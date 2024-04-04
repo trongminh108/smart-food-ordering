@@ -1,0 +1,31 @@
+type VouchersProduct {
+  id: ID!
+  id_voucher: ID
+  id_product: ID
+}
+
+input CreateVouchersProductInput {
+  id_voucher: ID
+  id_product: ID
+}
+
+input UpdateVouchersProductInput {
+  id: ID!
+  id_voucher: ID
+  id_product: ID
+}
+
+type Query {
+  vouchersProducts: [VouchersProduct]!
+  vouchersProduct(id: ID!): VouchersProduct
+}
+
+type Mutation {
+  createVouchersProduct(
+    createVouchersProductInput: CreateVouchersProductInput!
+  ): VouchersProduct!
+  updateVouchersProduct(
+    updateVouchersProductInput: UpdateVouchersProductInput!
+  ): VouchersProduct!
+  removeVouchersProduct(id: ID!): VouchersProduct
+}

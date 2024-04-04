@@ -1,0 +1,33 @@
+type Deliver {
+  id: ID!
+  id_user: ID
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+input CreateDeliverInput {
+  id_user: ID
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+input UpdateDeliverInput {
+  id: ID!
+  id_user: ID
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+type Query {
+  delivers: [Deliver]!
+  deliver(id: ID!): Deliver
+}
+
+type Mutation {
+  createDeliver(createDeliverInput: CreateDeliverInput!): Deliver!
+  updateDeliver(updateDeliverInput: UpdateDeliverInput!): Deliver!
+  removeDeliver(id: ID!): Deliver
+}

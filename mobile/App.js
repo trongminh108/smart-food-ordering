@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './src/pages/home';
 import Locations from './src/pages/locations';
 import colors from './src/constants/colors';
+import FaceRecognition from './src/pages/face_recognition';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,10 @@ export default function App() {
                     name="Locations"
                     component={Locations}
                     options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="FaceRecognition"
+                    component={FaceRecognition}
                 />
             </Stack.Navigator>
             <StatusBar

@@ -1,4 +1,4 @@
-import { Text, View, Image, TextInput } from 'react-native';
+import { Text, View, Image, TextInput, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -54,6 +54,12 @@ const Home = ({ navigation }) => {
                     </View>
                 </View>
             </View>
+            <Button
+                onPress={() => {
+                    navigation.navigate('FaceRecognition');
+                }}
+                title="Switch to Face Recognition"
+            />
             <UserLocation />
         </SafeAreaView>
     );

@@ -1,0 +1,45 @@
+type Order {
+  id: ID!
+  id_agent: ID
+  id_deliver: ID
+  id_user: ID
+  address: String
+  distance: Float
+  delivery_fee: Float
+  discount: Float
+  total_price: Float
+}
+
+input CreateOrderInput {
+  id_agent: ID
+  id_deliver: ID
+  id_user: ID
+  address: String
+  distance: Float
+  delivery_fee: Float
+  discount: Float
+  total_price: Float
+}
+
+input UpdateOrderInput {
+  id: ID!
+  id_agent: ID
+  id_deliver: ID
+  id_user: ID
+  address: String
+  distance: Float
+  delivery_fee: Float
+  discount: Float
+  total_price: Float
+}
+
+type Query {
+  orders: [Order]!
+  order(id: ID!): Order
+}
+
+type Mutation {
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  removeOrder(id: ID!): Order
+}

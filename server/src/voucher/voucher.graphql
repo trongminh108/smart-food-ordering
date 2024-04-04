@@ -1,0 +1,48 @@
+type Voucher {
+  id: ID!
+  id_agent: ID
+  code: ID
+  from: String
+  to: String
+  discount: Int
+  is_percentage: Boolean
+  is_valid: Boolean
+  is_all_products: Boolean
+  usage_limit: Int
+}
+
+input CreateVoucherInput {
+  id_agent: ID
+  code: ID
+  from: String
+  to: String
+  discount: Int
+  is_percentage: Boolean
+  is_valid: Boolean
+  is_all_products: Boolean
+  usage_limit: Int
+}
+
+input UpdateVoucherInput {
+  id: ID!
+  id_agent: ID
+  code: ID
+  from: String
+  to: String
+  discount: Int
+  is_percentage: Boolean
+  is_valid: Boolean
+  is_all_products: Boolean
+  usage_limit: Int
+}
+
+type Query {
+  vouchers: [Voucher]!
+  voucher(id: ID!): Voucher
+}
+
+type Mutation {
+  createVoucher(createVoucherInput: CreateVoucherInput!): Voucher!
+  updateVoucher(updateVoucherInput: UpdateVoucherInput!): Voucher!
+  removeVoucher(id: ID!): Voucher
+}

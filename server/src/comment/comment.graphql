@@ -1,0 +1,36 @@
+type Comment {
+  id: ID!
+  id_reviewer: ID
+  #for product, agent or deliver
+  id_object: ID
+  comment_content: String
+  rating: Float
+}
+
+input CreateCommentInput {
+  id_reviewer: ID
+  #for product, agent or deliver
+  id_object: ID
+  comment_content: String
+  rating: Float
+}
+
+input UpdateCommentInput {
+  id: ID!
+  id_reviewer: ID
+  #for product, agent or deliver
+  id_object: ID
+  comment_content: String
+  rating: Float
+}
+
+type Query {
+  comments: [Comment]!
+  comment(id: ID!): Comment
+}
+
+type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  removeComment(id: ID!): Comment
+}

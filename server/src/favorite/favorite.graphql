@@ -1,0 +1,24 @@
+type Favorite {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateFavoriteInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateFavoriteInput {
+  id: Int!
+}
+
+type Query {
+  favorites: [Favorite]!
+  favorite(id: Int!): Favorite
+}
+
+type Mutation {
+  createFavorite(createFavoriteInput: CreateFavoriteInput!): Favorite!
+  updateFavorite(updateFavoriteInput: UpdateFavoriteInput!): Favorite!
+  removeFavorite(id: Int!): Favorite
+}

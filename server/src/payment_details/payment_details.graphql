@@ -1,0 +1,41 @@
+type PaymentDetail {
+  id: ID!
+  id_user: ID
+  id_order: ID
+  #credit card, digital wallet, cash
+  payment_method: String
+  id_transaction: String
+  total_paid: Float
+}
+
+input CreatePaymentDetailInput {
+  id_user: ID
+  id_order: ID
+  payment_method: String
+  id_transaction: String
+  total_paid: Float
+}
+
+input UpdatePaymentDetailInput {
+  id: ID!
+  id_user: ID
+  id_order: ID
+  payment_method: String
+  id_transaction: String
+  total_paid: Float
+}
+
+type Query {
+  paymentDetails: [PaymentDetail]!
+  paymentDetail(id: ID!): PaymentDetail
+}
+
+type Mutation {
+  createPaymentDetail(
+    createPaymentDetailInput: CreatePaymentDetailInput!
+  ): PaymentDetail!
+  updatePaymentDetail(
+    updatePaymentDetailInput: UpdatePaymentDetailInput!
+  ): PaymentDetail!
+  removePaymentDetail(id: ID!): PaymentDetail
+}

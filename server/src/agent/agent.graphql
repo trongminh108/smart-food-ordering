@@ -1,0 +1,42 @@
+type Agent {
+  id: ID!
+  id_user: ID
+  name: String
+  address: String
+  avatar: String
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+input CreateAgentInput {
+  id_user: ID
+  name: String
+  address: String
+  avatar: String
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+input UpdateAgentInput {
+  id: ID!
+  id_user: ID
+  name: String
+  address: String
+  avatar: String
+  phone_number: String
+  rating: Float
+  comment: Int
+}
+
+type Query {
+  agents: [Agent]!
+  agent(id: ID!): Agent
+}
+
+type Mutation {
+  createAgent(createAgentInput: CreateAgentInput!): Agent!
+  updateAgent(updateAgentInput: UpdateAgentInput!): Agent!
+  removeAgent(id: ID!): Agent
+}

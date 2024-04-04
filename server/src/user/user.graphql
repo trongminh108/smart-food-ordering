@@ -1,0 +1,30 @@
+type User {
+  id: ID!
+  username: String
+  password: String
+  face_recognition: String
+}
+
+input CreateUserInput {
+  username: String
+  password: String
+  face_recognition: String
+}
+
+input UpdateUserInput {
+  id: ID!
+  username: String
+  password: String
+  face_recognition: String
+}
+
+type Query {
+  users: [User]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: ID!): User
+}

@@ -1,0 +1,40 @@
+type OrderDetail {
+  id: ID!
+  id_order: ID
+  id_product: ID
+  quantity: Int
+  discount: Float
+  subtotal: Float
+}
+
+input CreateOrderDetailInput {
+  id_order: ID
+  id_product: ID
+  quantity: Int
+  discount: Float
+  subtotal: Float
+}
+
+input UpdateOrderDetailInput {
+  id: ID!
+  id_order: ID
+  id_product: ID
+  quantity: Int
+  discount: Float
+  subtotal: Float
+}
+
+type Query {
+  orderDetails: [OrderDetail]!
+  orderDetail(id: ID!): OrderDetail
+}
+
+type Mutation {
+  createOrderDetail(
+    createOrderDetailInput: CreateOrderDetailInput!
+  ): OrderDetail!
+  updateOrderDetail(
+    updateOrderDetailInput: UpdateOrderDetailInput!
+  ): OrderDetail!
+  removeOrderDetail(id: ID!): OrderDetail
+}
