@@ -2,12 +2,28 @@ type User {
   id: ID!
   username: String
   password: String
+  full_name: String
+  gmail: String
+  avatar: String
+  phone_number: String
+  current_address: String
+  delivery_address: String
+  is_agent: Boolean
+  is_deliver: Boolean
   face_recognition: String
 }
 
 input CreateUserInput {
   username: String
   password: String
+  full_name: String
+  gmail: String
+  avatar: String
+  phone_number: String
+  current_address: String
+  delivery_address: String
+  is_agent: Boolean
+  is_deliver: Boolean
   face_recognition: String
 }
 
@@ -15,6 +31,14 @@ input UpdateUserInput {
   id: ID!
   username: String
   password: String
+  full_name: String
+  gmail: String
+  avatar: String
+  phone_number: String
+  current_address: String
+  delivery_address: String
+  is_agent: Boolean
+  is_deliver: Boolean
   face_recognition: String
 }
 

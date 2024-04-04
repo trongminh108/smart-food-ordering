@@ -1,0 +1,9 @@
+export const LUXAND_URL = 'https://api.luxand.cloud/photo/search/v2';
+export const LUXAND_TOKEN = 'e1e78399ff3946948e4ed1e697ac4bb1';
+export const PHOTOS = 'photos';
+export const PHOTO = 'photo';
+export const NAME = 'name';
+export const STORE = 'store';
+export const COLLECTIONS = 'collections';
+export const TOKEN = 'token';
+export const CONTENT_TYPE = 'Content-Type';

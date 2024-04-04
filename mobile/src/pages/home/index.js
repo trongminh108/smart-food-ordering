@@ -60,6 +60,12 @@ const Home = ({ navigation }) => {
                 }}
                 title="Switch to Face Recognition"
             />
+            <Button
+                onPress={() => {
+                    navigation.navigate('FacesRegistration');
+                }}
+                title="Switch to Faces Registration"
+            />
             <UserLocation />
         </SafeAreaView>
     );

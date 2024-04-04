@@ -14,14 +14,17 @@ import * as ImagePicker from 'expo-image-picker';
 // import * as fs from 'react-native-fs';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
+import LUXAND_FACE from '../../modules/luxand_api';
 
 const FaceRecognition = () => {
     const [selectedImage, setSelectedImage] = useState(null);
+    const [name, SetName] = useState('Unknown Person');
     const url = 'https://api.luxand.cloud/photo/search/v2';
     const headers = {
         token: 'e1e78399ff3946948e4ed1e697ac4bb1',
         'Content-Type': 'multipart/form-data',
     };
+    const luxand_obj = new LUXAND_FACE();
 
     async function handlePicker() {
         const options = {
@@ -36,31 +39,25 @@ const FaceRecognition = () => {
     }
 
     async function handleSendLuxand() {
-        const form = new FormData();
-        form.append('photo', {
-            uri: selectedImage,
-            name: 'photo.jpg',
-            type: 'image/jpeg',
-        });
-        form.append('collections', '');
-
-        const options = {
-            method: 'POST',
-            url: url,
-            headers: headers,
-            data: form,
-        };
-
-        try {
-            const response = await axios(options);
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
+        if (selectedImage) {
+            const photo = {
+                uri: selectedImage,
+                name: 'photo.jpg',
+                type: 'image/jpeg',
+            };
+            // const data = await luxand_obj.RecognizePeople(photo);
+            // SetName(data[0].name);
+            console.log(photo);
+        } else {
+            ToastAndroid.show('Please choose your photo', ToastAndroid.SHORT);
         }
     }
 
     return (
         <View style={styles.FaceRecognitionContainer}>
+            <View>
+                <Text>{name}</Text>
+            </View>
             <View style={styles.picContainer}>
                 {selectedImage && (
                     <Image

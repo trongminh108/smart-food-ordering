@@ -1,23 +1,27 @@
+import { join } from 'path';
+
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
+import { AgentModule } from './agent/agent.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { MONGOOSE_URI } from './constants';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
-import { AgentModule } from './agent/agent.module';
-import { DeliverModule } from './deliver/deliver.module';
 import { CommentModule } from './comment/comment.module';
+import { MONGOOSE_URI } from './constants';
+import { DeliverModule } from './deliver/deliver.module';
+import { FavoriteModule } from './favorite/favorite.module';
+import { FileUploadModule } from './file_upload/file_upload.module';
 import { OrderModule } from './order/order.module';
 import { OrderDetailsModule } from './order_details/order_details.module';
-import { VoucherModule } from './voucher/voucher.module';
 import { PaymentDetailsModule } from './payment_details/payment_details.module';
-import { FavoriteModule } from './favorite/favorite.module';
+import { ProductModule } from './product/product.module';
+import { UserModule } from './user/user.module';
+import { VoucherModule } from './voucher/voucher.module';
 import { VouchersProductsModule } from './vouchers_products/vouchers_products.module';
 
 @Module({
@@ -28,6 +32,13 @@ import { VouchersProductsModule } from './vouchers_products/vouchers_products.mo
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       typePaths: ['./src/**/*.graphql'],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/files', // Prefix tương tự như trong đoạn mã của bạn
+      serveStaticOptions: {
+        index: false, // Tắt hiển thị tệp index.html
+      },
     }),
     UserModule,
     ProductModule,
@@ -41,6 +52,7 @@ import { VouchersProductsModule } from './vouchers_products/vouchers_products.mo
     PaymentDetailsModule,
     FavoriteModule,
     VouchersProductsModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

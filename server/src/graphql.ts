@@ -158,6 +158,14 @@ export class UpdateProductInput {
 export class CreateUserInput {
     username?: Nullable<string>;
     password?: Nullable<string>;
+    full_name?: Nullable<string>;
+    gmail?: Nullable<string>;
+    avatar?: Nullable<string>;
+    phone_number?: Nullable<string>;
+    current_address?: Nullable<string>;
+    delivery_address?: Nullable<string>;
+    is_agent?: Nullable<boolean>;
+    is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
 }
 
@@ -165,6 +173,14 @@ export class UpdateUserInput {
     id: string;
     username?: Nullable<string>;
     password?: Nullable<string>;
+    full_name?: Nullable<string>;
+    gmail?: Nullable<string>;
+    avatar?: Nullable<string>;
+    phone_number?: Nullable<string>;
+    current_address?: Nullable<string>;
+    delivery_address?: Nullable<string>;
+    is_agent?: Nullable<boolean>;
+    is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
 }
 
@@ -423,6 +439,14 @@ export class User {
     id: string;
     username?: Nullable<string>;
     password?: Nullable<string>;
+    full_name?: Nullable<string>;
+    gmail?: Nullable<string>;
+    avatar?: Nullable<string>;
+    phone_number?: Nullable<string>;
+    current_address?: Nullable<string>;
+    delivery_address?: Nullable<string>;
+    is_agent?: Nullable<boolean>;
+    is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
 }
 

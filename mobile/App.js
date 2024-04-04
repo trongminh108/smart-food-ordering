@@ -7,6 +7,7 @@ import Home from './src/pages/home';
 import Locations from './src/pages/locations';
 import colors from './src/constants/colors';
 import FaceRecognition from './src/pages/face_recognition';
+import Faces_Registration from './src/pages/faces_registration';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,10 @@ export default function App() {
                 <Stack.Screen
                     name="FaceRecognition"
                     component={FaceRecognition}
+                />
+                <Stack.Screen
+                    name="FacesRegistration"
+                    component={Faces_Registration}
                 />
             </Stack.Navigator>
             <StatusBar
