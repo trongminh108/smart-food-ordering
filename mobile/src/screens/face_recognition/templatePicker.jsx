@@ -19,11 +19,6 @@ import LUXAND_FACE from '../../modules/luxand_api';
 const FaceRecognition = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [name, SetName] = useState('Unknown Person');
-    const url = 'https://api.luxand.cloud/photo/search/v2';
-    const headers = {
-        token: 'e1e78399ff3946948e4ed1e697ac4bb1',
-        'Content-Type': 'multipart/form-data',
-    };
     const luxand_obj = new LUXAND_FACE();
 
     async function handlePicker() {
@@ -34,7 +29,7 @@ const FaceRecognition = () => {
             // quality: 1,
         };
         const res = await ImagePicker.launchImageLibraryAsync(options);
-        console.log(res);
+        // console.log(res);
         if (!res.canceled) setSelectedImage(res.assets[0].uri);
     }
 
@@ -45,9 +40,8 @@ const FaceRecognition = () => {
                 name: 'photo.jpg',
                 type: 'image/jpeg',
             };
-            // const data = await luxand_obj.RecognizePeople(photo);
-            // SetName(data[0].name);
-            console.log(photo);
+            const data = await luxand_obj.RecognizePeople(photo);
+            SetName(data[0].name);
         } else {
             ToastAndroid.show('Please choose your photo', ToastAndroid.SHORT);
         }

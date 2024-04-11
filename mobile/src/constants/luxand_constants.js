@@ -1,4 +1,6 @@
 export const LUXAND_URL = 'https://api.luxand.cloud/photo/search/v2';
+export const LUXAND_ENROLL_PERSON = 'https://api.luxand.cloud/v2/person';
+export const LUXAND_ENROLL_FACE = 'https://api.luxand.cloud/v2/person';
 export const LUXAND_TOKEN = 'e1e78399ff3946948e4ed1e697ac4bb1';
 export const PHOTOS = 'photos';
 export const PHOTO = 'photo';
