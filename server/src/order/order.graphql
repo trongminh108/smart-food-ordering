@@ -1,13 +1,17 @@
 type Order {
   id: ID!
   id_agent: ID
+  agent: Agent
   id_deliver: ID
   id_user: ID
+  user: User
   address: String
   distance: Float
   delivery_fee: Float
   discount: Float
+  total_quantity: Int
   total_price: Float
+  status: String
 }
 
 input CreateOrderInput {
@@ -18,7 +22,9 @@ input CreateOrderInput {
   distance: Float
   delivery_fee: Float
   discount: Float
+  total_quantity: Int
   total_price: Float
+  status: String
 }
 
 input UpdateOrderInput {
@@ -30,7 +36,9 @@ input UpdateOrderInput {
   distance: Float
   delivery_fee: Float
   discount: Float
+  total_quantity: Int
   total_price: Float
+  status: String
 }
 
 type Query {

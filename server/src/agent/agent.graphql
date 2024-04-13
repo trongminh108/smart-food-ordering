@@ -3,20 +3,24 @@ type Agent {
   id_user: ID
   name: String
   address: String
+  position: [Float]
   avatar: String
+  images: [String]
   phone_number: String
   rating: Float
-  comment: Int
+  comments_quantity: Int
 }
 
 input CreateAgentInput {
   id_user: ID
   name: String
   address: String
+  position: [Float]
   avatar: String
+  images: [String]
   phone_number: String
   rating: Float
-  comment: Int
+  comments_quantity: Int
 }
 
 input UpdateAgentInput {
@@ -24,10 +28,12 @@ input UpdateAgentInput {
   id_user: ID
   name: String
   address: String
+  position: [Float]
   avatar: String
+  images: [String]
   phone_number: String
   rating: Float
-  comment: Int
+  comments_quantity: Int
 }
 
 type Query {

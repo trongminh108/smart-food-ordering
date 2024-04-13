@@ -5,55 +5,137 @@ import {
     Image,
     ScrollView,
     TouchableHighlight,
+    ToastAndroid,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
-import colors from '../../constants/colors';
-import { FONT_SIZE } from '../../constants/style';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import { CATEGORIES, PRODUCTS } from '../../constants/data';
+import colors from '../../constants/colors';
+import { FONT_SIZE, MARGIN_SCROLLVIEW_BOTTOM } from '../../constants/style';
+import { BACKEND_IMAGES, STATUS_PENDING } from '../../constants/backend';
+
 import ProductCardAgent from '../../components/product_card_agent/product_card_agent';
 import OrderProducts from '../../components/order_products/order_products';
+import LoadingScreen from '../../components/loading_screen/loading_screen';
+
+import { useLazyQuery } from '@apollo/client';
+import { getAllProducts } from '../../graphql-client/queries/products';
+import { getAllCategories } from '../../graphql-client/queries/categories';
+import {
+    useAddOrderDetailsMutation,
+    useAddOrderMutation,
+} from '../../graphql-client/mutations/services';
 
 const AgentForUser = ({ route }) => {
-    const { agent, id_product, id_category } = route?.params || {};
+    const { agent, id_product, id_category, price } = route?.params || {};
 
+    const [getProducts, { loading: loadingProducts, data: responseProducts }] =
+        useLazyQuery(getAllProducts);
+    const [
+        getCategories,
+        { loading: loadingCategories, data: responseCategories },
+    ] = useLazyQuery(getAllCategories);
+
+    const [isLoading, setIsLoading] = useState(true);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isBlur, setIsBlur] = useState(false);
+    const imagePath = BACKEND_IMAGES + agent.images[0];
 
-    const productsOfAgent = PRODUCTS.filter((pro) => pro.id_agent === agent.id);
-    const categoriesOfAgent = CATEGORIES.filter((cate) =>
+    const productsData = responseProducts?.products || null;
+    const categoriesData = responseCategories?.categories || null;
+
+    const productsOfAgent = responseProducts?.products.filter(
+        (pro) => pro.id_agent === agent.id
+    );
+    const categoriesOfAgent = responseCategories?.categories.filter((cate) =>
         productsOfAgent.some((pro) => pro.id_category === cate.id)
     );
 
-    const [orderDetails, setOrderDetails] = useState([
-        {
-            id: '1',
-            id_order: '1',
-            id_product: id_product,
-            quantity: 1,
-            discount: 0,
-            subtotal: productsOfAgent.find((pro) => pro.id === id_product)
-                .price,
-        },
-    ]);
+    const [orderDetails, setOrderDetails] = useState([]);
+
     const [selectedCate, setSelectedCate] = useState(
         id_category || categoriesOfAgent[0].id
     );
 
-    // useEffect(() => {
-    //     if (id_category) setSelectedCate(id_category);
-    // }, id_category);
+    useEffect(() => {
+        getProducts();
+        getCategories();
+    }, []);
 
-    const images = [
-        require('../../../assets/images/limbo_agents/limbo1.jpg'),
-        require('../../../assets/images/limbo_agents/limbo2.jpg'),
-        require('../../../assets/images/limbo_agents/limbo3.jpg'),
-    ];
+    useEffect(() => {
+        if (productsData && categoriesData) {
+            setIsLoading(false);
+        }
+    }, [productsData, categoriesData]);
+
+    useEffect(() => {
+        setSelectedCate(id_category);
+    }, [id_category]);
+
+    const navigation = useNavigation();
+    const AddOrderDetailsFunc = useAddOrderDetailsMutation();
+    const AddOrderFunc = useAddOrderMutation();
+
+    async function handleSaveDraftOrder() {
+        const quantity = orderDetails.reduce(
+            (acc, detail) => acc + detail.quantity,
+            0
+        );
+
+        const total = orderDetails.reduce(
+            (acc, detail) => acc + detail.subtotal,
+            0
+        );
+
+        // const responseOrder = await AddOrderFunc({
+        //     id_agent: agent.id,
+        //     total_quantity: quantity,
+        //     total_price: total,
+        //     status: STATUS_PENDING,
+        // });
+        // orderDetails.map(async (detail) => {
+        //     await AddOrderDetailsFunc({
+        //         id_order: responseOrder.id,
+        //         id_product: detail.id_product,
+        //         quantity: detail.quantity,
+        //         discount: 0,
+        //         subtotal: detail.subtotal,
+        //     });
+        // });
+
+        ToastAndroid.showWithGravity(
+            'Đã lưu vào đơn nháp',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+        );
+
+        setOrderDetails([]);
+        setIsBlur((prev) => !prev);
+    }
+
+    useEffect(() => {
+        setOrderDetails([
+            {
+                id_product: id_product,
+                quantity: 1,
+                discount: 0,
+                subtotal: price,
+            },
+        ]);
+    }, [id_product, isBlur]);
+
+    useEffect(() => {
+        navigation.addListener('blur', handleSaveDraftOrder);
+
+        return () => {
+            navigation.removeListener('blur', handleSaveDraftOrder);
+        };
+    }, [navigation, orderDetails]);
 
     function handlePressFavorite() {
         setIsFavorite((prev) => !prev);
-        // console.log(orderDetails);
     }
 
     function handlePressCate(id_cate) {
@@ -66,23 +148,22 @@ const AgentForUser = ({ route }) => {
                 (details) => details.id_product === product.id
             );
             //check isn't exist product
-            if (productIndex === -1)
-                return [
+            if (productIndex === -1) {
+                const res = [
                     ...prev,
                     {
-                        id: '1',
-                        id_order: '1',
                         id_product: product.id,
                         quantity: 1,
                         discount: 0,
                         subtotal: product.price,
                     },
                 ];
-            else
+                return res;
+            } else
                 return prev
                     .map((details, index) => {
                         if (index === productIndex) {
-                            // Tăng số lượng lên 1 (hoặc bất kỳ giá trị nào bạn muốn)
+                            // Tăng số lượng lên 1
                             if (quantity === 1)
                                 return {
                                     ...details,
@@ -105,10 +186,12 @@ const AgentForUser = ({ route }) => {
         });
     }
 
+    if (isLoading) return <LoadingScreen />;
+
     return (
         <View style={styles.AgentForUserContainer}>
             <View style={styles.header}>
-                <Image style={styles.imageBanner} source={images[0]} />
+                <Image style={styles.imageBanner} source={{ uri: imagePath }} />
             </View>
             <View style={styles.body}>
                 <Text style={styles.textName}>{agent.name}</Text>
@@ -123,7 +206,9 @@ const AgentForUser = ({ route }) => {
                     >
                         <Text>{agent.rating + ' '}</Text>
                         <Ionicons name="star" color={'tomato'} size={14} />
-                        <Text>{' -  (' + agent.comments + ' đánh giá)'}</Text>
+                        <Text>
+                            {' -  (' + agent.comments_quantity + ' đánh giá)'}
+                        </Text>
                     </View>
 
                     <Ionicons
@@ -156,27 +241,25 @@ const AgentForUser = ({ route }) => {
                 </View>
 
                 {/* List Products */}
-                <View style={styles.listProductsContainer}>
-                    {productsOfAgent.map((pro) => {
-                        if (pro.id_category === selectedCate)
-                            return (
-                                <ProductCardAgent
-                                    key={pro.id}
-                                    product={pro}
-                                    onPressAddProduct={handlePressAddProduct}
-                                    product_quantity={() => {
-                                        const indx = orderDetails.findIndex(
-                                            (details) =>
-                                                details.id_product === pro.id
-                                        );
-                                        if (indx !== -1)
-                                            return orderDetails[indx].quantity;
-                                        else return 0;
-                                    }}
-                                />
-                            );
-                    })}
-                </View>
+                <ScrollView horizontal={false}>
+                    <View style={styles.listProductsContainer}>
+                        {productsOfAgent.map((pro) => {
+                            if (pro.id_category === selectedCate)
+                                return (
+                                    <ProductCardAgent
+                                        key={pro.id}
+                                        product={pro}
+                                        onPressAddProduct={
+                                            handlePressAddProduct
+                                        }
+                                        product_quantity={
+                                            pro.id === id_product ? 1 : 0
+                                        }
+                                    />
+                                );
+                        })}
+                    </View>
+                </ScrollView>
             </View>
             {/* Order Product */}
             <OrderProducts orderDetails={orderDetails} />
@@ -232,5 +315,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
         marginTop: 12,
+        marginBottom: MARGIN_SCROLLVIEW_BOTTOM,
     },
 });

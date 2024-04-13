@@ -1,10 +1,21 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import { OrderDetailsService } from './order_details.service';
 import { CreateOrderDetailInput, UpdateOrderDetailInput } from 'src/graphql';
+import { ProductService } from 'src/product/product.service';
 
 @Resolver('OrderDetail')
 export class OrderDetailsResolver {
-  constructor(private readonly orderDetailsService: OrderDetailsService) {}
+  constructor(
+    private readonly orderDetailsService: OrderDetailsService,
+    private readonly productService: ProductService,
+  ) {}
 
   @Mutation('createOrderDetail')
   create(
@@ -35,5 +46,10 @@ export class OrderDetailsResolver {
   @Mutation('removeOrderDetail')
   remove(@Args('id') id: string) {
     return this.orderDetailsService.remove(id);
+  }
+
+  @ResolveField('product')
+  async product(@Parent() orderDetails) {
+    return await this.productService.findOne(orderDetails.id_product);
   }
 }

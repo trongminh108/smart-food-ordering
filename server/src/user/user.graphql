@@ -8,6 +8,7 @@ type User {
   phone_number: String
   current_address: String
   delivery_address: String
+  position: [Float]
   is_agent: Boolean
   is_deliver: Boolean
   face_recognition: String
@@ -22,6 +23,7 @@ input CreateUserInput {
   phone_number: String
   current_address: String
   delivery_address: String
+  position: [Float]
   is_agent: Boolean
   is_deliver: Boolean
   face_recognition: String
@@ -37,6 +39,7 @@ input UpdateUserInput {
   phone_number: String
   current_address: String
   delivery_address: String
+  position: [Float]
   is_agent: Boolean
   is_deliver: Boolean
   face_recognition: String
@@ -45,6 +48,7 @@ input UpdateUserInput {
 type Query {
   users: [User]!
   user(id: ID!): User
+  userByUsername(username: String!): User
 }
 
 type Mutation {

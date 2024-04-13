@@ -18,7 +18,11 @@ export class ORDER {
   @Prop()
   discount: number;
   @Prop()
+  total_quantity: number;
+  @Prop()
   total_price: number;
+  @Prop()
+  status: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(ORDER);

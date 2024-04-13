@@ -23,6 +23,7 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { VouchersProductsModule } from './vouchers_products/vouchers_products.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { VouchersProductsModule } from './vouchers_products/vouchers_products.mo
     FavoriteModule,
     VouchersProductsModule,
     FileUploadModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

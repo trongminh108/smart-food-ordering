@@ -21,6 +21,11 @@ export class UserResolver {
     return this.userService.findOne(id);
   }
 
+  @Query('userByUsername')
+  findOneByUsername(@Args('username') username: string) {
+    return this.userService.findByUsername(username);
+  }
+
   @Mutation('updateUser')
   update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.userService.update(updateUserInput);

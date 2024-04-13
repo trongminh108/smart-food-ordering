@@ -12,7 +12,7 @@ export class DELIVER {
   rating: number;
 
   @Prop()
-  comment: number;
+  comments_quantity: number;
 }
 
 export const DeliverSchema = SchemaFactory.createForClass(DELIVER);

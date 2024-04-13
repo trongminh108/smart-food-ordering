@@ -19,7 +19,7 @@ export default function OrderConfirmation({ route }) {
                 onPress={handleOnPressConfirmOrder}
             >
                 <Text style={styles.textButtonConfirm}>
-                    Xác nhận đơn - {formatCurrency(order.total_price)}
+                    Thanh Toán - {formatCurrency(order.total_price)}
                 </Text>
             </TouchableHighlight>
         </View>

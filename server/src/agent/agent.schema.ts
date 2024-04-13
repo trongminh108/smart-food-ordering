@@ -12,7 +12,13 @@ export class AGENT {
   address: string;
 
   @Prop()
+  position: number[];
+
+  @Prop()
   avatar: string;
+
+  @Prop()
+  images: string[];
 
   @Prop()
   phone_number: string;
@@ -21,7 +27,7 @@ export class AGENT {
   rating: number;
 
   @Prop()
-  comment: number;
+  comments_quantity: number;
 }
 
 export const AgentSchema = SchemaFactory.createForClass(AGENT);

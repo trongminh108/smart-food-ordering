@@ -5,6 +5,7 @@ type Product {
   name: String
   images: [String]
   description: String
+  sold: Int
   price: Int
   rating: Float
 }
@@ -15,6 +16,7 @@ input CreateProductInput {
   name: String
   images: [String]
   description: String
+  sold: Int
   price: Int
   rating: Float
 }
@@ -26,6 +28,7 @@ input UpdateProductInput {
   name: String
   images: [String]
   description: String
+  sold: Int
   price: Int
   rating: Float
 }

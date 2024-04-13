@@ -2,6 +2,7 @@ type OrderDetail {
   id: ID!
   id_order: ID
   id_product: ID
+  product: Product
   quantity: Int
   discount: Float
   subtotal: Float

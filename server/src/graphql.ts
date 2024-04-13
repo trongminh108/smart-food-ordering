@@ -12,10 +12,12 @@ export class CreateAgentInput {
     id_user?: Nullable<string>;
     name?: Nullable<string>;
     address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     avatar?: Nullable<string>;
+    images?: Nullable<Nullable<string>[]>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
 }
 
 export class UpdateAgentInput {
@@ -23,10 +25,20 @@ export class UpdateAgentInput {
     id_user?: Nullable<string>;
     name?: Nullable<string>;
     address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     avatar?: Nullable<string>;
+    images?: Nullable<Nullable<string>[]>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
+}
+
+export class CreateAuthInput {
+    exampleField?: Nullable<number>;
+}
+
+export class UpdateAuthInput {
+    id: number;
 }
 
 export class CreateCategoryInput {
@@ -58,7 +70,7 @@ export class CreateDeliverInput {
     id_user?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
 }
 
 export class UpdateDeliverInput {
@@ -66,7 +78,7 @@ export class UpdateDeliverInput {
     id_user?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
 }
 
 export class CreateFavoriteInput {
@@ -85,7 +97,9 @@ export class CreateOrderInput {
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
     discount?: Nullable<number>;
+    total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    status?: Nullable<string>;
 }
 
 export class UpdateOrderInput {
@@ -97,7 +111,9 @@ export class UpdateOrderInput {
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
     discount?: Nullable<number>;
+    total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    status?: Nullable<string>;
 }
 
 export class CreateOrderDetailInput {
@@ -140,6 +156,7 @@ export class CreateProductInput {
     name?: Nullable<string>;
     images?: Nullable<Nullable<string>[]>;
     description?: Nullable<string>;
+    sold?: Nullable<number>;
     price?: Nullable<number>;
     rating?: Nullable<number>;
 }
@@ -151,6 +168,7 @@ export class UpdateProductInput {
     name?: Nullable<string>;
     images?: Nullable<Nullable<string>[]>;
     description?: Nullable<string>;
+    sold?: Nullable<number>;
     price?: Nullable<number>;
     rating?: Nullable<number>;
 }
@@ -164,6 +182,7 @@ export class CreateUserInput {
     phone_number?: Nullable<string>;
     current_address?: Nullable<string>;
     delivery_address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     is_agent?: Nullable<boolean>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
@@ -179,6 +198,7 @@ export class UpdateUserInput {
     phone_number?: Nullable<string>;
     current_address?: Nullable<string>;
     delivery_address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     is_agent?: Nullable<boolean>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
@@ -226,10 +246,12 @@ export class Agent {
     id_user?: Nullable<string>;
     name?: Nullable<string>;
     address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     avatar?: Nullable<string>;
+    images?: Nullable<Nullable<string>[]>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
 }
 
 export abstract class IQuery {
@@ -238,6 +260,10 @@ export abstract class IQuery {
     abstract agents(): Nullable<Agent>[] | Promise<Nullable<Agent>[]>;
 
     abstract agent(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
+
+    abstract auths(): Nullable<Auth>[] | Promise<Nullable<Auth>[]>;
+
+    abstract auth(id: number): Nullable<Auth> | Promise<Nullable<Auth>>;
 
     abstract categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
 
@@ -275,6 +301,8 @@ export abstract class IQuery {
 
     abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
 
+    abstract userByUsername(username: string): Nullable<User> | Promise<Nullable<User>>;
+
     abstract vouchers(): Nullable<Voucher>[] | Promise<Nullable<Voucher>[]>;
 
     abstract voucher(id: string): Nullable<Voucher> | Promise<Nullable<Voucher>>;
@@ -292,6 +320,14 @@ export abstract class IMutation {
     abstract updateAgent(updateAgentInput: UpdateAgentInput): Agent | Promise<Agent>;
 
     abstract removeAgent(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
+
+    abstract createAuth(createAuthInput: CreateAuthInput): Auth | Promise<Auth>;
+
+    abstract updateAuth(updateAuthInput: UpdateAuthInput): Auth | Promise<Auth>;
+
+    abstract removeAuth(id: number): Nullable<Auth> | Promise<Nullable<Auth>>;
+
+    abstract login(username: string, password: string): Auth | Promise<Auth>;
 
     abstract createCategory(createCategoryInput: CreateCategoryInput): Category | Promise<Category>;
 
@@ -360,6 +396,28 @@ export abstract class IMutation {
     abstract removeVouchersProduct(id: string): Nullable<VouchersProduct> | Promise<Nullable<VouchersProduct>>;
 }
 
+export class UserAuth {
+    __typename?: 'UserAuth';
+    id?: Nullable<string>;
+    username?: Nullable<string>;
+    full_name?: Nullable<string>;
+    gmail?: Nullable<string>;
+    avatar?: Nullable<string>;
+    phone_number?: Nullable<string>;
+    current_address?: Nullable<string>;
+    delivery_address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
+    is_agent?: Nullable<boolean>;
+    is_deliver?: Nullable<boolean>;
+    face_recognition?: Nullable<string>;
+}
+
+export class Auth {
+    __typename?: 'Auth';
+    token: string;
+    user: UserAuth;
+}
+
 export class Category {
     __typename?: 'Category';
     id: string;
@@ -381,7 +439,7 @@ export class Deliver {
     id_user?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
-    comment?: Nullable<number>;
+    comments_quantity?: Nullable<number>;
 }
 
 export class Favorite {
@@ -393,13 +451,17 @@ export class Order {
     __typename?: 'Order';
     id: string;
     id_agent?: Nullable<string>;
+    agent?: Nullable<Agent>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    user?: Nullable<User>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
     discount?: Nullable<number>;
+    total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    status?: Nullable<string>;
 }
 
 export class OrderDetail {
@@ -407,6 +469,7 @@ export class OrderDetail {
     id: string;
     id_order?: Nullable<string>;
     id_product?: Nullable<string>;
+    product?: Nullable<Product>;
     quantity?: Nullable<number>;
     discount?: Nullable<number>;
     subtotal?: Nullable<number>;
@@ -430,6 +493,7 @@ export class Product {
     name?: Nullable<string>;
     images?: Nullable<Nullable<string>[]>;
     description?: Nullable<string>;
+    sold?: Nullable<number>;
     price?: Nullable<number>;
     rating?: Nullable<number>;
 }
@@ -445,6 +509,7 @@ export class User {
     phone_number?: Nullable<string>;
     current_address?: Nullable<string>;
     delivery_address?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     is_agent?: Nullable<boolean>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;

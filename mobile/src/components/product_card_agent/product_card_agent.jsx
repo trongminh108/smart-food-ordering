@@ -6,13 +6,14 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
 
 import { formatCurrency } from '../../modules/feature_functions';
 import colors from '../../constants/colors';
 import { FONT_SIZE, ICON_SIZE_BIG } from '../../constants/style';
+import { BACKEND_IMAGES } from '../../constants/backend';
 
 export default function ProductCardAgent({
     product,
@@ -20,6 +21,12 @@ export default function ProductCardAgent({
     product_quantity,
 }) {
     const [quantity, setQuantity] = useState(product_quantity);
+    const [idProduct, setIdProduct] = useState(product.id);
+    const imagePath = BACKEND_IMAGES + product.images[0];
+
+    useEffect(() => {
+        setQuantity(product_quantity);
+    }, [product_quantity]);
 
     function handlePressProductCard() {
         alert(`Info of ${product.name}`);
@@ -41,7 +48,7 @@ export default function ProductCardAgent({
             onPress={handlePressProductCard}
             activeOpacity={1}
         >
-            <Image source={product.image} style={styles.imageProduct} />
+            <Image source={{ uri: imagePath }} style={styles.imageProduct} />
             <View style={styles.cardInfo}>
                 <Text style={styles.textName}>{product.name}</Text>
                 <View>

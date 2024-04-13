@@ -9,5 +9,6 @@ import { AGENT, AgentSchema } from './agent.schema';
     MongooseModule.forFeature([{ name: AGENT.name, schema: AgentSchema }]),
   ],
   providers: [AgentResolver, AgentService],
+  exports: [AgentService],
 })
 export class AgentModule {}

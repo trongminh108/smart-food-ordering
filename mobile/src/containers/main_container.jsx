@@ -21,12 +21,13 @@ import {
     AccountName,
     AgentForUserName,
     OrderConfirmationName,
+    LoginName,
 } from '../constants/screen_names';
 import colors from '../constants/colors';
 import Providers from '../components/apollo_provider/apollo_provider';
+import LoginScreen from '../screens/login_screen';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 const MainContainer = () => {
     return (
@@ -94,6 +95,11 @@ const MainContainer = () => {
                         <Tab.Screen
                             name={OrderConfirmationName}
                             component={OrderConfirmation}
+                            options={{ tabBarButton: () => null }}
+                        />
+                        <Tab.Screen
+                            name={LoginName}
+                            component={LoginScreen}
                             options={{ tabBarButton: () => null }}
                         />
                     </Tab.Navigator>

@@ -9,6 +9,33 @@ export class USER {
   password: string;
 
   @Prop()
+  full_name: string;
+
+  @Prop()
+  gmail: string;
+
+  @Prop()
+  avatar: string;
+
+  @Prop()
+  phone_number: string;
+
+  @Prop()
+  current_address: string;
+
+  @Prop()
+  delivery_address: string;
+
+  @Prop()
+  position: number[];
+
+  @Prop({ default: false }) // Mặc định là false
+  is_agent: boolean;
+
+  @Prop({ default: false }) // Mặc định là false
+  is_deliver: boolean;
+
+  @Prop()
   face_recognition: string;
 }
 

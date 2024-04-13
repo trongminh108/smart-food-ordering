@@ -1,16 +1,22 @@
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import React from 'react';
+import colors from '../../constants/colors';
 
-const loading_screen = () => {
+const loading_screen = ({ message }) => {
     return (
         <View style={styles.loadingScreen}>
-            <Text style={styles.textLoading}>Loading...</Text>
+            <Text style={styles.textLoading}>{message}</Text>
             <ActivityIndicator
                 size="large"
                 style={{ transform: [{ scale: 2 }] }}
+                color={colors.primary}
             />
         </View>
     );
+};
+
+loading_screen.defaultProps = {
+    message: 'Loading...', // Thiết lập giá trị mặc định cho prop message
 };
 
 export default loading_screen;
