@@ -2,7 +2,10 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
-import { formatCurrency } from '../../modules/feature_functions';
+import {
+    displayDuration,
+    formatCurrency,
+} from '../../modules/feature_functions';
 import { AgentForUserName } from '../../constants/screen_names';
 import { BACKEND_IMAGES } from '../../constants/backend';
 
@@ -13,7 +16,7 @@ import { useMap } from '../../contexts/map_context';
 import { getAgentByID } from '../../graphql-client/queries/agents';
 import { displayDistance } from '../../modules/feature_functions';
 
-const ProductCard = ({ product, agent, navigation, distance }) => {
+const ProductCard = ({ product, agent, navigation, distance, duration }) => {
     const imagePath = BACKEND_IMAGES + product.images[0];
     const { origins, destinations } = useMap();
 
@@ -62,7 +65,12 @@ const ProductCard = ({ product, agent, navigation, distance }) => {
                     <Text>
                         {distance == 0
                             ? 'Đang xác định'
-                            : displayDistance(distance)}
+                            : displayDistance(distance) + ' '}
+                    </Text>
+                    <Text>
+                        {duration == 0
+                            ? ' | Đang xác định'
+                            : ' | ' + displayDuration(duration)}
                     </Text>
                 </Text>
             </View>

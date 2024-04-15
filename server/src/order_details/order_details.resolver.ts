@@ -35,6 +35,11 @@ export class OrderDetailsResolver {
     return this.orderDetailsService.findOne(id);
   }
 
+  @Query('orderDetailsByOrderID')
+  orderDetailsByOrderID(@Args('id') id: string) {
+    return this.orderDetailsService.findAll({ id_order: id });
+  }
+
   @Mutation('updateOrderDetail')
   update(
     @Args('updateOrderDetailInput')

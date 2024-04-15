@@ -21,6 +21,7 @@ import { showToast } from '../modules/feature_functions';
 const TOKEN_KEY = 'jwt_secret_key_sfo';
 const TOKEN = 'token';
 const USER = 'user';
+const USER_INFO = 'user_info';
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
@@ -39,12 +40,16 @@ const AuthProvider = ({ children }) => {
         const loadToken = async () => {
             const token = await AsyncStorage.getItem(TOKEN);
             const username = await AsyncStorage.getItem(USER);
+            const user = await JSON.parse(
+                await AsyncStorage.getItem(USER_INFO)
+            );
             if (token) {
                 setAuthState((prev) => ({
                     ...prev,
                     token: token,
                     username: username,
                     authenticated: true,
+                    user: user,
                 }));
             }
         };
@@ -71,7 +76,7 @@ const AuthProvider = ({ children }) => {
         if (res.token) {
             const token = res.token;
             const user = res.user;
-            setAuthState({
+            await setAuthState({
                 token: token,
                 user: user,
                 username: user.username,
@@ -80,6 +85,7 @@ const AuthProvider = ({ children }) => {
 
             await AsyncStorage.setItem(TOKEN, token);
             await AsyncStorage.setItem(USER, user.username);
+            await AsyncStorage.setItem(USER_INFO, JSON.stringify(user));
 
             ToastAndroid.showWithGravity(
                 'Đăng nhập thành công',
@@ -104,6 +110,7 @@ const AuthProvider = ({ children }) => {
     const logout = async () => {
         await AsyncStorage.removeItem(TOKEN);
         await AsyncStorage.removeItem(USER);
+        await AsyncStorage.removeItem(USER_INFO);
 
         setAuthState({
             token: '',

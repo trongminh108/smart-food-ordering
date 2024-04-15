@@ -10,6 +10,7 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderInput, UpdateOrderInput } from 'src/graphql';
 import { AgentService } from 'src/agent/agent.service';
+import { OrderDetailsService } from 'src/order_details/order_details.service';
 
 @Resolver('Order')
 export class OrderResolver {
@@ -17,6 +18,7 @@ export class OrderResolver {
     private readonly orderService: OrderService,
     private readonly agentService: AgentService,
     private readonly userService: UserService,
+    private readonly orderDetailsService: OrderDetailsService,
   ) {}
 
   @Mutation('createOrder')
@@ -32,6 +34,11 @@ export class OrderResolver {
   @Query('order')
   findOne(@Args('id') id: string) {
     return this.orderService.findOne(id);
+  }
+
+  @Query('ordersByUserID')
+  ordersByUserID(@Args('id') id: string) {
+    return this.orderService.findAll({ id_user: id });
   }
 
   @Mutation('updateOrder')
@@ -52,5 +59,10 @@ export class OrderResolver {
   @ResolveField('user')
   async user(@Parent() order) {
     return await this.userService.findOne(order.id_user);
+  }
+
+  @ResolveField('order_details')
+  async order_details(@Parent() order) {
+    return await this.orderDetailsService.findAll({ id_order: order.id });
   }
 }

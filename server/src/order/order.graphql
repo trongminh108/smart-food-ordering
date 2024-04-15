@@ -4,6 +4,8 @@ type Order {
   agent: Agent
   id_deliver: ID
   id_user: ID
+  recipient: String
+  order_details: [OrderDetail]
   user: User
   phone_number: String
   address: String
@@ -19,6 +21,7 @@ input CreateOrderInput {
   id_agent: ID
   id_deliver: ID
   id_user: ID
+  recipient: String
   phone_number: String
   address: String
   distance: Float
@@ -34,6 +37,7 @@ input UpdateOrderInput {
   id_agent: ID
   id_deliver: ID
   id_user: ID
+  recipient: String
   phone_number: String
   address: String
   distance: Float
@@ -47,6 +51,7 @@ input UpdateOrderInput {
 type Query {
   orders: [Order]!
   order(id: ID!): Order
+  ordersByUserID(id: ID!): [Order]
 }
 
 type Mutation {

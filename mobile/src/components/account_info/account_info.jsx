@@ -24,17 +24,17 @@ const AccountInfo = () => {
     }
 
     return (
-        <UserInfoContainer>
-            <View style={styles.accountInfoContainer}>
-                <Text>Xin chào {authState.user.full_name}</Text>
-                <TouchableHighlight
-                    style={styles.buttonLogout}
-                    onPress={handleLogout}
-                >
-                    <Text style={{ color: colors.white }}>Logout</Text>
-                </TouchableHighlight>
-            </View>
-        </UserInfoContainer>
+        // <UserInfoContainer>
+        <View style={styles.accountInfoContainer}>
+            <Text>Xin chào {authState.user.full_name}</Text>
+            <TouchableHighlight
+                style={styles.buttonLogout}
+                onPress={handleLogout}
+            >
+                <Text style={{ color: colors.white }}>Logout</Text>
+            </TouchableHighlight>
+        </View>
+        // </UserInfoContainer>
     );
 };
 

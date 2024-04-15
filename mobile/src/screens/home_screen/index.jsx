@@ -23,6 +23,7 @@ import { getUserLocation } from '../../modules/feature_functions';
 import { useMap } from '../../contexts/map_context';
 import { Ionicons } from '@expo/vector-icons';
 import { ICON_SIZE_MID } from '../../constants/style';
+import UserInfoContainer from '../../containers/user_info_container';
 
 export default function HomeScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -74,6 +75,7 @@ export default function HomeScreen({ navigation }) {
     if (isLoading) return <LoadingScreen />;
 
     return (
+        // <UserInfoContainer>
         <View>
             <View style={styles.addressContainer}>
                 <Ionicons name="location" size={ICON_SIZE_MID} color={'red'} />
@@ -89,12 +91,14 @@ export default function HomeScreen({ navigation }) {
                         const agent = agentsData.find(
                             (agent) => agent.id === product.id_agent
                         );
+                        let dis = 0;
                         let dura = 0;
                         if (distance.value.length != 0) {
                             const tmp = distance.value.find(
                                 (ag) => ag.id_agent === agent.id
                             );
-                            dura = tmp.distance;
+                            dis = tmp.distance;
+                            dura = tmp.duration;
                         }
                         return (
                             <ProductCard
@@ -102,7 +106,8 @@ export default function HomeScreen({ navigation }) {
                                 product={product}
                                 agent={agent}
                                 navigation={navigation}
-                                distance={dura}
+                                distance={dis}
+                                duration={dura}
                             />
                         );
                     })}
@@ -110,6 +115,7 @@ export default function HomeScreen({ navigation }) {
             </ScrollView>
             {/* <UserLocation /> */}
         </View>
+        // </UserInfoContainer>
     );
 }
 

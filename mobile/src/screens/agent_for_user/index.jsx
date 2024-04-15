@@ -81,7 +81,7 @@ const AgentForUser = ({ route }) => {
     const AddOrderFunc = useAddOrderMutation();
 
     async function handleSaveDraftOrder() {
-        if (authState.authenticated) {
+        if (authState.authenticated && orderDetails.length != 0) {
             const quantity = orderDetails.reduce(
                 (acc, detail) => acc + detail.quantity,
                 0
@@ -94,6 +94,7 @@ const AgentForUser = ({ route }) => {
 
             const responseOrder = await AddOrderFunc({
                 id_agent: agent.id,
+                id_user: authState.user.id,
                 total_quantity: quantity,
                 total_price: total,
                 status: STATUS_PENDING,

@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/auth_context';
 import { getUserByUsername } from '../graphql-client/queries/queries';
 
 import LoadingScreen from '../components/loading_screen/loading_screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserInfoContainer = ({ children }) => {
     const { authState, onLogout, onSetUserInfo } = useAuth();
@@ -13,8 +14,13 @@ const UserInfoContainer = ({ children }) => {
     const [userInfo, setUserInfo] = useState(authState.user || {});
 
     useEffect(() => {
-        if (Object.keys(userInfo).length === 0)
-            getUser({ variables: { username: authState.username } });
+        async function getUserInfo() {
+            if (Object.keys(userInfo).length === 0 && authState.authenticated) {
+                const username = await AsyncStorage.getItem('user');
+                getUser({ variables: { username: username } });
+            }
+        }
+        getUserInfo();
     }, []);
 
     useEffect(() => {
@@ -26,8 +32,13 @@ const UserInfoContainer = ({ children }) => {
 
     const memoizedUserInfo = useMemo(() => userInfo, [userInfo]);
 
-    if (loading || Object.keys(userInfo).length === 0)
-        return <LoadingScreen message={'Đang lấy thông tin người dùng'} />;
+    if (
+        loading ||
+        (authState.authenticated &&
+            Object.keys(userInfo).length === 0 &&
+            Object.keys(authState.user).length === 0)
+    )
+        return <LoadingScreen message={'Đang tải thông tin người dùng'} />;
 
     return <View style={{ flex: 1 }}>{children}</View>;
 };

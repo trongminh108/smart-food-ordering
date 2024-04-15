@@ -5,6 +5,7 @@ export const login = gql`
         login(username: $username, password: $password) {
             token
             user {
+                id
                 username
                 full_name
                 gmail

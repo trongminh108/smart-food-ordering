@@ -2,28 +2,32 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ collection: 'ORDERS' })
 export class ORDER {
-  @Prop()
+  @Prop({ default: '' })
   id_agent: string;
-  @Prop()
+  @Prop({ default: '' })
   id_deliver: string;
-  @Prop()
+  @Prop({ default: '' })
   id_user: string;
-  @Prop()
+
+  @Prop({ default: '' })
+  recipient: string;
+
+  @Prop({ default: '' })
   phone_number: string;
-  @Prop()
+  @Prop({ default: '' })
   address: string;
   //km, display m if km < 1
-  @Prop()
+  @Prop({ default: null })
   distance: number;
-  @Prop()
+  @Prop({ default: 0 })
   delivery_fee: number;
-  @Prop()
+  @Prop({ default: 0 })
   discount: number;
-  @Prop()
+  @Prop({ default: 0 })
   total_quantity: number;
-  @Prop()
+  @Prop({ default: 0 })
   total_price: number;
-  @Prop()
+  @Prop({ default: 'PENDING' })
   status: string;
 }
 

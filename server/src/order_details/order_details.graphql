@@ -28,6 +28,7 @@ input UpdateOrderDetailInput {
 type Query {
   orderDetails: [OrderDetail]!
   orderDetail(id: ID!): OrderDetail
+  orderDetailsByOrderID(id: ID!): [OrderDetail]
 }
 
 type Mutation {

@@ -6,3 +6,6 @@ export const { getAllAgents, getAgentByID } = agents;
 
 import * as ggmap_api from './ggmap_api';
 export const { getAddress, getDistanceDuration } = ggmap_api;
+
+import * as orders from './orders';
+export const { getOrdersByUserID } = orders;

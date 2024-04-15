@@ -98,6 +98,7 @@ export class CreateOrderInput {
     id_agent?: Nullable<string>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    recipient?: Nullable<string>;
     phone_number?: Nullable<string>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
@@ -113,6 +114,7 @@ export class UpdateOrderInput {
     id_agent?: Nullable<string>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    recipient?: Nullable<string>;
     phone_number?: Nullable<string>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
@@ -292,9 +294,13 @@ export abstract class IQuery {
 
     abstract order(id: string): Nullable<Order> | Promise<Nullable<Order>>;
 
+    abstract ordersByUserID(id: string): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
+
     abstract orderDetails(): Nullable<OrderDetail>[] | Promise<Nullable<OrderDetail>[]>;
 
     abstract orderDetail(id: string): Nullable<OrderDetail> | Promise<Nullable<OrderDetail>>;
+
+    abstract orderDetailsByOrderID(id: string): Nullable<Nullable<OrderDetail>[]> | Promise<Nullable<Nullable<OrderDetail>[]>>;
 
     abstract paymentDetails(): Nullable<PaymentDetail>[] | Promise<Nullable<PaymentDetail>[]>;
 
@@ -467,6 +473,8 @@ export class Order {
     agent?: Nullable<Agent>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    recipient?: Nullable<string>;
+    order_details?: Nullable<Nullable<OrderDetail>[]>;
     user?: Nullable<User>;
     phone_number?: Nullable<string>;
     address?: Nullable<string>;

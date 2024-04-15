@@ -29,6 +29,7 @@ export class AuthResolver {
 
     if (user) {
       const token = await this.authService.generateToken(user);
+      user['id'] = user._id;
       return { token: token, user: user };
     }
 

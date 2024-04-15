@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const getAllUsers = gql`
     query Users {
         users {
+            id
             username
             password
             full_name
@@ -22,8 +23,8 @@ export const getAllUsers = gql`
 export const getUserByUsername = gql`
     query UserByUsername($username: String!) {
         userByUsername(username: $username) {
+            id
             username
-            password
             full_name
             gmail
             avatar

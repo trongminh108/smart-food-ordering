@@ -1,5 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { addOrderDetails, addOrder, login, registerUser } from './mutations';
+import {
+    addOrderDetails,
+    addOrder,
+    login,
+    registerUser,
+    updateOrder,
+} from './mutations';
 
 export function useAddOrderDetailsMutation() {
     const [createOrderDetails] = useMutation(addOrderDetails);
@@ -80,4 +86,23 @@ export function useRegisterMutation() {
         return null;
     }
     return handleRegister;
+}
+
+export function useUpdateOrderMutation() {
+    const [useUpdateOrder] = useMutation(updateOrder);
+
+    async function handleUpdateOrder(order) {
+        try {
+            const { data } = await useUpdateOrder({
+                variables: {
+                    updateOrderInput: order,
+                },
+            });
+            return data.updateOrder;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleUpdateOrder;
 }

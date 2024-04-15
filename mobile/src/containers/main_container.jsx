@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,12 +22,20 @@ import {
     OrderConfirmationName,
     LoginName,
     RegisterName,
+    ReceiptName,
+    FavoriteName,
+    AgentName,
 } from '../constants/screen_names';
 import colors from '../constants/colors';
 import LoginScreen from '../screens/login_screen';
 import GlobalContainer from './global_container';
 import RegisterScreen from '../screens/register_screen';
 import TestScreen from '../screens/test';
+import ReceiptScreen from '../screens/receipt_screen';
+import FavoriteScreen from '../screens/favorite_screen';
+import AgentScreen from '../screens/agent_screen';
+import { useAuth } from '../contexts/auth_context';
+import MainScreen from './main_screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,80 +44,7 @@ const MainContainer = () => {
         <SafeAreaView style={styles.container}>
             <NavigationContainer>
                 <GlobalContainer>
-                    <Tab.Navigator
-                        initialRouteName={HomeName}
-                        screenOptions={({ route }) => ({
-                            tabBarIcon: ({ focused, color, size }) => {
-                                let iconName;
-                                let rn = route.name;
-                                if (rn === HomeName) {
-                                    iconName = focused
-                                        ? 'home'
-                                        : 'home-outline';
-                                } else if (rn === DetailsName) {
-                                    iconName = focused
-                                        ? 'list'
-                                        : 'list-outline';
-                                } else if (rn === SettingsName) {
-                                    iconName = focused
-                                        ? 'settings'
-                                        : 'settings-outline';
-                                } else if (rn == AccountName) {
-                                    iconName = focused
-                                        ? 'person'
-                                        : 'person-outline';
-                                }
-
-                                // You can return any component that you like here!
-                                return (
-                                    <Ionicons
-                                        name={iconName}
-                                        size={size}
-                                        color={color}
-                                    />
-                                );
-                            },
-                            tabBarActiveTintColor: colors.primary,
-                            tabBarInactiveTintColor: 'grey',
-                            labelStyle: { paddingBottom: 10, fontSize: 10 },
-                            style: { padding: 10, height: 70 },
-                            headerShown: false,
-                        })}
-                    >
-                        <Tab.Screen name={HomeName} component={HomeScreen} />
-                        <Tab.Screen
-                            name={DetailsName}
-                            component={DetailsScreen}
-                        />
-                        <Tab.Screen
-                            name={SettingsName}
-                            component={SettingsScreen}
-                        />
-                        <Tab.Screen
-                            name={AccountName}
-                            component={AccountScreen}
-                        />
-                        <Tab.Screen
-                            name={AgentForUserName}
-                            component={AgentForUserScreen}
-                            options={{ tabBarButton: () => null }}
-                        />
-                        <Tab.Screen
-                            name={OrderConfirmationName}
-                            component={OrderConfirmation}
-                            options={{ tabBarButton: () => null }}
-                        />
-                        <Tab.Screen
-                            name={LoginName}
-                            component={LoginScreen}
-                            options={{ tabBarButton: () => null }}
-                        />
-                        <Tab.Screen
-                            name={RegisterName}
-                            component={RegisterScreen}
-                            options={{ tabBarButton: () => null }}
-                        />
-                    </Tab.Navigator>
+                    <MainScreen />
                 </GlobalContainer>
             </NavigationContainer>
         </SafeAreaView>

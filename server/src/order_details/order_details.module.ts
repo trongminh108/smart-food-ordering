@@ -13,5 +13,6 @@ import { ProductModule } from 'src/product/product.module';
     ProductModule,
   ],
   providers: [OrderDetailsResolver, OrderDetailsService],
+  exports: [OrderDetailsService],
 })
 export class OrderDetailsModule {}

@@ -13,6 +13,7 @@ export class AuthService {
     const user = await this.userService.findByUsername(username);
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password: _, ...result } = user.toObject();
+
       return result;
     }
     // throw new Error('Invalid username or password');

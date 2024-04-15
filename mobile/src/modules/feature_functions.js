@@ -56,3 +56,51 @@ export const displayDistance = (meter) => {
     if (meter > 1000) return `${Math.round((meter / 1000) * 10) / 10}km`;
     return meter + 'm';
 };
+
+export function displayDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (hours > 0) {
+        return `${hours} giờ ${minutes} phút`;
+    } else if (minutes > 0) {
+        return `${minutes} phút`;
+    } else {
+        return `${remainingSeconds} giây`;
+    }
+}
+
+const fee3firstKM = 15000;
+const feeKmNext = 5000;
+export function calculateDeliveryFee(meter) {
+    let km = meter / 1000;
+    if (km <= 0) return 0;
+    let res = 0;
+    if (km >= 3) {
+        res += fee3firstKM;
+        km -= 3;
+    } else return fee3firstKM;
+    return res + Math.round(km) * feeKmNext;
+}
+
+import { Alert } from 'react-native';
+
+export const showConfirmBox = (yesFunc) => {
+    Alert.alert(
+        'Thông báo',
+        'Bạn chắc chắn đặt món này chứ?',
+        [
+            {
+                text: 'No',
+                // onPress: () => yesFunc(),
+                style: 'cancel',
+            },
+            {
+                text: 'Yes',
+                onPress: () => yesFunc(),
+            },
+        ],
+        { cancelable: true }
+    );
+};
