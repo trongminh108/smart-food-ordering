@@ -5,6 +5,7 @@ type Order {
   id_deliver: ID
   id_user: ID
   user: User
+  phone_number: String
   address: String
   distance: Float
   delivery_fee: Float
@@ -18,6 +19,7 @@ input CreateOrderInput {
   id_agent: ID
   id_deliver: ID
   id_user: ID
+  phone_number: String
   address: String
   distance: Float
   delivery_fee: Float
@@ -32,6 +34,7 @@ input UpdateOrderInput {
   id_agent: ID
   id_deliver: ID
   id_user: ID
+  phone_number: String
   address: String
   distance: Float
   delivery_fee: Float

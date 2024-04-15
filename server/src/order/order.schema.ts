@@ -9,6 +9,8 @@ export class ORDER {
   @Prop()
   id_user: string;
   @Prop()
+  phone_number: string;
+  @Prop()
   address: string;
   //km, display m if km < 1
   @Prop()

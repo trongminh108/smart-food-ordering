@@ -1,19 +1,29 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 import { formatCurrency } from '../../modules/feature_functions';
 import { AgentForUserName } from '../../constants/screen_names';
 import { BACKEND_IMAGES } from '../../constants/backend';
 
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { addOrderDetails } from '../../graphql-client/mutations/mutations';
+import { useMap } from '../../contexts/map_context';
+import { getAgentByID } from '../../graphql-client/queries/agents';
+import { displayDistance } from '../../modules/feature_functions';
 
-const ProductCard = ({ product, agent, navigation }) => {
+const ProductCard = ({ product, agent, navigation, distance }) => {
     const imagePath = BACKEND_IMAGES + product.images[0];
+    const { origins, destinations } = useMap();
+
+    useEffect(() => {}, []);
 
     function handlePressProductCard() {
+        destinations.setDestinations({
+            lat: agent.position[0],
+            lng: agent.position[1],
+        });
         navigation.navigate(AgentForUserName, {
             agent: agent,
             id_product: product.id,
@@ -47,7 +57,13 @@ const ProductCard = ({ product, agent, navigation }) => {
                         name="star"
                         color={'tomato'}
                         style={styles.star}
-                    />
+                    />{' '}
+                    |{' '}
+                    <Text>
+                        {distance == 0
+                            ? 'Đang xác định'
+                            : displayDistance(distance)}
+                    </Text>
                 </Text>
             </View>
         </TouchableOpacity>

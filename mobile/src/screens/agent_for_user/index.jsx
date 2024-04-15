@@ -27,6 +27,7 @@ import {
     useAddOrderDetailsMutation,
     useAddOrderMutation,
 } from '../../graphql-client/mutations/services';
+import { useAuth } from '../../contexts/auth_context';
 
 const AgentForUser = ({ route }) => {
     const { agent, id_product, id_category, price } = route?.params || {};
@@ -41,6 +42,7 @@ const AgentForUser = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isFavorite, setIsFavorite] = useState(false);
     const [isBlur, setIsBlur] = useState(false);
+    const { authState } = useAuth();
     const imagePath = BACKEND_IMAGES + agent.images[0];
 
     const productsData = responseProducts?.products || null;
@@ -79,38 +81,39 @@ const AgentForUser = ({ route }) => {
     const AddOrderFunc = useAddOrderMutation();
 
     async function handleSaveDraftOrder() {
-        const quantity = orderDetails.reduce(
-            (acc, detail) => acc + detail.quantity,
-            0
-        );
+        if (authState.authenticated) {
+            const quantity = orderDetails.reduce(
+                (acc, detail) => acc + detail.quantity,
+                0
+            );
 
-        const total = orderDetails.reduce(
-            (acc, detail) => acc + detail.subtotal,
-            0
-        );
+            const total = orderDetails.reduce(
+                (acc, detail) => acc + detail.subtotal,
+                0
+            );
 
-        // const responseOrder = await AddOrderFunc({
-        //     id_agent: agent.id,
-        //     total_quantity: quantity,
-        //     total_price: total,
-        //     status: STATUS_PENDING,
-        // });
-        // orderDetails.map(async (detail) => {
-        //     await AddOrderDetailsFunc({
-        //         id_order: responseOrder.id,
-        //         id_product: detail.id_product,
-        //         quantity: detail.quantity,
-        //         discount: 0,
-        //         subtotal: detail.subtotal,
-        //     });
-        // });
+            const responseOrder = await AddOrderFunc({
+                id_agent: agent.id,
+                total_quantity: quantity,
+                total_price: total,
+                status: STATUS_PENDING,
+            });
+            orderDetails.map(async (detail) => {
+                await AddOrderDetailsFunc({
+                    id_order: responseOrder.id,
+                    id_product: detail.id_product,
+                    quantity: detail.quantity,
+                    discount: 0,
+                    subtotal: detail.subtotal,
+                });
+            });
 
-        ToastAndroid.showWithGravity(
-            'Đã lưu vào đơn nháp',
-            ToastAndroid.SHORT,
-            ToastAndroid.BOTTOM
-        );
-
+            ToastAndroid.showWithGravity(
+                'Đã lưu vào đơn nháp',
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+            );
+        }
         setOrderDetails([]);
         setIsBlur((prev) => !prev);
     }

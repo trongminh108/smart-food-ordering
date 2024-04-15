@@ -22,18 +22,21 @@ import {
     AgentForUserName,
     OrderConfirmationName,
     LoginName,
+    RegisterName,
 } from '../constants/screen_names';
 import colors from '../constants/colors';
-import Providers from '../components/apollo_provider/apollo_provider';
 import LoginScreen from '../screens/login_screen';
+import GlobalContainer from './global_container';
+import RegisterScreen from '../screens/register_screen';
+import TestScreen from '../screens/test';
 
 const Tab = createBottomTabNavigator();
 
 const MainContainer = () => {
     return (
-        <Providers>
-            <SafeAreaView style={styles.container}>
-                <NavigationContainer>
+        <SafeAreaView style={styles.container}>
+            <NavigationContainer>
+                <GlobalContainer>
                     <Tab.Navigator
                         initialRouteName={HomeName}
                         screenOptions={({ route }) => ({
@@ -102,14 +105,23 @@ const MainContainer = () => {
                             component={LoginScreen}
                             options={{ tabBarButton: () => null }}
                         />
+                        <Tab.Screen
+                            name={RegisterName}
+                            component={RegisterScreen}
+                            options={{ tabBarButton: () => null }}
+                        />
                     </Tab.Navigator>
-                </NavigationContainer>
-            </SafeAreaView>
-        </Providers>
+                </GlobalContainer>
+            </NavigationContainer>
+        </SafeAreaView>
     );
 };
 
 export default MainContainer;
+
+const Layout = ({ children }) => {
+    return <GlobalContainer>{children}</GlobalContainer>;
+};
 
 const styles = StyleSheet.create({
     container: {

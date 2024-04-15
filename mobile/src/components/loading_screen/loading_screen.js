@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         opacity: 0.8,
     },
     textLoading: {
-        color: 'white',
+        color: colors.white,
         marginBottom: 30,
     },
 });

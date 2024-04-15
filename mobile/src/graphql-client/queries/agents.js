@@ -16,3 +16,20 @@ export const getAllAgents = gql`
         }
     }
 `;
+
+export const getAgentByID = gql`
+    query Agent($agentId: ID!) {
+        agent(id: $agentId) {
+            id
+            id_user
+            name
+            address
+            position
+            avatar
+            images
+            phone_number
+            rating
+            comments_quantity
+        }
+    }
+`;

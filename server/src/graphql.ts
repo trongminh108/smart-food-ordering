@@ -33,14 +33,6 @@ export class UpdateAgentInput {
     comments_quantity?: Nullable<number>;
 }
 
-export class CreateAuthInput {
-    exampleField?: Nullable<number>;
-}
-
-export class UpdateAuthInput {
-    id: number;
-}
-
 export class CreateCategoryInput {
     id: string;
     name?: Nullable<string>;
@@ -89,10 +81,24 @@ export class UpdateFavoriteInput {
     id: number;
 }
 
+export class CreateLocationInput {
+    exampleField?: Nullable<number>;
+}
+
+export class UpdateLocationInput {
+    id: number;
+}
+
+export class LocationInput {
+    lat?: Nullable<number>;
+    lng?: Nullable<number>;
+}
+
 export class CreateOrderInput {
     id_agent?: Nullable<string>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    phone_number?: Nullable<string>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
@@ -107,6 +113,7 @@ export class UpdateOrderInput {
     id_agent?: Nullable<string>;
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
+    phone_number?: Nullable<string>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
@@ -261,10 +268,6 @@ export abstract class IQuery {
 
     abstract agent(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
 
-    abstract auths(): Nullable<Auth>[] | Promise<Nullable<Auth>[]>;
-
-    abstract auth(id: number): Nullable<Auth> | Promise<Nullable<Auth>>;
-
     abstract categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
 
     abstract category(id: string): Nullable<Category> | Promise<Nullable<Category>>;
@@ -280,6 +283,10 @@ export abstract class IQuery {
     abstract favorites(): Nullable<Favorite>[] | Promise<Nullable<Favorite>[]>;
 
     abstract favorite(id: number): Nullable<Favorite> | Promise<Nullable<Favorite>>;
+
+    abstract getAddressFromLocation(location: LocationInput): string | Promise<string>;
+
+    abstract getDistanceBetweenLocation(origins: LocationInput, destinations: LocationInput): DistanceMatrix | Promise<DistanceMatrix>;
 
     abstract orders(): Nullable<Order>[] | Promise<Nullable<Order>[]>;
 
@@ -303,6 +310,8 @@ export abstract class IQuery {
 
     abstract userByUsername(username: string): Nullable<User> | Promise<Nullable<User>>;
 
+    abstract userByGmail(gmail: string): Nullable<User> | Promise<Nullable<User>>;
+
     abstract vouchers(): Nullable<Voucher>[] | Promise<Nullable<Voucher>[]>;
 
     abstract voucher(id: string): Nullable<Voucher> | Promise<Nullable<Voucher>>;
@@ -321,13 +330,9 @@ export abstract class IMutation {
 
     abstract removeAgent(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
 
-    abstract createAuth(createAuthInput: CreateAuthInput): Auth | Promise<Auth>;
-
-    abstract updateAuth(updateAuthInput: UpdateAuthInput): Auth | Promise<Auth>;
-
-    abstract removeAuth(id: number): Nullable<Auth> | Promise<Nullable<Auth>>;
-
     abstract login(username: string, password: string): Auth | Promise<Auth>;
+
+    abstract register(username: string, password: string, gmail: string): User | Promise<User>;
 
     abstract createCategory(createCategoryInput: CreateCategoryInput): Category | Promise<Category>;
 
@@ -352,6 +357,8 @@ export abstract class IMutation {
     abstract updateFavorite(updateFavoriteInput: UpdateFavoriteInput): Favorite | Promise<Favorite>;
 
     abstract removeFavorite(id: number): Nullable<Favorite> | Promise<Nullable<Favorite>>;
+
+    abstract removeGgMapApi(id: number): Nullable<GgMapApi> | Promise<Nullable<GgMapApi>>;
 
     abstract createOrder(createOrderInput: CreateOrderInput): Order | Promise<Order>;
 
@@ -396,26 +403,15 @@ export abstract class IMutation {
     abstract removeVouchersProduct(id: string): Nullable<VouchersProduct> | Promise<Nullable<VouchersProduct>>;
 }
 
-export class UserAuth {
-    __typename?: 'UserAuth';
-    id?: Nullable<string>;
-    username?: Nullable<string>;
-    full_name?: Nullable<string>;
-    gmail?: Nullable<string>;
-    avatar?: Nullable<string>;
-    phone_number?: Nullable<string>;
-    current_address?: Nullable<string>;
-    delivery_address?: Nullable<string>;
-    position?: Nullable<Nullable<number>[]>;
-    is_agent?: Nullable<boolean>;
-    is_deliver?: Nullable<boolean>;
-    face_recognition?: Nullable<string>;
-}
-
 export class Auth {
     __typename?: 'Auth';
-    token: string;
-    user: UserAuth;
+    token?: Nullable<string>;
+    user?: Nullable<User>;
+}
+
+export class ErrorMessage {
+    __typename?: 'ErrorMessage';
+    message: string;
 }
 
 export class Category {
@@ -447,6 +443,23 @@ export class Favorite {
     exampleField?: Nullable<number>;
 }
 
+export class GgMapApi {
+    __typename?: 'GgMapApi';
+    result?: Nullable<string>;
+}
+
+export class DistanceMatrix {
+    __typename?: 'DistanceMatrix';
+    distance?: Nullable<number>;
+    duration?: Nullable<number>;
+}
+
+export class Location {
+    __typename?: 'Location';
+    lat?: Nullable<number>;
+    lng?: Nullable<number>;
+}
+
 export class Order {
     __typename?: 'Order';
     id: string;
@@ -455,6 +468,7 @@ export class Order {
     id_deliver?: Nullable<string>;
     id_user?: Nullable<string>;
     user?: Nullable<User>;
+    phone_number?: Nullable<string>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;

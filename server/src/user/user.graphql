@@ -49,6 +49,7 @@ type Query {
   users: [User]!
   user(id: ID!): User
   userByUsername(username: String!): User
+  userByGmail(gmail: String!): User
 }
 
 type Mutation {

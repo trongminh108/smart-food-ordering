@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { BACKEND_URL } from '../constants/backend';
 
 // Initialize Apollo Client

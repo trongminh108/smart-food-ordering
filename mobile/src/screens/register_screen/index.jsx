@@ -13,25 +13,26 @@ import colors from '../../constants/colors';
 import { ICON_SIZE_BIG } from '../../constants/style';
 import { useAuth } from '../../contexts/auth_context';
 import { useNavigation } from '@react-navigation/native';
-import { RegisterName } from '../../constants/screen_names';
 
-const LoginScreen = () => {
+import { isValidEmail } from '../../modules/feature_functions';
+
+const RegisterScreen = () => {
     const [username, setUsername] = useState('');
+    const [gmail, setGmail] = useState('');
     const [password, setPassword] = useState('');
     const [securePassword, setSecurePassword] = useState(true);
-    const { onLogin } = useAuth();
-
-    async function handlePressLogin() {
-        // alert(username + ' - ' + password);
-        await onLogin(username, password);
-    }
+    const { onRegister } = useAuth();
 
     const navigation = useNavigation();
     async function handlePressRegister() {
-        navigation.navigate(RegisterName);
+        if (username && gmail && password) {
+            if (isValidEmail(gmail))
+                await onRegister(username, password, gmail);
+            else alert('Email chưa đúng');
+        } else {
+            alert('Vui lòng điền đầy đủ thông tin');
+        }
     }
-
-    function handlePressLoginWithGG() {}
 
     return (
         <View style={styles.LoginScreenContainer}>
@@ -45,7 +46,7 @@ const LoginScreen = () => {
             >
                 <View style={styles.ImageContainer}>
                     <Image
-                        source={require('../../../assets/images/products/cf.jpg')}
+                        source={require('../../../assets/images/products/water.jpg')}
                         style={styles.imageStyle}
                     />
                 </View>
@@ -57,6 +58,13 @@ const LoginScreen = () => {
                             onChangeText={(text) => setUsername(text)}
                         />
                     </View>
+                    <View style={[styles.inputText, styles.gmail]}>
+                        <TextInput
+                            placeholder="gmail"
+                            style={styles.input}
+                            onChangeText={(text) => setGmail(text)}
+                        />
+                    </View>
                     <View style={[styles.inputText, styles.password]}>
                         <TextInput
                             placeholder="matkhau"
@@ -66,46 +74,24 @@ const LoginScreen = () => {
                         />
                     </View>
                 </View>
-                <View style={[styles.buttons, { flexDirection: 'row' }]}>
-                    <TouchableHighlight
-                        style={styles.buttonLogin}
-                        onPress={handlePressLogin}
-                        underlayColor={colors.primary_hover}
-                    >
-                        <Text style={{ color: colors.white }}>Đăng nhập</Text>
-                    </TouchableHighlight>
+                <View style={styles.buttons}>
                     <TouchableHighlight
                         style={[
-                            styles.buttonLogin,
+                            styles.buttonRegister,
                             { backgroundColor: colors.secondary },
                         ]}
                         onPress={handlePressRegister}
-                        underlayColor={colors.primary_hover}
+                        underlayColor={colors.secondary_hover}
                     >
                         <Text style={{ color: colors.white }}>Đăng ký</Text>
                     </TouchableHighlight>
-                </View>
-                <View style={styles.orderLogin}>
-                    <Text> - Hoặc đăng nhập với - </Text>
-                    <View>
-                        <TouchableHighlight
-                            style={styles.buttonLoginWithGG}
-                            onPress={handlePressLoginWithGG}
-                            underlayColor={colors.primary_hover}
-                        >
-                            <Image
-                                source={require('../../../assets/images/gg.png')}
-                                style={styles.imageStyle}
-                            />
-                        </TouchableHighlight>
-                    </View>
                 </View>
             </ScrollView>
         </View>
     );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     LoginScreenContainer: {
@@ -141,33 +127,18 @@ const styles = StyleSheet.create({
     username: {},
     password: {},
     buttons: {
-        width: '85%',
+        width: '80%',
         justifyContent: 'center',
         alignItems: 'flex-end',
-        justifyContent: 'space-between',
     },
-    buttonLogin: {
+    buttonRegister: {
         marginTop: 20,
-        width: '45%',
+        width: '50%',
         height: 48,
         backgroundColor: 'blue',
         padding: 10,
         borderRadius: 32,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    orderLogin: {
-        width: '100%',
-        marginTop: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    buttonLoginWithGG: {
-        marginTop: 16,
-        width: 54,
-        height: 54,
-        overflow: 'hidden',
-        backgroundColor: colors.white,
-        borderRadius: 54,
     },
 });

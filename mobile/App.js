@@ -9,6 +9,7 @@ import colors from './src/constants/colors';
 import FaceRecognition from './src/screens/face_recognition';
 import Faces_Registration from './src/screens/faces_registration';
 import MainContainer from './src/containers/main_container';
+import GlobalContainer from './src/containers/global_container';
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,8 @@ export default function App() {
         <MainContainer />
     );
 }
+
+// AppRegistry.registerComponent('smart_food_ordering', () => App);
 
 const styles = StyleSheet.create({
     container: {

@@ -7,8 +7,6 @@ import MapViewDirections from 'react-native-maps-directions';
 const UserLocation = () => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const GG_API = 'AIzaSyAX6NeccHlvy0T3RmCqZk9pwXpM8LWMPfQ';
-    // const GG_API = 'AIzaSyAp0PAbhn4M2AtYe-IYbePfFc5n18GNxhY';
     const origin = {
         latitude: 10.400696929273314,
         longitude: 105.5029581237249,

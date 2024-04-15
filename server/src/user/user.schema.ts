@@ -2,31 +2,35 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ collection: 'USERS' })
 export class USER {
-  @Prop()
+  @Prop({ required: true })
   username: string;
 
   @Prop()
   password: string;
 
-  @Prop()
+  @Prop({
+    default: function () {
+      return this.username;
+    },
+  })
   full_name: string;
 
   @Prop()
   gmail: string;
 
-  @Prop()
+  @Prop({ default: 'water.jpg' })
   avatar: string;
 
-  @Prop()
+  @Prop({ default: '' })
   phone_number: string;
 
-  @Prop()
+  @Prop({ default: '' })
   current_address: string;
 
-  @Prop()
+  @Prop({ default: '' })
   delivery_address: string;
 
-  @Prop()
+  @Prop({ default: [0, 0] })
   position: number[];
 
   @Prop({ default: false }) // Mặc định là false
@@ -35,7 +39,7 @@ export class USER {
   @Prop({ default: false }) // Mặc định là false
   is_deliver: boolean;
 
-  @Prop()
+  @Prop({ default: '' })
   face_recognition: string;
 }
 

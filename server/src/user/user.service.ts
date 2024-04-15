@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserInput, UpdateUserInput } from 'src/graphql';
+import axios from 'axios';
+import { GG_MAP_REVERSE_GEOCODING_API } from 'src/constants';
 
 @Injectable()
 export class UserService {
@@ -22,6 +24,10 @@ export class UserService {
 
   async findByUsername(username: string) {
     return await this.userModel.findOne({ username: username });
+  }
+
+  async findByGmail(gmail: string) {
+    return await this.userModel.findOne({ gmail: gmail });
   }
 
   async update(updateUserInput: UpdateUserInput) {

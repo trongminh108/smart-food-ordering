@@ -1,0 +1,40 @@
+type GgMapApi {
+  # Example field (placeholder)
+  result: String
+}
+
+input CreateLocationInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateLocationInput {
+  id: Int!
+}
+
+input LocationInput {
+  lat: Float
+  lng: Float
+}
+
+type DistanceMatrix {
+  distance: Int
+  duration: Int
+}
+
+type Location {
+  lat: Float
+  lng: Float
+}
+
+type Query {
+  getAddressFromLocation(location: LocationInput!): String!
+  getDistanceBetweenLocation(
+    origins: LocationInput!
+    destinations: LocationInput!
+  ): DistanceMatrix!
+}
+
+type Mutation {
+  removeGgMapApi(id: Int!): GgMapApi
+}

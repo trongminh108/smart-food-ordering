@@ -24,6 +24,7 @@ import { UserModule } from './user/user.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { VouchersProductsModule } from './vouchers_products/vouchers_products.module';
 import { AuthModule } from './auth/auth.module';
+import { GgMapApiModule } from './gg_map_api/gg_map_api.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AuthModule } from './auth/auth.module';
     VouchersProductsModule,
     FileUploadModule,
     AuthModule,
+    GgMapApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

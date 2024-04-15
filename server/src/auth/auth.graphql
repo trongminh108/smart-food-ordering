@@ -1,41 +1,46 @@
-type UserAuth {
-  id: ID
-  username: String
-  full_name: String
-  gmail: String
-  avatar: String
-  phone_number: String
-  current_address: String
-  delivery_address: String
-  position: [Float]
-  is_agent: Boolean
-  is_deliver: Boolean
-  face_recognition: String
-}
+# type UserAuth {
+#   id
+#   username: String
+#   full_name: String
+#   gmail: String
+#   avatar: String
+#   phone_number: String
+#   current_address: String
+#   delivery_address: String
+#   position: [Float]
+#   is_agent: Boolean
+#   is_deliver: Boolean
+#   face_recognition: String
+# }
 
 type Auth {
   # Example field (placeholder)
-  token: String!
-  user: UserAuth!
+  token: String
+  user: User
 }
 
-input CreateAuthInput {
-  # Example field (placeholder)
-  exampleField: Int
-}
+# input CreateAuthInput {
+#   # Example field (placeholder)
+#   exampleField: Int
+# }
 
-input UpdateAuthInput {
-  id: Int!
-}
+# input UpdateAuthInput {
+#   id: Int!
+# }
 
-type Query {
-  auths: [Auth]!
-  auth(id: Int!): Auth
+# type Query {
+#   auths: [Auth]!
+#   auth(id: Int!): Auth
+# }
+
+type ErrorMessage {
+  message: String!
 }
 
 type Mutation {
-  createAuth(createAuthInput: CreateAuthInput!): Auth!
-  updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
-  removeAuth(id: Int!): Auth
+  # createAuth(createAuthInput: CreateAuthInput!): Auth!
+  # updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
+  # removeAuth(id: Int!): Auth
   login(username: String!, password: String!): Auth!
+  register(username: String!, password: String!, gmail: String!): User!
 }

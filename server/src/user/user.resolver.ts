@@ -26,6 +26,11 @@ export class UserResolver {
     return this.userService.findByUsername(username);
   }
 
+  @Query('userByGmail')
+  findOneByGmail(@Args('gmail') gmail: string) {
+    return this.userService.findByGmail(gmail);
+  }
+
   @Mutation('updateUser')
   update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.userService.update(updateUserInput);

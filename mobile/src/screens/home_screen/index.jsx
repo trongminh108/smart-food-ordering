@@ -14,7 +14,15 @@ import UserLocation from '../../components/user_location/user_location';
 import { AGENTS, PRODUCTS } from '../../constants/data';
 import { useLazyQuery } from '@apollo/client';
 import { getAllProducts } from '../../graphql-client/queries/products';
-import { getAllAgents } from '../../graphql-client/queries/agents';
+import {
+    getAgentByID,
+    getAllAgents,
+} from '../../graphql-client/queries/agents';
+import LoadingScreen from '../../components/loading_screen/loading_screen';
+import { getUserLocation } from '../../modules/feature_functions';
+import { useMap } from '../../contexts/map_context';
+import { Ionicons } from '@expo/vector-icons';
+import { ICON_SIZE_MID } from '../../constants/style';
 
 export default function HomeScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -25,30 +33,54 @@ export default function HomeScreen({ navigation }) {
         { loading: loadingAgents, error: errorAgents, data: dataAgents },
     ] = useLazyQuery(getAllAgents);
 
+    const { origins, address, distance, distance_tmp } = useMap();
+
     if (loading) console.log('loading...');
     if (error) console.log(error);
-    // if (data) console.log(data.products);
+
     const productsData = data?.products || null;
     const agentsData = dataAgents?.agents || null;
 
     useEffect(() => {
         getProducts();
         getAgents();
+        async function GetUserLocation() {
+            const latlng = await getUserLocation();
+            origins.setOrigins(latlng);
+        }
+        GetUserLocation();
     }, []);
 
     useEffect(() => {
-        if (productsData && agentsData) setIsLoading(false);
+        if (productsData && agentsData) {
+            setIsLoading(false);
+            getDistanceAllAgents(dataAgents.agents);
+        }
     }, [productsData, agentsData]);
 
-    if (isLoading)
-        return (
-            <View>
-                <Text>Loading...</Text>
-            </View>
-        );
+    async function getDistanceAllAgents(agents) {
+        const data = [];
+        for (const agent of agents) {
+            data.push({
+                id_agent: agent.id,
+                position: agent.position,
+                distance: 0,
+                duration: 0,
+            });
+        }
+        distance_tmp.setDistance_tmp(data);
+    }
+
+    if (isLoading) return <LoadingScreen />;
 
     return (
         <View>
+            <View style={styles.addressContainer}>
+                <Ionicons name="location" size={ICON_SIZE_MID} color={'red'} />
+                <Text numberOfLines={1} ellipsizeMode="tail">
+                    {address.value}
+                </Text>
+            </View>
             <SearchBar />
             {/* List Products */}
             <ScrollView>
@@ -57,12 +89,20 @@ export default function HomeScreen({ navigation }) {
                         const agent = agentsData.find(
                             (agent) => agent.id === product.id_agent
                         );
+                        let dura = 0;
+                        if (distance.value.length != 0) {
+                            const tmp = distance.value.find(
+                                (ag) => ag.id_agent === agent.id
+                            );
+                            dura = tmp.distance;
+                        }
                         return (
                             <ProductCard
                                 key={product.id}
                                 product={product}
                                 agent={agent}
                                 navigation={navigation}
+                                distance={dura}
                             />
                         );
                     })}
@@ -80,5 +120,11 @@ const styles = StyleSheet.create({
         gap: 8,
         marginTop: 12,
         marginBottom: 44,
+    },
+
+    addressContainer: {
+        padding: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });
