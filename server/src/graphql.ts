@@ -486,6 +486,12 @@ export class Order {
     status?: Nullable<string>;
 }
 
+export abstract class ISubscription {
+    __typename?: 'ISubscription';
+
+    abstract pubInfoOrder(): string | Promise<string>;
+}
+
 export class OrderDetail {
     __typename?: 'OrderDetail';
     id: string;

@@ -6,14 +6,18 @@ import {
   Args,
   ResolveField,
   Parent,
+  Subscription,
 } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { CreateOrderInput, UpdateOrderInput } from 'src/graphql';
 import { AgentService } from 'src/agent/agent.service';
 import { OrderDetailsService } from 'src/order_details/order_details.service';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver('Order')
 export class OrderResolver {
+  pubSub: PubSub = new PubSub();
+  PUSH_INFO_ORDER = 'PUSH_INFO_ORDER';
   constructor(
     private readonly orderService: OrderService,
     private readonly agentService: AgentService,
@@ -28,6 +32,9 @@ export class OrderResolver {
 
   @Query('orders')
   findAll() {
+    this.pubSub.publish(this.PUSH_INFO_ORDER, {
+      pubInfoOrder: 'Get all orders',
+    });
     return this.orderService.findAll();
   }
 
@@ -64,5 +71,10 @@ export class OrderResolver {
   @ResolveField('order_details')
   async order_details(@Parent() order) {
     return await this.orderDetailsService.findAll({ id_order: order.id });
+  }
+
+  @Subscription('pubInfoOrder')
+  helloFunc() {
+    return this.pubSub.asyncIterator(this.PUSH_INFO_ORDER);
   }
 }

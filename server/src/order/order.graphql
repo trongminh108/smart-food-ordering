@@ -48,6 +48,10 @@ input UpdateOrderInput {
   status: String
 }
 
+type Subscription {
+  pubInfoOrder: String!
+}
+
 type Query {
   orders: [Order]!
   order(id: ID!): Order

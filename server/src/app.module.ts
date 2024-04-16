@@ -34,6 +34,10 @@ import { GgMapApiModule } from './gg_map_api/gg_map_api.module';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       typePaths: ['./src/**/*.graphql'],
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
