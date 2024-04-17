@@ -7,6 +7,7 @@ export const OrderConfirmationName = 'OrderConfirmation';
 export const LoginName = 'Login';
 export const RegisterName = 'Register';
 export const ReceiptName = 'Receipt';
+export const OrderName = 'Order';
 export const FavoriteName = 'Favorite';
 export const AgentName = 'Agent';
 export const DeliverName = 'Deliver';

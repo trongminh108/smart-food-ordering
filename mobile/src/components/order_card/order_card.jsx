@@ -22,7 +22,7 @@ import {
 import { displayDistance } from '../../modules/feature_functions';
 import { useNavigation } from '@react-navigation/native';
 
-const ReceiptCard = ({ order, distance, duration, status }) => {
+const OrderCard = ({ order, distance, duration, status }) => {
     const { agent, user } = order;
 
     const imagePath = BACKEND_IMAGES + order.agent.images[0];
@@ -98,7 +98,7 @@ const ReceiptCard = ({ order, distance, duration, status }) => {
     );
 };
 
-export default ReceiptCard;
+export default OrderCard;
 
 const styles = StyleSheet.create({
     cardContainer: {

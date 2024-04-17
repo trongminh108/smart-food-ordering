@@ -22,7 +22,7 @@ import {
     OrderConfirmationName,
     LoginName,
     RegisterName,
-    ReceiptName,
+    OrderName,
     FavoriteName,
     AgentName,
     DeliverName,
@@ -32,7 +32,7 @@ import LoginScreen from '../screens/login_screen';
 import GlobalContainer from './global_container';
 import RegisterScreen from '../screens/register_screen';
 import TestScreen from '../screens/test';
-import ReceiptScreen from '../screens/receipt_screen';
+import OrdersScreen from '../screens/order_screen';
 import FavoriteScreen from '../screens/favorite_screen';
 import AgentScreen from '../screens/agent_screen';
 import { useAuth } from '../contexts/auth_context';
@@ -42,23 +42,23 @@ const Tab = createBottomTabNavigator();
 
 const MainScreen = () => {
     const { authState } = useAuth();
+    let initRoute = HomeName;
 
-    function handleTabPress(route) {
-        if (route.name === ReceiptName) {
-            console.log('switch to receipt');
-        }
-    }
+    if (authState?.authenticated && authState?.user.is_agent)
+        initRoute = AgentName;
+    else if (authState?.authenticated && authState?.user.is_deliver)
+        initRoute = DeliverName;
 
     return (
         <Tab.Navigator
-            initialRouteName={HomeName}
+            initialRouteName={initRoute}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     let rn = route.name;
                     if (rn === HomeName) {
                         iconName = focused ? 'home' : 'home-outline';
-                    } else if (rn === ReceiptName) {
+                    } else if (rn === OrderName) {
                         iconName = focused ? 'receipt' : 'receipt-outline';
                     } else if (rn === FavoriteName) {
                         iconName = focused ? 'heart' : 'heart-outline';
@@ -89,7 +89,7 @@ const MainScreen = () => {
                 <Tab.Screen name={DeliverName} component={DeliverScreen} />
             )}
             <Tab.Screen name={HomeName} component={HomeScreen} />
-            <Tab.Screen name={ReceiptName} component={ReceiptScreen} />
+            <Tab.Screen name={OrderName} component={OrdersScreen} />
             <Tab.Screen name={FavoriteName} component={FavoriteScreen} />
             <Tab.Screen name={AccountName} component={AccountScreen} />
             <Tab.Screen

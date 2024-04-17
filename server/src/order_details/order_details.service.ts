@@ -33,6 +33,14 @@ export class OrderDetailsService {
     return await this.orderDetailsModel.findByIdAndDelete(id);
   }
 
+  async removeMany(condition = {}) {
+    return await this.orderDetailsModel.deleteMany(condition);
+  }
+
+  async removeOrderDetailsByOrderID(id: string) {
+    return await this.removeMany({ id_order: id });
+  }
+
   async removeAllData() {
     return await this.orderDetailsModel.deleteMany();
   }

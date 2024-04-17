@@ -36,6 +36,10 @@ export class OrderService {
     return await this.orderModel.findByIdAndDelete(id);
   }
 
+  async removeMany(condition = {}) {
+    return await this.orderModel.deleteMany(condition);
+  }
+
   async removeAllData() {
     return await this.orderModel.deleteMany();
   }

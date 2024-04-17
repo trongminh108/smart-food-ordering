@@ -14,7 +14,11 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import colors from '../../constants/colors';
 import { FONT_SIZE, MARGIN_SCROLLVIEW_BOTTOM } from '../../constants/style';
-import { BACKEND_IMAGES, STATUS_PENDING } from '../../constants/backend';
+import {
+    BACKEND_IMAGES,
+    STATUS_DRAFT,
+    STATUS_PENDING,
+} from '../../constants/backend';
 
 import ProductCardAgent from '../../components/product_card_agent/product_card_agent';
 import OrderProducts from '../../components/order_products/order_products';
@@ -97,7 +101,7 @@ const AgentForUser = ({ route }) => {
                 id_user: authState.user.id,
                 total_quantity: quantity,
                 total_price: total,
-                status: STATUS_PENDING,
+                status: STATUS_DRAFT,
             });
             orderDetails.map(async (detail) => {
                 await AddOrderDetailsFunc({

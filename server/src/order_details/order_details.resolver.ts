@@ -53,6 +53,11 @@ export class OrderDetailsResolver {
     return this.orderDetailsService.remove(id);
   }
 
+  @Mutation('removeOrderDetailsByOrderID')
+  removeOrderDetailsByOrderID(@Args('id') id: string) {
+    return this.orderDetailsService.removeOrderDetailsByOrderID(id);
+  }
+
   @Mutation('removeAllDataOrderDetails')
   async removeAll() {
     try {

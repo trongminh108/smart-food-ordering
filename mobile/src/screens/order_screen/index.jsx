@@ -15,7 +15,7 @@ import colors from '../../constants/colors';
 import { useLazyQuery, useSubscription } from '@apollo/client';
 import { getOrdersByUserID } from '../../graphql-client/queries/queries';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
-import ReceiptCard from '../../components/receipt_card/receipt_card';
+import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -24,7 +24,7 @@ import {
 } from '../../graphql-client/subscriptions/orders';
 import { getAgentByUserID } from '../../graphql-client/queries/agents';
 
-const ReceiptScreen = () => {
+const OrdersScreen = () => {
     const { authState } = useAuth();
     const { distance } = useMap();
     const [useGetAgentByUserID] = useLazyQuery(getAgentByUserID);
@@ -69,7 +69,7 @@ const ReceiptScreen = () => {
 
     return (
         // <UserInfoContainer>
-        <View style={styles.receiptScreen}>
+        <View style={styles.ordersScreen}>
             <View style={styles.headerReceipt}>
                 <View style={styles.listCategoriesContainer}>
                     <ScrollView
@@ -119,7 +119,7 @@ const ReceiptScreen = () => {
                                 }
 
                                 return (
-                                    <ReceiptCard
+                                    <OrderCard
                                         key={order.id}
                                         order={order}
                                         distance={dis}
@@ -137,10 +137,10 @@ const ReceiptScreen = () => {
     );
 };
 
-export default ReceiptScreen;
+export default OrdersScreen;
 
 const styles = StyleSheet.create({
-    receiptScreen: {
+    ordersScreen: {
         flex: 1,
         backgroundColor: colors.background,
     },

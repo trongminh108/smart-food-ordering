@@ -8,7 +8,12 @@ import {
     useRegisterMutation,
 } from '../graphql-client/mutations/services';
 
-import { HomeName, LoginName } from '../constants/screen_names';
+import {
+    AgentName,
+    DeliverName,
+    HomeName,
+    LoginName,
+} from '../constants/screen_names';
 
 import {
     EXIST_GMAIL,
@@ -120,7 +125,9 @@ const AuthProvider = ({ children }) => {
                 ToastAndroid.BOTTOM
             );
 
-            navigation.navigate(HomeName);
+            if (user.is_agent) navigation.navigate(AgentName);
+            else if (user.is_deliver) navigation.navigate(DeliverName);
+            else navigation.navigate(HomeName);
             return res;
         }
 

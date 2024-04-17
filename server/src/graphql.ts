@@ -376,6 +376,8 @@ export abstract class IMutation {
 
     abstract removeOrder(id: string): Nullable<Order> | Promise<Nullable<Order>>;
 
+    abstract removeOrderByUserID(id: string): Nullable<Order> | Promise<Nullable<Order>>;
+
     abstract removeAllDataOrder(): string | Promise<string>;
 
     abstract createOrderDetail(createOrderDetailInput: CreateOrderDetailInput): OrderDetail | Promise<OrderDetail>;
@@ -383,6 +385,8 @@ export abstract class IMutation {
     abstract updateOrderDetail(updateOrderDetailInput: UpdateOrderDetailInput): OrderDetail | Promise<OrderDetail>;
 
     abstract removeOrderDetail(id: string): Nullable<OrderDetail> | Promise<Nullable<OrderDetail>>;
+
+    abstract removeOrderDetailsByOrderID(id?: Nullable<string>): Nullable<Nullable<OrderDetail>[]> | Promise<Nullable<Nullable<OrderDetail>[]>>;
 
     abstract removeAllDataOrderDetails(): string | Promise<string>;
 

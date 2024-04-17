@@ -15,7 +15,7 @@ import colors from '../../constants/colors';
 import { useLazyQuery, useSubscription } from '@apollo/client';
 import { getOrdersByUserID } from '../../graphql-client/queries/queries';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
-import ReceiptCard from '../../components/receipt_card/receipt_card';
+import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -37,7 +37,7 @@ const AgentScreen = () => {
 
     useSubscription(pubNewOrder, {
         onData: ({ data }) => {
-            setOrders((prev) => [...prev, data.data.pubNewOrder]);
+            setOrders((prev) => [data.data.pubNewOrder, ...prev]);
             console.log('data 5');
         },
         variables: {
@@ -123,7 +123,7 @@ const AgentScreen = () => {
                                 }
 
                                 return (
-                                    <ReceiptCard
+                                    <OrderCard
                                         key={order.id}
                                         order={order}
                                         distance={dis}

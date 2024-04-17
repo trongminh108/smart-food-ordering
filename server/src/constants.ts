@@ -22,3 +22,9 @@ export function GG_MAP_DISTANCE_MATRIX_API(
 }
 
 const TEST_GG_API = `https://maps.googleapis.com/maps/api/geocode/json?latlng=10.387973895202244,105.42367147467304&location_type=ROOFTOP&key=AIzaSyCizJs78NYhWcXTm4TV00jD8k-JlgSHF3U`;
+
+export const STATUS_DRAFT = 'DRAFT';
+export const STATUS_PENDING = 'PENDING';
+export const STATUS_ACTIVE = 'ACTIVE';
+export const STATUS_SUCCESS = 'SUCCESS';
+export const STATUS_FAILED = 'FAILED';
