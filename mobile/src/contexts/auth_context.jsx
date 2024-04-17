@@ -17,11 +17,17 @@ import {
 } from '../constants/backend';
 
 import { showToast } from '../modules/feature_functions';
+import { useLazyQuery } from '@apollo/client';
+import {
+    getAgentByID,
+    getAgentByUserID,
+} from '../graphql-client/queries/agents';
 
 const TOKEN_KEY = 'jwt_secret_key_sfo';
 const TOKEN = 'token';
 const USER = 'user';
 const USER_INFO = 'user_info';
+const AGENT = 'agent';
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
@@ -40,9 +46,16 @@ const AuthProvider = ({ children }) => {
         const loadToken = async () => {
             const token = await AsyncStorage.getItem(TOKEN);
             const username = await AsyncStorage.getItem(USER);
+            let id_agent = '';
             const user = await JSON.parse(
                 await AsyncStorage.getItem(USER_INFO)
             );
+            if (user?.is_agent) {
+                const { data } = await useGetAgentByUserID({
+                    variables: { agentByUserIdId: user.id },
+                });
+                id_agent = await AsyncStorage.getItem(AGENT);
+            }
             if (token) {
                 setAuthState((prev) => ({
                     ...prev,
@@ -50,6 +63,7 @@ const AuthProvider = ({ children }) => {
                     username: username,
                     authenticated: true,
                     user: user,
+                    id_agent: id_agent,
                 }));
             }
         };
@@ -71,21 +85,34 @@ const AuthProvider = ({ children }) => {
         }
     };
 
+    const [useGetAgentByUserID] = useLazyQuery(getAgentByUserID);
+
     const login = async (username, password) => {
         const res = await loginFunc(username, password);
         if (res.token) {
             const token = res.token;
             const user = res.user;
+            let id_agent = '';
+            if (user.is_agent) {
+                const { data } = await useGetAgentByUserID({
+                    variables: { agentByUserIdId: user.id },
+                });
+                id_agent = data?.agentByUserID.id;
+                await AsyncStorage.setItem(AGENT, id_agent);
+            }
+
             await setAuthState({
                 token: token,
                 user: user,
                 username: user.username,
                 authenticated: true,
+                id_agent: id_agent,
             });
 
             await AsyncStorage.setItem(TOKEN, token);
             await AsyncStorage.setItem(USER, user.username);
             await AsyncStorage.setItem(USER_INFO, JSON.stringify(user));
+            await AsyncStorage.setItem(AGENT, id_agent);
 
             ToastAndroid.showWithGravity(
                 'Đăng nhập thành công',
@@ -111,6 +138,7 @@ const AuthProvider = ({ children }) => {
         await AsyncStorage.removeItem(TOKEN);
         await AsyncStorage.removeItem(USER);
         await AsyncStorage.removeItem(USER_INFO);
+        await AsyncStorage.removeItem(AGENT);
 
         setAuthState({
             token: '',

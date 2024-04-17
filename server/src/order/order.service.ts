@@ -22,6 +22,10 @@ export class OrderService {
     return await this.orderModel.findById(id);
   }
 
+  async findOneCondition(condition = {}) {
+    return await this.orderModel.findOne(condition);
+  }
+
   async update(updateOrderInput: UpdateOrderInput) {
     const { id, ...updateData } = updateOrderInput;
     await this.orderModel.findByIdAndUpdate(id, updateData);
@@ -30,5 +34,9 @@ export class OrderService {
 
   async remove(id: string) {
     return await this.orderModel.findByIdAndDelete(id);
+  }
+
+  async removeAllData() {
+    return await this.orderModel.deleteMany();
   }
 }

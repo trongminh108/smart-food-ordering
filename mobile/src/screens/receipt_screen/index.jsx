@@ -12,39 +12,46 @@ import UserInfoContainer from '../../containers/user_info_container';
 import NotLogin from '../../components/not_login/not_login';
 import { FONT_SIZE } from '../../constants/style';
 import colors from '../../constants/colors';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useSubscription } from '@apollo/client';
 import { getOrdersByUserID } from '../../graphql-client/queries/queries';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
 import ReceiptCard from '../../components/receipt_card/receipt_card';
 import { useMap } from '../../contexts/map_context';
+import { useNavigation } from '@react-navigation/native';
+import {
+    pubNewOrder,
+    pushAllOrders,
+} from '../../graphql-client/subscriptions/orders';
+import { getAgentByUserID } from '../../graphql-client/queries/agents';
 
 const ReceiptScreen = () => {
     const { authState } = useAuth();
     const { distance } = useMap();
+    const [useGetAgentByUserID] = useLazyQuery(getAgentByUserID);
+    const [currentType, setCurrentType] = useState(0);
+    const [orders, setOrders] = useState(null);
+    const navigation = useNavigation();
+
+    const [useGetOrdersByUserID, { data: dataOrders }] =
+        useLazyQuery(getOrdersByUserID);
+    const [idAgent, setIdAgent] = useState(null);
 
     const typesOfReceipt = ['Đang đến', 'Lịch sử', 'Đánh giá', 'Đơn nháp'];
     const statusOrders = ['ACTIVE', 'SUCCESS', 'no', 'PENDING'];
 
-    if (authState.user.is_agent) {
-        typesOfReceipt.unshift('Đơn mới');
-        statusOrders.unshift('NEW_RECEIPT');
-    }
-
-    const [currentType, setCurrentType] = useState(0);
-    const [orders, setOrders] = useState(null);
-
-    const [useGetOrdersByUserID, { data: dataOrders }] =
-        useLazyQuery(getOrdersByUserID);
-
     useEffect(() => {
-        if (authState.authenticated && authState.user.id) {
-            useGetOrdersByUserID({
-                variables: {
-                    ordersByUserIdId: authState.user.id,
-                },
-            });
+        async function getOrdersData() {
+            if (authState.authenticated && authState.user.id) {
+                const { data } = await useGetOrdersByUserID({
+                    variables: {
+                        ordersByUserIdId: authState.user.id,
+                    },
+                });
+                setOrders(data.ordersByUserID);
+            }
         }
-    }, [authState.user.id]);
+        getOrdersData();
+    }, [authState.authenticated]);
 
     useEffect(() => {
         if (dataOrders) {

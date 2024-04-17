@@ -43,6 +43,12 @@ const Tab = createBottomTabNavigator();
 const MainScreen = () => {
     const { authState } = useAuth();
 
+    function handleTabPress(route) {
+        if (route.name === ReceiptName) {
+            console.log('switch to receipt');
+        }
+    }
+
     return (
         <Tab.Navigator
             initialRouteName={HomeName}

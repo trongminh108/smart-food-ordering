@@ -104,3 +104,45 @@ export const showConfirmBox = (yesFunc) => {
         { cancelable: true }
     );
 };
+
+// for add and remove data
+// export const updateCache = (client, { data: { insert_todos } }) => {
+//     const data = client.readQuery({
+//         query: FETCH_TODOS,
+//         variables: {
+//             isPublic,
+//         },
+//     });
+//     const newTodo = insert_todos.returning[0];
+//     const newData = {
+//         todos: [newTodo, ...data.todos],
+//     };
+//     client.writeQuery({
+//         query: FETCH_TODOS,
+//         variables: {
+//             isPublic,
+//         },
+//         data: newData,
+//     });
+// };
+
+// for update data
+// const [todoUpdate] = useMutation(
+//     TOGGLE_TODO,
+//     {
+//       update(cache, { data }) {
+//         const existingTodos : any = cache.readQuery({ query: GET_MY_TODOS });
+//         const newTodos = existingTodos!.todos.map((t:any) => {
+//           if (t.id === todo.id) {
+//             return { ...t, ...data!.update_todos!.returning[0] };
+//           } else {
+//             return t;
+//           }
+//         });
+//         cache.writeQuery({
+//           query: GET_MY_TODOS,
+//           data: {todos: newTodos}
+//         });
+//       }
+//     }
+//   );

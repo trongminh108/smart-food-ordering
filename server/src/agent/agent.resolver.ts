@@ -21,6 +21,11 @@ export class AgentResolver {
     return this.agentService.findOne(id);
   }
 
+  @Query('agentByUserID')
+  async agentByUserID(@Args('id') id: string) {
+    return await this.agentService.findOneByUserID(id);
+  }
+
   @Mutation('updateAgent')
   update(@Args('updateAgentInput') updateAgentInput: UpdateAgentInput) {
     return this.agentService.update(updateAgentInput);

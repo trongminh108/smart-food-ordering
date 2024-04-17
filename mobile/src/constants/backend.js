@@ -1,3 +1,4 @@
+export const BACKEND_SUB = '192.168.1.9:4000';
 export const BACKEND_URL = 'http://192.168.1.9:4000';
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';
 

@@ -22,6 +22,10 @@ export class AgentService {
     return await this.agentModel.findById(id);
   }
 
+  async findOneByUserID(id: string) {
+    return await this.agentModel.findOne({ id_user: id });
+  }
+
   async update(updateAgentInput: UpdateAgentInput) {
     const { id, ...updateData } = updateAgentInput;
     await this.agentModel.findByIdAndUpdate(id, updateData);

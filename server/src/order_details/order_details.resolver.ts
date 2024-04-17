@@ -53,6 +53,16 @@ export class OrderDetailsResolver {
     return this.orderDetailsService.remove(id);
   }
 
+  @Mutation('removeAllDataOrderDetails')
+  async removeAll() {
+    try {
+      this.orderDetailsService.removeAllData();
+      return 'Deleted all Data in OrderDetails Table';
+    } catch (error) {
+      return 'Deleted error';
+    }
+  }
+
   @ResolveField('product')
   async product(@Parent() orderDetails) {
     return await this.productService.findOne(orderDetails.id_product);

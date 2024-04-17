@@ -5,8 +5,31 @@ export const addOrder = gql`
         createOrder(createOrderInput: $createOrderInput) {
             id
             id_agent
+            agent {
+                id
+                name
+                images
+                address
+                rating
+            }
             id_deliver
             id_user
+            recipient
+            user {
+                full_name
+                current_address
+                phone_number
+            }
+            order_details {
+                quantity
+                discount
+                subtotal
+                product {
+                    name
+                    images
+                }
+            }
+            phone_number
             address
             distance
             delivery_fee
@@ -23,8 +46,31 @@ export const updateOrder = gql`
         updateOrder(updateOrderInput: $updateOrderInput) {
             id
             id_agent
+            agent {
+                id
+                name
+                images
+                address
+                rating
+            }
             id_deliver
             id_user
+            recipient
+            user {
+                full_name
+                current_address
+                phone_number
+            }
+            order_details {
+                quantity
+                discount
+                subtotal
+                product {
+                    name
+                    images
+                }
+            }
+            phone_number
             address
             distance
             delivery_fee

@@ -18,6 +18,7 @@ import { PubSub } from 'graphql-subscriptions';
 export class OrderResolver {
   pubSub: PubSub = new PubSub();
   PUSH_INFO_ORDER = 'PUSH_INFO_ORDER';
+  PUB_NEW_ORDER = 'PUB_NEW_ORDER';
   constructor(
     private readonly orderService: OrderService,
     private readonly agentService: AgentService,
@@ -26,15 +27,14 @@ export class OrderResolver {
   ) {}
 
   @Mutation('createOrder')
-  create(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
-    return this.orderService.create(createOrderInput);
+  async create(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
+    const newOrder = await this.orderService.create(createOrderInput);
+    this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: newOrder });
+    return newOrder;
   }
 
   @Query('orders')
   findAll() {
-    this.pubSub.publish(this.PUSH_INFO_ORDER, {
-      pubInfoOrder: 'Get all orders',
-    });
     return this.orderService.findAll();
   }
 
@@ -48,6 +48,11 @@ export class OrderResolver {
     return this.orderService.findAll({ id_user: id });
   }
 
+  @Query('ordersByAgentID')
+  ordersByAgentID(@Args('id') id: string) {
+    return this.orderService.findAll({ id_agent: id });
+  }
+
   @Mutation('updateOrder')
   update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
     return this.orderService.update(updateOrderInput);
@@ -56,6 +61,16 @@ export class OrderResolver {
   @Mutation('removeOrder')
   remove(@Args('id') id: string) {
     return this.orderService.remove(id);
+  }
+
+  @Mutation('removeAllDataOrder')
+  async removeAllData() {
+    try {
+      await this.orderService.removeAllData();
+      return 'Deleted all data in Order Table';
+    } catch (error) {
+      return 'Deleted Error';
+    }
   }
 
   @ResolveField('agent')
@@ -76,5 +91,17 @@ export class OrderResolver {
   @Subscription('pubInfoOrder')
   helloFunc() {
     return this.pubSub.asyncIterator(this.PUSH_INFO_ORDER);
+  }
+
+  @Subscription('pubNewOrder', {
+    filter(payload, variables, context) {
+      return (
+        payload.pubNewOrder.id_agent === variables.id_agent &&
+        payload.pubNewOrder.status === 'ACTIVE'
+      );
+    },
+  })
+  pubNewOrder() {
+    return this.pubSub.asyncIterator(this.PUB_NEW_ORDER);
   }
 }

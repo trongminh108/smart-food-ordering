@@ -32,4 +32,8 @@ export class OrderDetailsService {
   async remove(id: string) {
     return await this.orderDetailsModel.findByIdAndDelete(id);
   }
+
+  async removeAllData() {
+    return await this.orderDetailsModel.deleteMany();
+  }
 }

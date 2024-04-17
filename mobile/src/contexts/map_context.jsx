@@ -27,7 +27,6 @@ const MapProvider = ({ children }) => {
                     location: origins,
                 },
             });
-            setAddress('Đang xác định');
         }
     }, [origins]);
 

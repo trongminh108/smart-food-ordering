@@ -270,6 +270,8 @@ export abstract class IQuery {
 
     abstract agent(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
 
+    abstract agentByUserID(id: string): Nullable<Agent> | Promise<Nullable<Agent>>;
+
     abstract categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
 
     abstract category(id: string): Nullable<Category> | Promise<Nullable<Category>>;
@@ -295,6 +297,8 @@ export abstract class IQuery {
     abstract order(id: string): Nullable<Order> | Promise<Nullable<Order>>;
 
     abstract ordersByUserID(id: string): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
+
+    abstract ordersByAgentID(id: string): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
 
     abstract orderDetails(): Nullable<OrderDetail>[] | Promise<Nullable<OrderDetail>[]>;
 
@@ -372,11 +376,15 @@ export abstract class IMutation {
 
     abstract removeOrder(id: string): Nullable<Order> | Promise<Nullable<Order>>;
 
+    abstract removeAllDataOrder(): string | Promise<string>;
+
     abstract createOrderDetail(createOrderDetailInput: CreateOrderDetailInput): OrderDetail | Promise<OrderDetail>;
 
     abstract updateOrderDetail(updateOrderDetailInput: UpdateOrderDetailInput): OrderDetail | Promise<OrderDetail>;
 
     abstract removeOrderDetail(id: string): Nullable<OrderDetail> | Promise<Nullable<OrderDetail>>;
+
+    abstract removeAllDataOrderDetails(): string | Promise<string>;
 
     abstract createPaymentDetail(createPaymentDetailInput: CreatePaymentDetailInput): PaymentDetail | Promise<PaymentDetail>;
 
@@ -490,6 +498,8 @@ export abstract class ISubscription {
     __typename?: 'ISubscription';
 
     abstract pubInfoOrder(): string | Promise<string>;
+
+    abstract pubNewOrder(id_agent: string): Nullable<Order> | Promise<Nullable<Order>>;
 }
 
 export class OrderDetail {

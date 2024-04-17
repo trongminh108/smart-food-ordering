@@ -39,4 +39,5 @@ type Mutation {
     updateOrderDetailInput: UpdateOrderDetailInput!
   ): OrderDetail!
   removeOrderDetail(id: ID!): OrderDetail
+  removeAllDataOrderDetails: String!
 }

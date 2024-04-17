@@ -39,6 +39,7 @@ input UpdateAgentInput {
 type Query {
   agents: [Agent]!
   agent(id: ID!): Agent
+  agentByUserID(id: ID!): Agent
 }
 
 type Mutation {

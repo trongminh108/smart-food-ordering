@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
     addOrderDetails,
     addOrder,
@@ -6,6 +6,8 @@ import {
     registerUser,
     updateOrder,
 } from './mutations';
+import { getOrdersByUserID } from '../queries/orders';
+import { getAgentByID, getAllAgents } from '../queries/agents';
 
 export function useAddOrderDetailsMutation() {
     const [createOrderDetails] = useMutation(addOrderDetails);
@@ -36,6 +38,7 @@ export function useAddOrderMutation() {
                 variables: {
                     createOrderInput: order,
                 },
+                update: updateCacheOrder,
             });
             return data.createOrder;
         } catch (error) {
@@ -106,3 +109,28 @@ export function useUpdateOrderMutation() {
     }
     return handleUpdateOrder;
 }
+
+const updateCacheOrder = async (cache, { data: { createOrder } }) => {
+    // console.log(createOrder);
+    if (createOrder.id_user) {
+        const data = await cache.readQuery({
+            query: getOrdersByUserID,
+            variables: {
+                ordersByUserIdId: createOrder.id_user,
+            },
+        });
+        if (data) {
+            const newData = {
+                ordersByUserID: [createOrder, ...data?.ordersByUserID],
+            };
+            await cache.writeQuery({
+                query: getOrdersByUserID,
+                variables: {
+                    ordersByUserIdId: createOrder.id_user,
+                },
+                data: newData,
+            });
+            console.log('In data cache: ', newData);
+        }
+    }
+};

@@ -24,6 +24,7 @@ import { useMap } from '../../contexts/map_context';
 import { Ionicons } from '@expo/vector-icons';
 import { ICON_SIZE_MID } from '../../constants/style';
 import UserInfoContainer from '../../containers/user_info_container';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
