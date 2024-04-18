@@ -130,7 +130,7 @@ const updateCacheOrder = async (cache, { data: { createOrder } }) => {
                 },
                 data: newData,
             });
-            console.log('In data cache: ', newData);
+            // console.log('In data cache: ', newData);
         }
     }
 };

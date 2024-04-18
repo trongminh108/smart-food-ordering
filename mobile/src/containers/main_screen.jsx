@@ -49,6 +49,8 @@ const MainScreen = () => {
     else if (authState?.authenticated && authState?.user.is_deliver)
         initRoute = DeliverName;
 
+    //set map here
+
     return (
         <Tab.Navigator
             initialRouteName={initRoute}

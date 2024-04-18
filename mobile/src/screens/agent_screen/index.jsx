@@ -45,7 +45,7 @@ const AgentScreen = () => {
         },
     });
 
-    console.log(authState?.id_agent);
+    // console.log(authState?.id_agent);
 
     useEffect(() => {
         async function getOrdersData() {
