@@ -23,7 +23,8 @@ export class AgentService {
   }
 
   async findOneByUserID(id: string) {
-    return await this.agentModel.findOne({ id_user: id });
+    const res = await this.agentModel.findOne({ id_user: id });
+    return res || null;
   }
 
   async update(updateAgentInput: UpdateAgentInput) {

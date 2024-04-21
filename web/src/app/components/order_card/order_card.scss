@@ -1,0 +1,13 @@
+@use '@/assets/scss/constants/variables' as vars;
+@use '@/assets/scss/constants/colors' as colors;
+
+.cardOrderContainer {
+    border-radius: 16;
+    overflow: hidden;
+    background-color: colors.$white;
+
+    &:hover {
+        background-color: rgb(206, 206, 206);
+        cursor: pointer;
+    }
+}

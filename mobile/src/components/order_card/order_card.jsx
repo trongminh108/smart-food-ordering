@@ -10,6 +10,7 @@ import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 import {
+    convertDateTimeToUTC7,
     displayDuration,
     formatCurrency,
 } from '../../modules/feature_functions';
@@ -17,6 +18,7 @@ import { OrderConfirmationName } from '../../constants/screen_names';
 import {
     BACKEND_IMAGES,
     STATUS_ACTIVE,
+    STATUS_DRAFT,
     STATUS_PENDING,
 } from '../../constants/backend';
 import { displayDistance } from '../../modules/feature_functions';
@@ -29,11 +31,12 @@ const OrderCard = ({ order, distance, duration, status }) => {
 
     const navigation = useNavigation();
     function handlePressOrderCard() {
-        if (status === STATUS_PENDING)
+        if (status === STATUS_DRAFT)
             navigation.navigate(OrderConfirmationName, {
                 order: order,
                 distance: distance,
                 duration: duration,
+                is_draft: true,
             });
         else if (status === STATUS_ACTIVE) alert('Đơn hàng đang được giao');
         else alert(status);

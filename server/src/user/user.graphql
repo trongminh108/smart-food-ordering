@@ -10,6 +10,7 @@ type User {
   delivery_address: String
   position: [Float]
   is_agent: Boolean
+  agent: Agent
   is_deliver: Boolean
   face_recognition: String
 }

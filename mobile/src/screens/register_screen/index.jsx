@@ -44,6 +44,11 @@ const RegisterScreen = () => {
                 }}
                 showsVerticalScrollIndicator={false}
             >
+                <View style={{ marginBottom: 16 }}>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                        Đăng ký
+                    </Text>
+                </View>
                 <View style={styles.ImageContainer}>
                     <Image
                         source={require('../../../assets/images/products/water.jpg')}

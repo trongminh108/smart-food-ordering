@@ -1,20 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { STATUS_DRAFT } from 'src/constants';
 
-@Schema({ collection: 'ORDERS' })
+@Schema({ collection: 'ORDERS', timestamps: true })
 export class ORDER {
-  @Prop({ default: '' })
+  @Prop({ default: null })
   id_agent: string;
-  @Prop({ default: '' })
+  @Prop({ default: null })
   id_deliver: string;
-  @Prop({ default: '' })
+  @Prop({ default: null })
   id_user: string;
 
-  @Prop({ default: '' })
+  @Prop({ default: null })
   recipient: string;
 
-  @Prop({ default: '' })
+  @Prop({ default: null })
   phone_number: string;
-  @Prop({ default: '' })
+
+  @Prop({ default: null })
+  position: number[];
+
+  @Prop({ default: null })
   address: string;
   //km, display m if km < 1
   @Prop({ default: null })
@@ -27,7 +32,14 @@ export class ORDER {
   total_quantity: number;
   @Prop({ default: 0 })
   total_price: number;
-  @Prop({ default: 'PENDING' })
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt: Date;
+
+  @Prop({ default: STATUS_DRAFT })
   status: string;
 }
 

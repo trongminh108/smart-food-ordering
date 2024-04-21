@@ -1,0 +1,34 @@
+@use '@/assets/scss/constants/variables' as vars;
+
+.leftSidebarContainer {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    background-color: vars.$bg-secondary;
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+
+    .btnManage {
+        width: 90%;
+        height: 3rem;
+        background-color: vars.$bg-primary;
+        margin-bottom: 1rem;
+        border-radius: 3rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 2rem;
+        text-decoration: none;
+        color: white;
+
+        &.active {
+            background-color: white;
+            color: vars.$bg-primary;
+            font-weight: 600;
+        }
+        &:hover {
+            background-color: rgb(128, 128, 128) !important;
+        }
+    }
+}

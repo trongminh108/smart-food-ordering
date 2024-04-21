@@ -1,0 +1,82 @@
+@use '@/assets/scss/constants/variables' as vars;
+
+$nav-height: 55px;
+$ni-width: 100px;
+$ni-height: 40px;
+$ni-radius: 20px;
+
+.nav {
+    height: $nav-height;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 10;
+
+    &.sticky {
+        width: 100%;
+        position: fixed;
+        top: 0;
+    }
+
+    &.sticky + * {
+        // padding-top: $nav-height;
+        margin-top: $nav-height;
+    }
+
+    .navItems {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.i1 {
+            width: 50%;
+            display: flex;
+            justify-content: start;
+            position: relative;
+            gap: 1rem;
+
+            .navBackground {
+                position: absolute;
+                width: $ni-width;
+                height: $ni-height;
+                background-color: vars.$primary-color;
+                border-radius: $ni-radius;
+                left: 0;
+                transition: left 0.4s ease-in;
+            }
+        }
+
+        &.i2 {
+            width: 50%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nItem {
+            width: $ni-width;
+            height: $ni-height;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            border-radius: $ni-radius;
+            background-color: transparent;
+            z-index: 1;
+            transition: font-size 0.3s ease;
+
+            &:hover {
+                cursor: pointer;
+                font-size: 18px;
+            }
+
+            &:active {
+                & ~ .navBackground {
+                    background-color: darkgreen;
+                }
+            }
+        }
+    }
+}

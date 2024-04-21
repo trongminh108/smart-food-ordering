@@ -1,0 +1,32 @@
+@use '@/assets/scss/constants/variables' as vars;
+@use '@/assets/scss/constants/mixins' as mxs;
+
+.sign-in-container {
+    background-color: vars.$background-color;
+    @include mxs.centerFlex;
+    flex-direction: column;
+    padding: 2rem;
+
+    & .title {
+        background-color: vars.$primary-color;
+        color: vars.$white;
+        @include mxs.centerFlex;
+        font-size: 3rem;
+        width: 30%;
+        border-radius: 1rem;
+        margin: 3rem;
+    }
+
+    & .form-container {
+        background-color: vars.$third-color;
+        border-radius: 1rem;
+        padding: 2rem;
+        width: 60%;
+
+        & .btn-submit {
+            background-color: vars.$primary-color;
+            float: right;
+            padding: 0.5rem 2rem;
+        }
+    }
+}

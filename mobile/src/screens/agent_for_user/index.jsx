@@ -30,8 +30,12 @@ import { getAllCategories } from '../../graphql-client/queries/categories';
 import {
     useAddOrderDetailsMutation,
     useAddOrderMutation,
+    useUpdateOrderMutation,
 } from '../../graphql-client/mutations/services';
 import { useAuth } from '../../contexts/auth_context';
+import { useMap } from '../../contexts/map_context';
+import { getDistanceDuration } from '../../modules/feature_functions';
+import { OrderConfirmationName } from '../../constants/screen_names';
 
 const AgentForUser = ({ route }) => {
     const { agent, id_product, id_category, price } = route?.params || {};
@@ -48,6 +52,7 @@ const AgentForUser = ({ route }) => {
     const [isBlur, setIsBlur] = useState(false);
     const { authState } = useAuth();
     const imagePath = BACKEND_IMAGES + agent.images[0];
+    const { distance } = useMap();
 
     const productsData = responseProducts?.products || null;
     const categoriesData = responseCategories?.categories || null;
@@ -83,9 +88,12 @@ const AgentForUser = ({ route }) => {
     const navigation = useNavigation();
     const AddOrderDetailsFunc = useAddOrderDetailsMutation();
     const AddOrderFunc = useAddOrderMutation();
+    const UpdateOrderFunc = useUpdateOrderMutation();
+
+    let is_blur = true;
 
     async function handleSaveDraftOrder() {
-        if (authState.authenticated && orderDetails.length != 0) {
+        if (authState.authenticated && orderDetails.length != 0 && is_blur) {
             const quantity = orderDetails.reduce(
                 (acc, detail) => acc + detail.quantity,
                 0
@@ -103,14 +111,20 @@ const AgentForUser = ({ route }) => {
                 total_price: total,
                 status: STATUS_DRAFT,
             });
-            orderDetails.map(async (detail) => {
-                await AddOrderDetailsFunc({
-                    id_order: responseOrder.id,
-                    id_product: detail.id_product,
-                    quantity: detail.quantity,
-                    discount: 0,
-                    subtotal: detail.subtotal,
-                });
+            const responseOrderDetails = await orderDetails.map(
+                async (detail) => {
+                    await AddOrderDetailsFunc({
+                        id_order: responseOrder.id,
+                        id_product: detail.id_product,
+                        quantity: detail.quantity,
+                        discount: 0,
+                        subtotal: detail.subtotal,
+                    });
+                }
+            );
+            await UpdateOrderFunc({
+                id: responseOrder.id,
+                name: responseOrder.name,
             });
 
             ToastAndroid.showWithGravity(
@@ -148,6 +162,57 @@ const AgentForUser = ({ route }) => {
 
     function handlePressCate(id_cate) {
         setSelectedCate(id_cate);
+    }
+
+    function handlePressOrderProducts() {
+        is_blur = false;
+
+        const quantity = orderDetails.reduce(
+            (acc, detail) => acc + detail.quantity,
+            0
+        );
+
+        const total = orderDetails.reduce(
+            (acc, detail) => acc + detail.subtotal,
+            0
+        );
+
+        const order = {
+            id_agent: agent.id,
+            id_user: authState?.user?.id || null,
+            total_quantity: quantity,
+            total_price: total,
+            status: STATUS_DRAFT,
+            order_details: [
+                ...orderDetails.map((detail) => {
+                    const product = productsOfAgent.find(
+                        (product) => product.id === detail.id_product
+                    );
+
+                    return {
+                        id_order: '',
+                        id_product: detail.id_product,
+                        product: product,
+                        quantity: detail.quantity,
+                        discount: 0,
+                        subtotal: detail.subtotal,
+                    };
+                }),
+            ],
+        };
+        const tmp = getDistanceDuration(distance, agent.id);
+        const dis = tmp[0];
+        const dur = tmp[1];
+
+        navigation.navigate(OrderConfirmationName, {
+            order: order,
+            distance: dis,
+            duration: dur,
+            is_draft: false,
+        });
+
+        setOrderDetails([]);
+        setIsBlur((prev) => !prev);
     }
 
     function handlePressAddProduct(product, quantity) {
@@ -270,7 +335,11 @@ const AgentForUser = ({ route }) => {
                 </ScrollView>
             </View>
             {/* Order Product */}
-            <OrderProducts orderDetails={orderDetails} />
+
+            <OrderProducts
+                orderDetails={orderDetails}
+                onPress={handlePressOrderProducts}
+            />
         </View>
     );
 };

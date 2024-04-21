@@ -1,3 +1,6 @@
+scalar DateTime
+scalar Date
+
 type Order {
   id: ID!
   id_agent: ID
@@ -8,12 +11,15 @@ type Order {
   order_details: [OrderDetail]
   user: User
   phone_number: String
+  position: [Float]
   address: String
   distance: Float
   delivery_fee: Float
   discount: Float
   total_quantity: Int
   total_price: Float
+  createdAt: DateTime
+  updatedAt: DateTime
   status: String
 }
 
@@ -23,6 +29,7 @@ input CreateOrderInput {
   id_user: ID
   recipient: String
   phone_number: String
+  position: [Float]
   address: String
   distance: Float
   delivery_fee: Float
@@ -39,6 +46,7 @@ input UpdateOrderInput {
   id_user: ID
   recipient: String
   phone_number: String
+  position: [Float]
   address: String
   distance: Float
   delivery_fee: Float

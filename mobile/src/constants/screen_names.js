@@ -11,3 +11,4 @@ export const OrderName = 'Order';
 export const FavoriteName = 'Favorite';
 export const AgentName = 'Agent';
 export const DeliverName = 'Deliver';
+export const FaceRecognitionName = 'FaceRecognition';

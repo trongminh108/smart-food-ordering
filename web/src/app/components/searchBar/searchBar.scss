@@ -1,0 +1,92 @@
+@use '@/assets/scss/constants/variables' as vars;
+
+.searchBar {
+    position: relative;
+    margin-right: 20px;
+    min-width: vars.$ni-height;
+    height: vars.$ni-height;
+    overflow: visible;
+    display: flex;
+    justify-content: flex-end;
+
+    .searchInput {
+        width: calc(vars.$ni-height / vars.$di);
+        height: calc(vars.$ni-height / vars.$di);
+        background-color: white;
+        border: 2px solid vars.$primary-color;
+        outline: none;
+        border-radius: vars.$ni-radius;
+        transition: width 0.5s ease, height 0.5s ease;
+        padding-left: 20px;
+        font-size: 16px;
+        margin-right: calc(vars.$ni-height - (vars.$ni-height/vars.$di));
+        cursor: pointer;
+
+        &::placeholder {
+            opacity: 0;
+            transition: opacity 0.3s ease-out 0.1s;
+        }
+
+        &:focus {
+            width: calc(vars.$ni-height * vars.$mw);
+            height: vars.$ni-height;
+
+            &::placeholder {
+                opacity: 1;
+            }
+        }
+
+        &:focus + .btnClear,
+        &:not(:placeholder-shown) + .btnClear {
+            top: 47%;
+            left: 92%;
+
+            &::before,
+            &::after {
+                height: 20px;
+            }
+        }
+
+        &:focus + .btnClear::after,
+        &:not(:placeholder-shown) + .btnClear::after {
+            transform: rotate(90deg);
+        }
+
+        &:not(:placeholder-shown) {
+            width: calc(vars.$ni-height * vars.$mw);
+            height: vars.$ni-height;
+        }
+    }
+
+    .btnClear {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        cursor: pointer;
+        left: 82%;
+        top: 82%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        transition: top 0.5s ease, left 0.5s ease;
+
+        &::before,
+        &::after {
+            content: '';
+            width: 0px;
+            height: 15px;
+            display: block;
+            border-radius: 3px;
+            border: 1px solid vars.$primary-color;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        &::before {
+            transition: transform 0.2s ease-out, height 0.2s ease-out;
+        }
+
+        &::after {
+            transition: transform 0.2s ease-out 0.3s, height 0.2s ease-out;
+        }
+    }
+}

@@ -100,6 +100,7 @@ export class CreateOrderInput {
     id_user?: Nullable<string>;
     recipient?: Nullable<string>;
     phone_number?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
@@ -116,6 +117,7 @@ export class UpdateOrderInput {
     id_user?: Nullable<string>;
     recipient?: Nullable<string>;
     phone_number?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
@@ -489,12 +491,15 @@ export class Order {
     order_details?: Nullable<Nullable<OrderDetail>[]>;
     user?: Nullable<User>;
     phone_number?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
     address?: Nullable<string>;
     distance?: Nullable<number>;
     delivery_fee?: Nullable<number>;
     discount?: Nullable<number>;
     total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
     status?: Nullable<string>;
 }
 
@@ -553,6 +558,7 @@ export class User {
     delivery_address?: Nullable<string>;
     position?: Nullable<Nullable<number>[]>;
     is_agent?: Nullable<boolean>;
+    agent?: Nullable<Agent>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
 }
@@ -578,4 +584,5 @@ export class VouchersProduct {
     id_product?: Nullable<string>;
 }
 
+export type DateTime = any;
 type Nullable<T> = T | null;

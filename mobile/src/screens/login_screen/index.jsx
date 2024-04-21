@@ -13,7 +13,10 @@ import colors from '../../constants/colors';
 import { ICON_SIZE_BIG } from '../../constants/style';
 import { useAuth } from '../../contexts/auth_context';
 import { useNavigation } from '@react-navigation/native';
-import { RegisterName } from '../../constants/screen_names';
+import {
+    FaceRecognitionName,
+    RegisterName,
+} from '../../constants/screen_names';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
@@ -33,6 +36,10 @@ const LoginScreen = () => {
 
     function handlePressLoginWithGG() {}
 
+    function handlePressLoginWithFaceID() {
+        navigation.navigate(FaceRecognitionName);
+    }
+
     return (
         <View style={styles.LoginScreenContainer}>
             <ScrollView
@@ -43,6 +50,11 @@ const LoginScreen = () => {
                 }}
                 showsVerticalScrollIndicator={false}
             >
+                <View style={{ marginBottom: 16 }}>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                        Đăng nhập
+                    </Text>
+                </View>
                 <View style={styles.ImageContainer}>
                     <Image
                         source={require('../../../assets/images/products/cf.jpg')}
@@ -87,7 +99,7 @@ const LoginScreen = () => {
                 </View>
                 <View style={styles.orderLogin}>
                     <Text> - Hoặc đăng nhập với - </Text>
-                    <View>
+                    <View style={{ flexDirection: 'row', gap: 16 }}>
                         <TouchableHighlight
                             style={styles.buttonLoginWithGG}
                             onPress={handlePressLoginWithGG}
@@ -96,6 +108,19 @@ const LoginScreen = () => {
                             <Image
                                 source={require('../../../assets/images/gg.png')}
                                 style={styles.imageStyle}
+                            />
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            style={[
+                                styles.buttonLoginWithGG,
+                                { borderWidth: 1, borderColor: colors.primary },
+                            ]}
+                            onPress={handlePressLoginWithFaceID}
+                            underlayColor={colors.primary_hover}
+                        >
+                            <Image
+                                source={require('../../../assets/images/face_recognition.png')}
+                                style={[styles.imageStyle]}
                             />
                         </TouchableHighlight>
                     </View>

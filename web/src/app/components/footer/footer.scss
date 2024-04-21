@@ -1,0 +1,34 @@
+@use '@/assets/scss/constants/variables' as vars;
+@use '@/assets/scss/constants/mixins' as mxs;
+
+.footer {
+    width: 100%;
+    height: vars.$hf-height;
+    background-color: vars.$bg-primary;
+
+    & .logoText {
+        gap: 1rem;
+        justify-content: center;
+
+        & .logoFooter {
+            background-color: vars.$background-color;
+            border-radius: 2rem;
+        }
+    }
+
+    & .contactsFooter {
+        gap: 0.5rem;
+
+        & .contact {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        & .contactIcon {
+            & * {
+                @include mxs.hover-transition-color();
+            }
+        }
+    }
+}

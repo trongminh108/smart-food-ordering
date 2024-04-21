@@ -18,26 +18,32 @@ import LoadingScreen from '../../components/loading_screen/loading_screen';
 import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { useNavigation } from '@react-navigation/native';
-import {
-    pubNewOrder,
-    pushAllOrders,
-} from '../../graphql-client/subscriptions/orders';
+import { pubNewOrder } from '../../graphql-client/subscriptions/orders';
 import { getAgentByUserID } from '../../graphql-client/queries/agents';
+import {
+    STATUS_ACTIVE,
+    STATUS_DRAFT,
+    STATUS_PENDING,
+    STATUS_SUCCESS,
+} from '../../constants/backend';
 
 const OrdersScreen = () => {
     const { authState } = useAuth();
     const { distance } = useMap();
-    const [useGetAgentByUserID] = useLazyQuery(getAgentByUserID);
     const [currentType, setCurrentType] = useState(0);
     const [orders, setOrders] = useState(null);
-    const navigation = useNavigation();
 
     const [useGetOrdersByUserID, { data: dataOrders }] =
         useLazyQuery(getOrdersByUserID);
-    const [idAgent, setIdAgent] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const typesOfReceipt = ['Đang đến', 'Lịch sử', 'Đánh giá', 'Đơn nháp'];
-    const statusOrders = ['ACTIVE', 'SUCCESS', 'no', 'PENDING'];
+    const typesOfReceipt = ['Đang đến', 'Lịch sử', 'Đang duyệt', 'Đơn nháp'];
+    const statusOrders = [
+        STATUS_ACTIVE,
+        STATUS_SUCCESS,
+        STATUS_PENDING,
+        STATUS_DRAFT,
+    ];
 
     useEffect(() => {
         async function getOrdersData() {
@@ -47,16 +53,14 @@ const OrdersScreen = () => {
                         ordersByUserIdId: authState.user.id,
                     },
                 });
-                setOrders(data.ordersByUserID);
+                setIsLoading(false);
             }
         }
         getOrdersData();
     }, [authState.authenticated]);
 
     useEffect(() => {
-        if (dataOrders) {
-            setOrders(dataOrders.ordersByUserID);
-        }
+        setOrders(dataOrders?.ordersByUserID || []);
     }, [dataOrders]);
 
     function handlePressTypeReceipt(index) {
@@ -65,7 +69,7 @@ const OrdersScreen = () => {
 
     if (!authState.authenticated) return <NotLogin />;
 
-    if (!orders) return <LoadingScreen message={'Đang tải hóa đơn'} />;
+    if (isLoading) return <LoadingScreen message={'Đang tải hóa đơn'} />;
 
     return (
         // <UserInfoContainer>
@@ -107,7 +111,9 @@ const OrdersScreen = () => {
                             if (statusOrders[currentType] === order.status) {
                                 let dis = -1;
                                 let dura = -1;
-                                if (statusOrders[currentType] === 'PENDING') {
+                                if (
+                                    statusOrders[currentType] === STATUS_DRAFT
+                                ) {
                                     if (distance.value.length != 0) {
                                         const tmp = distance.value.find(
                                             (ag) =>

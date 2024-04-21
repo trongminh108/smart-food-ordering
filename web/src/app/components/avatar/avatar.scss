@@ -1,0 +1,95 @@
+// @import '@/assets/scss/constants/variables';
+@use '@/assets/scss/constants/variables' as vars;
+
+.container-avatar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    & .btn-signin {
+        background-color: vars.$primary-color;
+        padding: 0.5rem;
+        border-radius: 5rem;
+
+        &:hover {
+            background-color: vars.$primary-color-hover;
+        }
+    }
+
+    .avatarImage {
+        width: vars.$ni-height;
+        height: vars.$ni-height;
+        background-color: white;
+        border: 2px solid vars.$primary-color;
+        border-radius: 25px;
+        // background-image: url('../../../app/favicon.ico');
+        background-size: contain;
+        transition: transform 0.2s ease;
+        position: relative;
+
+        &:hover {
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+    }
+
+    .options-avatar {
+        width: 150px;
+        height: 0;
+        background-color: white;
+        position: absolute;
+        border: none;
+        outline: none;
+        top: 60px;
+        left: -35px;
+        border-radius: 10px 0 10px 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease, height 0.3s ease;
+        z-index: 10;
+
+        &::before {
+            content: '';
+            position: absolute;
+            outline: none;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 15px solid white;
+            right: 0;
+            transform: translateY(-99%);
+        }
+
+        .option {
+            width: 100%;
+            height: 0px;
+            color: black;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: height 0.3s ease, font-weight 0.2s ease,
+                font-size 0.2s ease;
+            user-select: none;
+
+            &:hover {
+                cursor: pointer;
+                font-size: 17px;
+                font-weight: 600;
+            }
+
+            &:not(:last-child) {
+                border-bottom: 1px solid vars.$primary-color;
+            }
+        }
+
+        &.visible {
+            opacity: 1;
+            height: 150px;
+
+            .option {
+                height: 50px;
+                display: flex;
+            }
+        }
+    }
+}

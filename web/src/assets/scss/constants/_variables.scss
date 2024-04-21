@@ -1,0 +1,47 @@
+//@use '@/assets/scss/constants/variables' as vars;
+
+/*======================COLORS======================*/
+$white: white;
+
+/*======================THEME COLOR======================*/
+$primary-color: #2ecc71;
+$primary-color-hover: #208e4e;
+$secondary-color: aqua;
+$third-color: royalblue;
+$background-color: #1d2a35;
+$bg-primary: #181818;
+$bg-secondary: #222222;
+
+/*======================HEADER FOOTER======================*/
+$hf-height: 150px;
+$hf-background: aqua;
+
+/*======================NAVIGATION BAR======================*/
+$nav-height: 55px;
+$ni-width: 100px;
+$ni-height: 40px;
+$ni-radius: 20px;
+
+/*======================SEARCH BAR======================*/
+$di: 1.2;
+$mw: 10;
+
+/*======================POSTER FILM======================*/
+$desktop-wh: 6.5px;
+$tablet-wh: 6.5px;
+$mobile-wh: 4.5px;
+
+$dp-wh: 3px;
+$pf-radius: 15px;
+
+$w-ratio: 27;
+$h-ratio: 40;
+
+/*======================FILMS CONTAINER======================*/
+$d-filmsPerView: 4;
+$t-filmsPerView: 3;
+$m-filmsPerView: 2;
+
+/*======================PAGINATION======================*/
+$btnPage-hover: #b3b300;
+$disabled-color: gray;

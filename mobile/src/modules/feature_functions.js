@@ -146,3 +146,40 @@ export const showConfirmBox = (yesFunc) => {
 //       }
 //     }
 //   );
+
+export const getDistanceDuration = (distance, id_agent) => {
+    let dis = -1;
+    let dur = -1;
+    if (distance.value.length != 0) {
+        try {
+            const tmp = distance?.value?.find(
+                (ag) => ag?.id_agent === id_agent
+            );
+            return [tmp.distance, tmp.duration];
+        } catch (error) {}
+    }
+    return [dis, dur];
+};
+
+export function convertDateTimeToUTC7(inputDateTimeString) {
+    const inputDate = new Date(inputDateTimeString);
+    const utc7Date = new Date(inputDate.getTime() + 7 * 60 * 60 * 1000);
+
+    const day = utc7Date.getDate().toString().padStart(2, '0');
+    const month = (utc7Date.getMonth() + 1).toString().padStart(2, '0');
+    const year = utc7Date.getFullYear();
+    const hours = utc7Date.getUTCHours().toString().padStart(2, '0');
+    const minutes = utc7Date.getMinutes().toString().padStart(2, '0');
+    const seconds = utc7Date.getSeconds().toString().padStart(2, '0');
+
+    const formattedDate = `${day}-${month}-${year}`;
+    const formattedTime = `${hours}:${minutes}:${seconds} UTC+7`;
+
+    return [formattedDate, formattedTime];
+}
+
+export function isValidPhoneNumber(phoneNumber) {
+    const regex = /^\d{10}$/;
+    if (phoneNumber.match(regex)) return true;
+    return false;
+}

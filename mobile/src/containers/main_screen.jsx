@@ -26,6 +26,7 @@ import {
     FavoriteName,
     AgentName,
     DeliverName,
+    FaceRecognitionName,
 } from '../constants/screen_names';
 import colors from '../constants/colors';
 import LoginScreen from '../screens/login_screen';
@@ -37,6 +38,12 @@ import FavoriteScreen from '../screens/favorite_screen';
 import AgentScreen from '../screens/agent_screen';
 import { useAuth } from '../contexts/auth_context';
 import DeliverScreen from '../screens/deliver_screen';
+import { getAllAgents } from '../graphql-client/queries/queries';
+import { useLazyQuery } from '@apollo/client';
+import LoadingScreen from '../components/loading_screen/loading_screen';
+import { useMap } from '../contexts/map_context';
+import { getUserLocation } from '../modules/feature_functions';
+import FaceRecognition from '../screens/face_recognition';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,6 +57,16 @@ const MainScreen = () => {
         initRoute = DeliverName;
 
     //set map here
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        async function GetUserLocation() {
+            setIsLoading((prev) => !prev);
+        }
+        GetUserLocation();
+    }, []);
+
+    if (isLoading) return <LoadingScreen />;
 
     return (
         <Tab.Navigator
@@ -112,6 +129,11 @@ const MainScreen = () => {
             <Tab.Screen
                 name={RegisterName}
                 component={RegisterScreen}
+                options={{ tabBarButton: () => null }}
+            />
+            <Tab.Screen
+                name={FaceRecognitionName}
+                component={FaceRecognition}
                 options={{ tabBarButton: () => null }}
             />
         </Tab.Navigator>

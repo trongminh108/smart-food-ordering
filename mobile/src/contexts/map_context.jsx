@@ -5,7 +5,11 @@ import {
     getAddress,
     getDistanceDuration,
 } from '../graphql-client/queries/ggmap_api';
-import { removeCodeAddress } from '../modules/feature_functions';
+import {
+    getUserLocation,
+    removeCodeAddress,
+} from '../modules/feature_functions';
+import { getAllAgents } from '../graphql-client/queries/agents';
 
 const MapContext = createContext({});
 
@@ -18,16 +22,41 @@ const MapProvider = ({ children }) => {
     const [address, setAddress] = useState('Đang xác định');
     const [useGetAddressQuery, { data: dataAddress }] =
         useLazyQuery(getAddress);
+    const [useGetAllAgentsQuery] = useLazyQuery(getAllAgents);
+
+    async function getDistanceAllAgents(agents) {
+        const data = [];
+        for (const agent of agents) {
+            data.push({
+                id_agent: agent.id,
+                position: agent.position,
+                distance: 0,
+                duration: 0,
+            });
+        }
+        return data;
+    }
+
+    useEffect(() => {
+        async function generateMap() {
+            const { data } = await useGetAllAgentsQuery();
+            const dataDistances = await getDistanceAllAgents(data?.agents);
+            const latlng = await getUserLocation();
+            await setDistance_tmp(dataDistances);
+            await setOrigins(latlng);
+        }
+        generateMap();
+    }, []);
 
     //get user address
     useEffect(() => {
-        if (Object.keys(origins).length != 0) {
-            useGetAddressQuery({
-                variables: {
-                    location: origins,
-                },
-            });
-        }
+        // if (Object.keys(origins).length != 0) {
+        //     useGetAddressQuery({
+        //         variables: {
+        //             location: origins,
+        //         },
+        //     });
+        // }
     }, [origins]);
 
     useEffect(() => {
@@ -40,37 +69,37 @@ const MapProvider = ({ children }) => {
         useLazyQuery(getDistanceDuration);
     //get distance and durations
     useEffect(() => {
-        if (
-            Object.keys(distance_tmp).length != 0 &&
-            Object.keys(origins).length != 0
-        ) {
-            const promises = distance_tmp.map((agent) => {
-                return fetchDistanceDuration(origins, {
-                    lat: agent.position[0],
-                    lng: agent.position[1],
-                });
-            });
-            Promise.all(promises)
-                .then((results) => {
-                    const arr_res = [];
-                    for (let i = 0; i < results.length; i++) {
-                        arr_res.push({
-                            ...distance_tmp[i],
-                            distance:
-                                results[i].getDistanceBetweenLocation.distance,
-                            duration:
-                                results[i].getDistanceBetweenLocation.duration,
-                        });
-                    }
-                    setDistance(arr_res);
-                })
-                .catch((error) => {
-                    console.error(
-                        'Error fetching distance and duration:',
-                        error
-                    );
-                });
-        }
+        // if (
+        //     Object.keys(distance_tmp).length != 0 &&
+        //     Object.keys(origins).length != 0
+        // ) {
+        //     const promises = distance_tmp.map((agent) => {
+        //         return fetchDistanceDuration(origins, {
+        //             lat: agent.position[0],
+        //             lng: agent.position[1],
+        //         });
+        //     });
+        //     Promise.all(promises)
+        //         .then(async (results) => {
+        //             const arr_res = [];
+        //             for (let i = 0; i < results.length; i++) {
+        //                 arr_res.push({
+        //                     ...distance_tmp[i],
+        //                     distance:
+        //                         results[i].getDistanceBetweenLocation.distance,
+        //                     duration:
+        //                         results[i].getDistanceBetweenLocation.duration,
+        //                 });
+        //             }
+        //             await setDistance(arr_res);
+        //         })
+        //         .catch((error) => {
+        //             console.error(
+        //                 'Error fetching distance and duration:',
+        //                 error
+        //             );
+        //         });
+        // }
     }, [distance_tmp, origins]);
 
     const fetchDistanceDuration = async (origins, destinations) => {

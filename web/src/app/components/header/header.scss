@@ -1,0 +1,14 @@
+@import '@/assets/scss/constants/variables';
+
+.header {
+    width: 100%;
+    height: $hf-height;
+    background-color: $bg-primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & .logoHeaderLeftDiv {
+        transform: scaleX(-1);
+    }
+}

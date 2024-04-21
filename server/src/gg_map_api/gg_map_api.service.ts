@@ -36,7 +36,10 @@ export class GgMapApiService {
       };
     } catch (error) {
       console.log('Error from getDistanceBetweenLocation: ', error);
-      return null;
+      return {
+        distance: 0,
+        duration: 0,
+      };
     }
   }
 }

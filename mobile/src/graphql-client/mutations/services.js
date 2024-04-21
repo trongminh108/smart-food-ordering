@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
 import {
     addOrderDetails,
     addOrder,
@@ -6,7 +6,7 @@ import {
     registerUser,
     updateOrder,
 } from './mutations';
-import { getOrdersByUserID } from '../queries/orders';
+import { getOrderByID, getOrdersByUserID } from '../queries/orders';
 import { getAgentByID, getAllAgents } from '../queries/agents';
 
 export function useAddOrderDetailsMutation() {
@@ -18,6 +18,7 @@ export function useAddOrderDetailsMutation() {
                 variables: {
                     createOrderDetailInput: orderDetails,
                 },
+                update: updateCacheAddOrderDetails,
             });
             return data.createOrderDetail;
         } catch (error) {
@@ -38,7 +39,7 @@ export function useAddOrderMutation() {
                 variables: {
                     createOrderInput: order,
                 },
-                update: updateCacheOrder,
+                update: updateCacheAddOrder,
             });
             return data.createOrder;
         } catch (error) {
@@ -100,6 +101,7 @@ export function useUpdateOrderMutation() {
                 variables: {
                     updateOrderInput: order,
                 },
+                update: cacheUpdateOrderMutation,
             });
             return data.updateOrder;
         } catch (error) {
@@ -110,7 +112,7 @@ export function useUpdateOrderMutation() {
     return handleUpdateOrder;
 }
 
-const updateCacheOrder = async (cache, { data: { createOrder } }) => {
+const updateCacheAddOrder = async (cache, { data: { createOrder } }) => {
     // console.log(createOrder);
     if (createOrder.id_user) {
         const data = await cache.readQuery({
@@ -133,4 +135,69 @@ const updateCacheOrder = async (cache, { data: { createOrder } }) => {
             // console.log('In data cache: ', newData);
         }
     }
+};
+
+const cacheUpdateOrderMutation = async (cache, { data: { updateOrder } }) => {
+    if (updateOrder.id_user) {
+        const data = await cache.readQuery({
+            query: getOrdersByUserID,
+            variables: {
+                ordersByUserIdId: updateOrder.id_user,
+            },
+        });
+        if (data) {
+            const newData = data.ordersByUserID.map((order) => {
+                if (order.id === updateOrder.id) {
+                    return { ...order, ...updateOrder };
+                }
+                return order;
+            });
+            await cache.writeQuery({
+                query: getOrdersByUserID,
+                variables: {
+                    ordersByUserIdId: updateOrder.id_user,
+                },
+                data: { ordersByUserID: newData },
+            });
+            // console.log('In data cache: ', newData);
+        }
+    }
+};
+
+export const updateCacheAddOrderDetails = async (
+    cache,
+    { data: createOrderDetail }
+) => {
+    // const data = await cache.readQuery({
+    //     query: getOrderByID,
+    //     variables: {
+    //         orderId: createOrderDetail.id_order,
+    //     },
+    // });
+    // console.log('[DATA]: ', createOrderDetail);
+    // if (data) {
+    //     if (!data.has('order_details')) data.set(order_details, []);
+    //     data.order_details.push(createOrderDetail);
+    //     const dataOrders = await cache.readQuery({
+    //         query: getOrdersByUserID,
+    //         variables: {
+    //             ordersByUserIdId: data.id_user,
+    //         },
+    //     });
+    //     if (dataOrders) {
+    //         const newData = dataOrders.ordersByUserID.map((order) => {
+    //             if (order.id === data.id) {
+    //                 return { ...order, ...data };
+    //             }
+    //             return order;
+    //         });
+    //         await cache.writeQuery({
+    //             query: getOrdersByUserID,
+    //             variables: {
+    //                 ordersByUserIdId: updateOrder.id_user,
+    //             },
+    //             data: { ordersByUserID: newData },
+    //         });
+    //     }
+    // }
 };

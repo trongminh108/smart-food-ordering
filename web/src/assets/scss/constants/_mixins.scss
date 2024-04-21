@@ -1,0 +1,36 @@
+//@use '@/assets/scss/constants/mixins' as mxs;
+@use '@/assets/scss/constants/variables' as vars;
+
+@mixin centerFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin responsive($breakpoint) {
+    @if ($breakpoint == 'desktop') {
+        @media screen and (min-width: 1024px) {
+            @content;
+        }
+    }
+
+    @if ($breakpoint == 'tablet') {
+        @media screen and (min-width: 740px) and (max-width: 1023px) {
+            @content;
+        }
+    }
+
+    @if ($breakpoint == 'mobile') {
+        @media screen and (max-width: 739px) {
+            @content;
+        }
+    }
+}
+
+@mixin hover-transition-color($duration: 0.3s) {
+    transition: color $duration;
+
+    &:hover {
+        color: vars.$primary-color !important;
+    }
+}

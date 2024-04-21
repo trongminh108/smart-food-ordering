@@ -15,23 +15,11 @@ import colors from '../../constants/colors';
 import { ICON_SIZE_BIG, PADDING_Y } from '../../constants/style';
 import { OrderConfirmationName } from '../../constants/screen_names';
 
-const OrderProducts = ({ orderDetails }) => {
+const OrderProducts = ({ orderDetails, onPress }) => {
     const [order, setOrder] = useState({
-        id: '1',
-        id_agent: '1',
-        id_deliver: '1',
-        id_user: '1',
         total_quantity: 0,
         total_price: 0,
-        address: [],
-        distance: 11.4,
-        delivery_fee: 0,
-        discount: 0,
-        //pending, active, success, failed
-        status: 'pending',
     });
-
-    const navigation = useNavigation();
 
     useEffect(() => {
         setOrder((prev) => ({
@@ -48,10 +36,7 @@ const OrderProducts = ({ orderDetails }) => {
     }, [orderDetails]);
 
     function handlePressOrderButton() {
-        navigation.navigate(OrderConfirmationName, {
-            order: order,
-            orderDetails: orderDetails,
-        });
+        onPress();
     }
 
     return (

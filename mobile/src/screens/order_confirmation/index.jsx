@@ -21,21 +21,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '../../contexts/map_context';
 import { useAuth } from '../../contexts/auth_context';
 import ProductPaymentCard from '../../components/product_payment_card/product_payment_card';
-import { STATUS_ACTIVE } from '../../constants/backend';
-import { useUpdateOrderMutation } from '../../graphql-client/mutations/services';
+import { STATUS_ACTIVE, STATUS_PENDING } from '../../constants/backend';
+import {
+    useAddOrderDetailsMutation,
+    useAddOrderMutation,
+    useUpdateOrderMutation,
+} from '../../graphql-client/mutations/services';
 import { useNavigation } from '@react-navigation/native';
 import { HomeName } from '../../constants/screen_names';
 
+import { isValidPhoneNumber } from '../../modules/feature_functions';
+
 export default function OrderConfirmation({ route }) {
-    const { order, orderDetails, distance } = route?.params || {};
+    const { order, distance, is_draft, duration } = route?.params || {};
     const { order_details } = order;
     const delivery_fee = calculateDeliveryFee(distance);
 
-    const { authState } = useAuth();
-    const { address } = useMap();
-
-    const updateOrderFunc = useUpdateOrderMutation();
     const navigation = useNavigation();
+    const { authState } = useAuth();
+    const { address, origins } = useMap();
+    const updateOrderFunc = useUpdateOrderMutation();
+    const AddOrderDetailsFunc = useAddOrderDetailsMutation();
+    const AddOrderFunc = useAddOrderMutation();
 
     const [name, setName] = useState(
         authState.authenticated ? authState.user.full_name : ''
@@ -43,33 +50,68 @@ export default function OrderConfirmation({ route }) {
     const [phoneNumber, setPhoneNumber] = useState(
         authState.authenticated ? authState.user.phone_number : ''
     );
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleOnPressConfirmOrder() {
         try {
+            setIsLoading(true);
             async function PressYesConfirm() {
-                const updateOrderInput = {
-                    id: order.id,
-                    recipient: name,
-                    phone_number: phoneNumber,
-                    address: address.value,
-                    distance: distance,
-                    delivery_fee: delivery_fee,
-                    discount: order.discount,
-                    total_quantity: order.total_quantity,
-                    total_price: order.total_price + delivery_fee,
-                    status: STATUS_ACTIVE,
-                };
+                if (
+                    isValidPhoneNumber(phoneNumber) &&
+                    name.trim().length != 0
+                ) {
+                    if (is_draft) {
+                        const updateOrderInput = {
+                            id: order.id,
+                            recipient: name,
+                            phone_number: phoneNumber,
+                            position: [origins.value.lat, origins.value.lng],
+                            address: address.value,
+                            distance: distance,
+                            delivery_fee: delivery_fee,
+                            discount: order.discount,
+                            total_quantity: order.total_quantity,
+                            total_price: order.total_price,
+                            status: STATUS_PENDING,
+                        };
 
-                const res = await updateOrderFunc(updateOrderInput);
-
-                ToastAndroid.showWithGravity(
-                    'Đã đặt hàng - chúc bạn ngon miệng',
-                    ToastAndroid.SHORT,
-                    ToastAndroid.BOTTOM
-                );
-                navigation.navigate(HomeName);
+                        const res = await updateOrderFunc(updateOrderInput);
+                    } else {
+                        const responseOrder = await AddOrderFunc({
+                            id_agent: order.id_agent,
+                            recipient: name,
+                            phone_number: phoneNumber,
+                            position: [origins.value.lat, origins.value.lng],
+                            address: address.value,
+                            distance: distance,
+                            delivery_fee: delivery_fee,
+                            id_user: authState?.user?.id || null,
+                            total_quantity: order.total_quantity,
+                            total_price: order.total_price,
+                            status: STATUS_PENDING,
+                        });
+                        const res = await order_details.map(async (detail) => {
+                            await AddOrderDetailsFunc({
+                                id_order: responseOrder?.id,
+                                id_product: detail.id_product,
+                                quantity: detail.quantity,
+                                discount: 0,
+                                subtotal: detail.subtotal,
+                            });
+                        });
+                    }
+                    ToastAndroid.showWithGravity(
+                        'Đã đặt hàng - chúc bạn ngon miệng',
+                        ToastAndroid.SHORT,
+                        ToastAndroid.BOTTOM
+                    );
+                    navigation.navigate(HomeName);
+                } else {
+                    alert('Tên người nhận hoặc số điện thoại không hợp lệ');
+                }
             }
             showConfirmBox(PressYesConfirm);
+            setIsLoading(false);
         } catch (error) {
             console.error(error);
         }
@@ -106,20 +148,12 @@ export default function OrderConfirmation({ route }) {
                         style={styles.textInput}
                         placeholder="Nhập tên người nhận"
                         onChangeText={(e) => setName(e)}
-                        value={
-                            authState.authenticated
-                                ? authState.user.full_name
-                                : ''
-                        }
+                        value={name}
                     />
                     <TextInput
                         style={styles.textInput}
                         placeholder="Nhập số điện thoại"
-                        value={
-                            authState.authenticated
-                                ? authState.user.phone_number
-                                : ''
-                        }
+                        value={phoneNumber}
                         onChangeText={(e) => setPhoneNumber(e)}
                     />
                 </View>
@@ -131,13 +165,16 @@ export default function OrderConfirmation({ route }) {
                     <View
                         style={{ gap: 8, marginTop: 12, paddingHorizontal: 16 }}
                     >
-                        {order_details &&
+                        {order_details ? (
                             order_details.map((detail, index) => (
                                 <ProductPaymentCard
                                     key={index}
                                     detail={detail}
                                 />
-                            ))}
+                            ))
+                        ) : (
+                            <Text>Hê lô</Text>
+                        )}
                     </View>
                 </ScrollView>
             </View>
@@ -152,7 +189,7 @@ export default function OrderConfirmation({ route }) {
                 </View>
                 <View style={styles.feeContainer}>
                     <Text>{`Phí giao hàng (${displayDistance(
-                        distance
+                        distance == -1 ? 0 : distance
                     )})`}</Text>
                     <Text style={{ fontWeight: 'bold' }}>
                         {formatCurrency(delivery_fee)}

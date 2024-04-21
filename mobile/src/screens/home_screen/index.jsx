@@ -28,53 +28,34 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
-    const [getProducts, { loading, error, data }] =
+    const [getProducts, { loading, error, data: dataProducts }] =
         useLazyQuery(getAllProducts);
     const [
         getAgents,
         { loading: loadingAgents, error: errorAgents, data: dataAgents },
     ] = useLazyQuery(getAllAgents);
 
-    const { origins, address, distance, distance_tmp } = useMap();
-
-    if (loading) console.log('loading...');
-    if (error) console.log(error);
-
-    const productsData = data?.products || null;
-    const agentsData = dataAgents?.agents || null;
+    const { address, distance } = useMap();
+    const [productsData, setProductsData] = useState([]);
+    const [agentsData, setAgentsData] = useState([]);
 
     useEffect(() => {
-        getProducts();
-        getAgents();
-        async function GetUserLocation() {
-            const latlng = await getUserLocation();
-            origins.setOrigins(latlng);
+        async function getData() {
+            getProducts();
+            getAgents();
         }
-        GetUserLocation();
+        getData();
     }, []);
 
     useEffect(() => {
-        if (productsData && agentsData) {
+        if (dataProducts?.products && dataAgents?.agents) {
             setIsLoading(false);
-            getDistanceAllAgents(dataAgents.agents);
+            setProductsData(dataProducts.products);
+            setAgentsData(dataAgents.agents);
         }
-    }, [productsData, agentsData]);
-
-    async function getDistanceAllAgents(agents) {
-        const data = [];
-        for (const agent of agents) {
-            data.push({
-                id_agent: agent.id,
-                position: agent.position,
-                distance: 0,
-                duration: 0,
-            });
-        }
-        distance_tmp.setDistance_tmp(data);
-    }
+    }, [dataAgents, dataProducts]);
 
     if (isLoading) return <LoadingScreen />;
-
     return (
         // <UserInfoContainer>
         <View>
@@ -94,7 +75,7 @@ export default function HomeScreen({ navigation }) {
                         );
                         let dis = 0;
                         let dura = 0;
-                        if (distance.value.length != 0) {
+                        if (distance?.value?.length != 0) {
                             const tmp = distance.value.find(
                                 (ag) => ag.id_agent === agent.id
                             );

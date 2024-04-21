@@ -18,9 +18,7 @@ import { displayDistance } from '../../modules/feature_functions';
 
 const ProductCard = ({ product, agent, navigation, distance, duration }) => {
     const imagePath = BACKEND_IMAGES + product.images[0];
-    const { origins, destinations } = useMap();
-
-    useEffect(() => {}, []);
+    const { origins, destinations, distance: mapDistance } = useMap();
 
     function handlePressProductCard() {
         destinations.setDestinations({
