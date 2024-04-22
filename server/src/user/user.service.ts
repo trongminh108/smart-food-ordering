@@ -18,6 +18,10 @@ export class UserService {
     return await this.userModel.find(condition);
   }
 
+  async findOneCondition(condition = {}) {
+    return await this.userModel.findOne(condition);
+  }
+
   async findOne(id: string) {
     return await this.userModel.findById(id);
   }

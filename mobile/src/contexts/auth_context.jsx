@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import {
     useLoginMutation,
+    useLoginWithFaceIDMutation,
     useRegisterMutation,
 } from '../graphql-client/mutations/services';
 
@@ -45,6 +46,7 @@ const AuthProvider = ({ children }) => {
 
     const navigation = useNavigation();
     const loginFunc = useLoginMutation();
+    const loginWithFaceIDFunc = useLoginWithFaceIDMutation();
     const registerFunc = useRegisterMutation();
 
     useEffect(() => {
@@ -141,6 +143,55 @@ const AuthProvider = ({ children }) => {
         return null;
     };
 
+    const loginWithFaceID = async (face_id) => {
+        const res = await loginWithFaceIDFunc(face_id);
+        if (res.token) {
+            const token = res.token;
+            const user = res.user;
+            let id_agent = '';
+            if (user.is_agent) {
+                const { data } = await useGetAgentByUserID({
+                    variables: { agentByUserIdId: user.id },
+                });
+                id_agent = data?.agentByUserID.id;
+                await AsyncStorage.setItem(AGENT, id_agent);
+            }
+
+            await setAuthState({
+                token: token,
+                user: user,
+                username: user.username,
+                authenticated: true,
+                id_agent: id_agent,
+            });
+
+            await AsyncStorage.setItem(TOKEN, token);
+            await AsyncStorage.setItem(USER, user.username);
+            await AsyncStorage.setItem(USER_INFO, JSON.stringify(user));
+            await AsyncStorage.setItem(AGENT, id_agent);
+
+            ToastAndroid.showWithGravity(
+                'Đăng nhập thành công',
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+            );
+
+            if (user.is_agent) navigation.navigate(AgentName);
+            else if (user.is_deliver) navigation.navigate(DeliverName);
+            else navigation.navigate(HomeName);
+            return res;
+        }
+
+        ToastAndroid.showWithGravity(
+            'Đăng nhập thất bại',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+        );
+
+        console.log('Login Failed', res);
+        return null;
+    };
+
     const logout = async () => {
         await AsyncStorage.removeItem(TOKEN);
         await AsyncStorage.removeItem(USER);
@@ -170,6 +221,7 @@ const AuthProvider = ({ children }) => {
     const value = {
         onRegister: register,
         onLogin: login,
+        onLoginWithFaceID: loginWithFaceID,
         onLogout: logout,
         authState: authState,
         onSetUserInfo: setUserInfo,

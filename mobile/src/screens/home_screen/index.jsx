@@ -55,6 +55,36 @@ export default function HomeScreen({ navigation }) {
         }
     }, [dataAgents, dataProducts]);
 
+    function searchIgnoreCaseAndDiacritics(text, keyword) {
+        const normalizedText = text.toLowerCase();
+        const normalizedKeyword = keyword.toLowerCase();
+
+        const removeDiacritics = (str) => {
+            return str
+                .normalize('NFD') // Chuẩn hóa chuỗi thành Unicode (NFD)
+                .replace(/[\u0300-\u036f]/g, ''); // Loại bỏ các ký tự dấu
+        };
+
+        const normalizedTextWithoutDiacritics =
+            removeDiacritics(normalizedText);
+        const normalizedKeywordWithoutDiacritics =
+            removeDiacritics(normalizedKeyword);
+
+        return normalizedTextWithoutDiacritics.includes(
+            normalizedKeywordWithoutDiacritics
+        );
+    }
+
+    function handleSubmitSearch(keyword) {
+        if (keyword)
+            setProductsData((prev) =>
+                prev.filter((product) =>
+                    searchIgnoreCaseAndDiacritics(product.name, keyword)
+                )
+            );
+        else setProductsData(dataProducts.products);
+    }
+
     if (isLoading) return <LoadingScreen />;
     return (
         // <UserInfoContainer>
@@ -65,7 +95,7 @@ export default function HomeScreen({ navigation }) {
                     {address.value}
                 </Text>
             </View>
-            <SearchBar />
+            <SearchBar onSubmit={handleSubmitSearch} />
             {/* List Products */}
             <ScrollView>
                 <View style={styles.listProductsContainer}>

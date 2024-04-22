@@ -42,5 +42,6 @@ type Mutation {
   # updateAuth(updateAuthInput: UpdateAuthInput!): Auth!
   # removeAuth(id: Int!): Auth
   login(username: String!, password: String!): Auth!
+  loginWithFaceID(face_id: String!): Auth!
   register(username: String!, password: String!, gmail: String!): User!
 }

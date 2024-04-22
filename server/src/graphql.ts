@@ -344,6 +344,8 @@ export abstract class IMutation {
 
     abstract login(username: string, password: string): Auth | Promise<Auth>;
 
+    abstract loginWithFaceID(face_id: string): Auth | Promise<Auth>;
+
     abstract register(username: string, password: string, gmail: string): User | Promise<User>;
 
     abstract createCategory(createCategoryInput: CreateCategoryInput): Category | Promise<Category>;

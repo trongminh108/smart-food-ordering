@@ -5,15 +5,18 @@ import Providers from '../components/apollo_provider/apollo_provider';
 import AuthProvider from '../contexts/auth_context';
 import MapProvider from '../contexts/map_context';
 import UserInfoContainer from './user_info_container';
+import NotificationsProvider from '../contexts/notification_context';
 
 const GlobalContainer = ({ children }) => {
     return (
         <Providers>
             <MapProvider>
                 <AuthProvider>
-                    {/* <UserInfoContainer> */}
-                    {children}
-                    {/* </UserInfoContainer> */}
+                    <NotificationsProvider>
+                        {/* <UserInfoContainer> */}
+                        {children}
+                        {/* </UserInfoContainer> */}
+                    </NotificationsProvider>
                 </AuthProvider>
             </MapProvider>
         </Providers>

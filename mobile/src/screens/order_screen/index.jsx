@@ -26,13 +26,16 @@ import { getAgentByUserID } from '../../graphql-client/queries/agents';
 import {
     STATUS_ACTIVE,
     STATUS_DRAFT,
+    STATUS_FAILED,
     STATUS_PENDING,
     STATUS_SUCCESS,
 } from '../../constants/backend';
+import { useNotifications } from '../../contexts/notification_context';
 
 const OrdersScreen = () => {
     const { authState } = useAuth();
     const { distance } = useMap();
+    const { onSendNotification } = useNotifications();
     const [currentType, setCurrentType] = useState(0);
     const [orders, setOrders] = useState(null);
 
@@ -50,8 +53,24 @@ const OrdersScreen = () => {
 
     useSubscription(pubUserStatusOrder, {
         onData: ({ data }) => {
-            // setOrders((prev) => [data.data.pubUserStatusOrder, ...prev]);
-            // console.log('data 5: ', data.data.pubUserStatusOrder);
+            const status = data.data.pubUserStatusOrder.status;
+            const title = data.data.pubUserStatusOrder.agent.name;
+            switch (status) {
+                case STATUS_ACTIVE:
+                    onSendNotification(title, 'Đơn của bạn đã được duyệt');
+                    break;
+                case STATUS_FAILED:
+                    onSendNotification(title, 'Đơn của bạn đã bị hủy');
+                    break;
+                case STATUS_SUCCESS:
+                    onSendNotification(
+                        title,
+                        'Đơn của bạn đã được giao thành công'
+                    );
+                    break;
+                default:
+                    break;
+            }
         },
         variables: {
             idUser: authState?.user.id,

@@ -10,6 +10,8 @@ import FaceRecognition from './src/screens/face_recognition';
 import Faces_Registration from './src/screens/faces_registration';
 import MainContainer from './src/containers/main_container';
 import GlobalContainer from './src/containers/global_container';
+import NotificationComponent from './src/components/notification/notification';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 

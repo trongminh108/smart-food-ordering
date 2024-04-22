@@ -8,6 +8,7 @@ import {
 } from './mutations';
 import { getOrderByID, getOrdersByUserID } from '../queries/orders';
 import { getAgentByID, getAllAgents } from '../queries/agents';
+import { loginWithFaceID } from './auth';
 
 export function useAddOrderDetailsMutation() {
     const [createOrderDetails] = useMutation(addOrderDetails);
@@ -62,6 +63,26 @@ export function useLoginMutation() {
                 },
             });
             return data.login;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+
+    return handleLogin;
+}
+
+export function useLoginWithFaceIDMutation() {
+    const [loginFunc] = useMutation(loginWithFaceID);
+
+    async function handleLogin(face_id) {
+        try {
+            const { data } = await loginFunc({
+                variables: {
+                    faceId: face_id,
+                },
+            });
+            return data.loginWithFaceID;
         } catch (error) {
             console.error(error);
         }

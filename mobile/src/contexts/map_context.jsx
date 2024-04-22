@@ -49,15 +49,15 @@ const MapProvider = ({ children }) => {
     }, []);
 
     //get user address
-    useEffect(() => {
-        if (Object.keys(origins).length != 0) {
-            useGetAddressQuery({
-                variables: {
-                    location: origins,
-                },
-            });
-        }
-    }, [origins]);
+    // useEffect(() => {
+    //     if (Object.keys(origins).length != 0) {
+    //         useGetAddressQuery({
+    //             variables: {
+    //                 location: origins,
+    //             },
+    //         });
+    //     }
+    // }, [origins]);
 
     useEffect(() => {
         if (dataAddress) {
@@ -68,39 +68,39 @@ const MapProvider = ({ children }) => {
     const [useGetDistanceDuration, { data: dataDistanceDuration }] =
         useLazyQuery(getDistanceDuration);
     //get distance and durations
-    useEffect(() => {
-        if (
-            Object.keys(distance_tmp).length != 0 &&
-            Object.keys(origins).length != 0
-        ) {
-            const promises = distance_tmp.map((agent) => {
-                return fetchDistanceDuration(origins, {
-                    lat: agent.position[0],
-                    lng: agent.position[1],
-                });
-            });
-            Promise.all(promises)
-                .then(async (results) => {
-                    const arr_res = [];
-                    for (let i = 0; i < results.length; i++) {
-                        arr_res.push({
-                            ...distance_tmp[i],
-                            distance:
-                                results[i].getDistanceBetweenLocation.distance,
-                            duration:
-                                results[i].getDistanceBetweenLocation.duration,
-                        });
-                    }
-                    await setDistance(arr_res);
-                })
-                .catch((error) => {
-                    console.error(
-                        'Error fetching distance and duration:',
-                        error
-                    );
-                });
-        }
-    }, [distance_tmp, origins]);
+    // useEffect(() => {
+    //     if (
+    //         Object.keys(distance_tmp).length != 0 &&
+    //         Object.keys(origins).length != 0
+    //     ) {
+    //         const promises = distance_tmp.map((agent) => {
+    //             return fetchDistanceDuration(origins, {
+    //                 lat: agent.position[0],
+    //                 lng: agent.position[1],
+    //             });
+    //         });
+    //         Promise.all(promises)
+    //             .then(async (results) => {
+    //                 const arr_res = [];
+    //                 for (let i = 0; i < results.length; i++) {
+    //                     arr_res.push({
+    //                         ...distance_tmp[i],
+    //                         distance:
+    //                             results[i].getDistanceBetweenLocation.distance,
+    //                         duration:
+    //                             results[i].getDistanceBetweenLocation.duration,
+    //                     });
+    //                 }
+    //                 await setDistance(arr_res);
+    //             })
+    //             .catch((error) => {
+    //                 console.error(
+    //                     'Error fetching distance and duration:',
+    //                     error
+    //                 );
+    //             });
+    //     }
+    // }, [distance_tmp, origins]);
 
     const fetchDistanceDuration = async (origins, destinations) => {
         const { data } = await useGetDistanceDuration({

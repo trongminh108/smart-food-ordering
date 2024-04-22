@@ -1,10 +1,14 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import colors from '../../constants/colors';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-export default function SearchBar() {
+export default function SearchBar({ onSubmit }) {
+    const navigation = useNavigation();
+    const [textSearch, setTextSearch] = useState('');
+
     return (
         <View style={styles.searchBarContainer}>
             <View style={styles.searchBar}>
@@ -12,9 +16,8 @@ export default function SearchBar() {
                 <TextInput
                     style={styles.textInput}
                     placeholder="Tìm món ăn"
-                    onSubmitEditing={() => {
-                        navigation.navigate('Locations');
-                    }}
+                    onSubmitEditing={() => onSubmit(textSearch)}
+                    onChangeText={(e) => setTextSearch(e)}
                 />
             </View>
         </View>

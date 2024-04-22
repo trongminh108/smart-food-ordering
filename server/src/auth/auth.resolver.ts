@@ -36,6 +36,20 @@ export class AuthResolver {
     return { token: '', user: null };
   }
 
+  @Mutation('loginWithFaceID')
+  async loginWithFaceID(@Args('face_id') face_id: string) {
+    const user = await this.userService.findOneCondition({
+      face_recognition: face_id,
+    });
+    if (user) {
+      const token = await this.authService.generateToken(user);
+      user['id'] = user._id;
+      return { token: token, user: user };
+    }
+
+    return { token: '', user: null };
+  }
+
   @Mutation('register')
   async register(
     @Args('username') username: string,

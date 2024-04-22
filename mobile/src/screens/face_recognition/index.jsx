@@ -13,6 +13,7 @@ import * as MediaLibrary from 'expo-media-library';
 import LUXAND_FACE from '../../modules/luxand_api';
 import * as FaceDetector from 'expo-face-detector';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
+import { useAuth } from '../../contexts/auth_context';
 
 const FaceRecognition = () => {
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -24,6 +25,7 @@ const FaceRecognition = () => {
     const [showBox, setShowBox] = useState(false);
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { onLoginWithFaceID } = useAuth();
 
     useEffect(() => {
         const getPermission = async () => {
@@ -47,11 +49,14 @@ const FaceRecognition = () => {
                             photo.uri
                         );
                         if (response != []) {
-                            setName(response[0].name);
-                            luxand_obj.AddFaceToPerson(
-                                response[0].uuid,
-                                photo.uri
-                            );
+                            // setName(response[0].name);
+                            const face_id = await response[0].uuid;
+                            onLoginWithFaceID(face_id);
+                            // console.log('FACE ID: ', face_id);
+                            // luxand_obj.AddFaceToPerson(
+                            //     response[0].uuid,
+                            //     photo.uri
+                            // );
                         }
                     }
             }
@@ -123,7 +128,7 @@ const FaceRecognition = () => {
                     style={styles.button}
                     onPress={HandleRecognizePerson}
                 >
-                    <Text style={styles.text}>Recognize Person</Text>
+                    <Text style={styles.text}>Đăng nhập</Text>
                 </TouchableOpacity>
             </View>
             {isLoading && <LoadingScreen />}
