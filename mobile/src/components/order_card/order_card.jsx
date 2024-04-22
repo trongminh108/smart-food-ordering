@@ -5,6 +5,8 @@ import {
     Image,
     TouchableHighlight,
     TouchableOpacity,
+    Alert,
+    ToastAndroid,
 } from 'react-native';
 import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,10 +22,13 @@ import {
     BACKEND_IMAGES,
     STATUS_ACTIVE,
     STATUS_DRAFT,
+    STATUS_FAILED,
     STATUS_PENDING,
+    STATUS_SUCCESS,
 } from '../../constants/backend';
 import { displayDistance } from '../../modules/feature_functions';
 import { useNavigation } from '@react-navigation/native';
+import { useUpdateOrderMutation } from '../../graphql-client/mutations/services';
 
 const OrderCard = ({ order, distance, duration, status }) => {
     const { agent, user } = order;
@@ -31,6 +36,27 @@ const OrderCard = ({ order, distance, duration, status }) => {
     const imagePath = BACKEND_IMAGES + order.agent.images[0];
 
     const navigation = useNavigation();
+
+    const useUpdateOrderFunc = useUpdateOrderMutation();
+
+    async function handleConfirmSuccessOrder() {
+        await useUpdateOrderFunc({ id: order.id, status: STATUS_SUCCESS });
+        ToastAndroid.showWithGravity(
+            'Xác nhận đơn này thành công',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+        );
+    }
+
+    async function handleConfirmFailedOrder() {
+        await useUpdateOrderFunc({ id: order.id, status: STATUS_FAILED });
+        ToastAndroid.showWithGravity(
+            'Xác nhận đơn này thất bại',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+        );
+    }
+
     function handlePressOrderCard() {
         if (status === STATUS_DRAFT)
             navigation.navigate(OrderConfirmationName, {
@@ -39,8 +65,24 @@ const OrderCard = ({ order, distance, duration, status }) => {
                 duration: duration,
                 is_draft: true,
             });
-        else if (status === STATUS_ACTIVE) alert('Đơn hàng đang được giao');
-        else alert(status);
+        else if (status === STATUS_ACTIVE) {
+            Alert.alert(
+                'Thông báo',
+                'Xác nhận đơn hàng này?',
+                [
+                    {
+                        text: 'Thất bại',
+                        onPress: handleConfirmFailedOrder,
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Thành công',
+                        onPress: handleConfirmSuccessOrder,
+                    },
+                ],
+                { cancelable: true }
+            );
+        } else alert(status);
     }
 
     return (

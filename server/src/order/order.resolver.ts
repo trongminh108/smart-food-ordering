@@ -9,11 +9,20 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { OrderService } from './order.service';
-import { CreateOrderInput, UpdateOrderInput } from 'src/graphql';
+import {
+  CreateOrderInput,
+  OrderSearchCondition,
+  UpdateOrderInput,
+} from 'src/graphql';
 import { AgentService } from 'src/agent/agent.service';
 import { OrderDetailsService } from 'src/order_details/order_details.service';
 import { PubSub } from 'graphql-subscriptions';
-import { STATUS_PENDING } from 'src/constants';
+import {
+  STATUS_DRAFT,
+  STATUS_FAILED,
+  STATUS_PENDING,
+  STATUS_SUCCESS,
+} from 'src/constants';
 
 @Resolver('Order')
 export class OrderResolver {
@@ -21,6 +30,7 @@ export class OrderResolver {
   PUSH_INFO_ORDER = 'PUSH_INFO_ORDER';
   PUB_NEW_ORDER = 'PUB_NEW_ORDER';
   PUB_USER_STATUS_ORDER = 'PUB_USER_STATUS_ORDER';
+  PUB_AGENT_STATUS_ORDER = 'PUB_AGENT_STATUS_ORDER';
 
   constructor(
     private readonly orderService: OrderService,
@@ -56,12 +66,20 @@ export class OrderResolver {
     return this.orderService.findAll({ id_agent: id });
   }
 
+  @Query('ordersByCondition')
+  ordersByCondition(@Args('condition') condition: OrderSearchCondition) {
+    return this.orderService.findAll(condition);
+  }
+
   @Mutation('updateOrder')
   async update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
     const updatedOrder = await this.orderService.update(updateOrderInput);
     this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: updatedOrder });
     this.pubSub.publish(this.PUB_USER_STATUS_ORDER, {
       pubUserStatusOrder: updatedOrder,
+    });
+    this.pubSub.publish(this.PUB_AGENT_STATUS_ORDER, {
+      pubAgentStatusOrder: updatedOrder,
     });
     return updatedOrder;
   }
@@ -125,5 +143,18 @@ export class OrderResolver {
   })
   pubUserStatusOrder() {
     return this.pubSub.asyncIterator(this.PUB_USER_STATUS_ORDER);
+  }
+
+  @Subscription('pubAgentStatusOrder', {
+    filter(payload, variables, context) {
+      return (
+        payload.pubAgentStatusOrder.id_agent === variables.id_agent &&
+        (payload.pubAgentStatusOrder.status === STATUS_SUCCESS ||
+          payload.pubAgentStatusOrder.status === STATUS_FAILED)
+      );
+    },
+  })
+  pubAgentStatusOrder() {
+    return this.pubSub.asyncIterator(this.PUB_AGENT_STATUS_ORDER);
   }
 }

@@ -7,7 +7,10 @@ import { CHILDREN } from '../constants/interfaces';
 import { useQuery, useSubscription } from '@apollo/client';
 import { getOrdersByAgentID } from '../apollo-client/queries/orders';
 import { useAuth } from './auth_context';
-import { pubNewOrder } from '../apollo-client/subscriptions/orders';
+import {
+    pubAgentStatusOrder,
+    pubNewOrder,
+} from '../apollo-client/subscriptions/orders';
 
 function AgentProvider({ children }: CHILDREN) {
     const { authState } = useAuth();
@@ -32,6 +35,21 @@ function AgentProvider({ children }: CHILDREN) {
         onData: ({ data }) => {
             setOrders((prev: any) => {
                 return [data.data.pubNewOrder, ...prev];
+            });
+        },
+        variables: {
+            idAgent: authState.id_agent,
+        },
+    });
+
+    useSubscription(pubAgentStatusOrder, {
+        onData: ({ data }) => {
+            const newOrder = data.data.pubAgentStatusOrder;
+            setOrders((prev: any) => {
+                prev.map((order: any) => {
+                    if (order.id === newOrder.id) return newOrder;
+                    return order;
+                });
             });
         },
         variables: {

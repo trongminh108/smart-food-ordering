@@ -56,10 +56,33 @@ input UpdateOrderInput {
   status: String
 }
 
+input OrderSearchCondition {
+  id: ID
+  id_agent: ID
+  # agent: Agent
+  id_deliver: ID
+  id_user: ID
+  recipient: String
+  # order_details: [OrderDetail]
+  # user: User
+  phone_number: String
+  position: [Float]
+  address: String
+  distance: Float
+  delivery_fee: Float
+  discount: Float
+  total_quantity: Int
+  total_price: Float
+  createdAt: DateTime
+  updatedAt: DateTime
+  status: String
+}
+
 type Subscription {
   pubInfoOrder: String!
   pubNewOrder(id_agent: ID!): Order
   pubUserStatusOrder(id_user: ID!): Order
+  pubAgentStatusOrder(id_agent: ID!): Order
 }
 
 type Query {
@@ -67,6 +90,7 @@ type Query {
   order(id: ID!): Order
   ordersByUserID(id: ID!): [Order]
   ordersByAgentID(id: ID!): [Order]
+  ordersByCondition(condition: OrderSearchCondition!): [Order]
 }
 
 type Mutation {

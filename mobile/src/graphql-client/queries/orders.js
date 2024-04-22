@@ -63,3 +63,11 @@ export const getOrderByID = gql`
         }
     }
 `;
+
+export const getOrdersByCondition = gql`
+    query OrdersByCondition($condition: OrderSearchCondition!) {
+        ordersByCondition(condition: $condition) {
+            ${ORDER_TYPE}
+        }
+    }
+`;

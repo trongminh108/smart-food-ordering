@@ -8,3 +8,19 @@ export const pubNewOrder = gql`
         }
     }
 `;
+
+export const pubUserStatusOrder = gql`
+    subscription PubUserStatusOrder($idUser: ID!) {
+        pubUserStatusOrder(id_user: $idUser) {
+            ${ORDER_TYPE}
+        }
+    }
+`;
+
+export const pubAgentStatusOrder = gql`
+    subscription Subscription($idAgent: ID!) {
+        pubAgentStatusOrder(id_agent: $idAgent) {
+            ${ORDER_TYPE}
+        }
+    }
+`;

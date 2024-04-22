@@ -127,6 +127,25 @@ export class UpdateOrderInput {
     status?: Nullable<string>;
 }
 
+export class OrderSearchCondition {
+    id?: Nullable<string>;
+    id_agent?: Nullable<string>;
+    id_deliver?: Nullable<string>;
+    id_user?: Nullable<string>;
+    recipient?: Nullable<string>;
+    phone_number?: Nullable<string>;
+    position?: Nullable<Nullable<number>[]>;
+    address?: Nullable<string>;
+    distance?: Nullable<number>;
+    delivery_fee?: Nullable<number>;
+    discount?: Nullable<number>;
+    total_quantity?: Nullable<number>;
+    total_price?: Nullable<number>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
+    status?: Nullable<string>;
+}
+
 export class CreateOrderDetailInput {
     id_order?: Nullable<string>;
     id_product?: Nullable<string>;
@@ -301,6 +320,8 @@ export abstract class IQuery {
     abstract ordersByUserID(id: string): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
 
     abstract ordersByAgentID(id: string): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
+
+    abstract ordersByCondition(condition: OrderSearchCondition): Nullable<Nullable<Order>[]> | Promise<Nullable<Nullable<Order>[]>>;
 
     abstract orderDetails(): Nullable<OrderDetail>[] | Promise<Nullable<OrderDetail>[]>;
 
@@ -513,6 +534,8 @@ export abstract class ISubscription {
     abstract pubNewOrder(id_agent: string): Nullable<Order> | Promise<Nullable<Order>>;
 
     abstract pubUserStatusOrder(id_user: string): Nullable<Order> | Promise<Nullable<Order>>;
+
+    abstract pubAgentStatusOrder(id_agent: string): Nullable<Order> | Promise<Nullable<Order>>;
 }
 
 export class OrderDetail {
