@@ -18,7 +18,10 @@ import LoadingScreen from '../../components/loading_screen/loading_screen';
 import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { useNavigation } from '@react-navigation/native';
-import { pubNewOrder } from '../../graphql-client/subscriptions/orders';
+import {
+    pubNewOrder,
+    pubUserStatusOrder,
+} from '../../graphql-client/subscriptions/orders';
 import { getAgentByUserID } from '../../graphql-client/queries/agents';
 import {
     STATUS_ACTIVE,
@@ -44,6 +47,16 @@ const OrdersScreen = () => {
         STATUS_PENDING,
         STATUS_DRAFT,
     ];
+
+    useSubscription(pubUserStatusOrder, {
+        onData: ({ data }) => {
+            // setOrders((prev) => [data.data.pubUserStatusOrder, ...prev]);
+            // console.log('data 5: ', data.data.pubUserStatusOrder);
+        },
+        variables: {
+            idUser: authState?.user.id,
+        },
+    });
 
     useEffect(() => {
         async function getOrdersData() {

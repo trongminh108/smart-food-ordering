@@ -10,6 +10,7 @@ import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 import {
+    calculateTimeFrom,
     convertDateTimeToUTC7,
     displayDuration,
     formatCurrency,
@@ -60,13 +61,22 @@ const OrderCard = ({ order, distance, duration, status }) => {
                     </View>
                 </View>
                 <View style={styles.cardInfo}>
-                    <Text
-                        style={styles.textName}
-                        ellipsizeMode="clip"
-                        numberOfLines={1}
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            gap: 4,
+                        }}
                     >
-                        {agent.name}
-                    </Text>
+                        <Text
+                            style={styles.textName}
+                            ellipsizeMode="clip"
+                            numberOfLines={1}
+                        >
+                            {agent.name}
+                        </Text>
+                        <Text>{`(${calculateTimeFrom(order.updatedAt)})`}</Text>
+                    </View>
                     <Text style={styles.textPrice}>
                         {agent.rating}{' '}
                         <Ionicons

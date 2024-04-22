@@ -9,52 +9,33 @@ import OrderCard from '@/app/components/order_card/order_card';
 import { STATUS_ACTIVE, STATUS_PENDING } from '@/app/constants/backend';
 import { useAuth } from '@/app/contexts/auth_context';
 import { useQuery, useSubscription } from '@apollo/client';
+import { useAgent } from '@/app/contexts/agent_context';
 
 function OrderManage() {
     const { authState } = useAuth();
-    const {
-        loading: loadingOrders,
-        data: dataOrders,
-        error,
-    } = useQuery(getOrdersByAgentID, {
-        variables: {
-            ordersByAgentIdId: authState.user.agent.id,
-        },
-    });
+    const { orders: ordersContext } = useAgent();
+    const [orders, setOrders] = useState(ordersContext.value);
 
-    const [orders, setOrders] = useState<any>([]);
-
-    useSubscription(pubNewOrder, {
-        onData: ({ data }) => {
-            setOrders((prev: any) => {
-                return [data.data.pubNewOrder, ...prev];
-            });
-        },
-        variables: {
-            idAgent: authState.id_agent,
-        },
-    });
+    function handleFilterOrders(orders: any, status: any) {
+        const ordersPending = orders.filter((order: any) => {
+            return order.status === status;
+        });
+        ordersPending.sort((a: any, b: any) => {
+            const dateA = new Date(a.updatedAt);
+            const dateB = new Date(b.updatedAt);
+            if (dateA < dateB) return 1;
+            if (dateA > dateB) return -1;
+            return 0;
+        });
+        return ordersPending;
+    }
 
     useEffect(() => {
-        if (dataOrders) {
-            const ordersPending = dataOrders.ordersByAgentID.filter(
-                (order: any) => {
-                    return order.status === STATUS_PENDING;
-                }
-            );
-            ordersPending.sort((a: any, b: any) => {
-                const dateA = new Date(a.updatedAt);
-                const dateB = new Date(b.updatedAt);
-                if (dateA < dateB) return 1;
-                if (dateA > dateB) return -1;
-                return 0;
-            });
-            setOrders(ordersPending);
-            console.log(dataOrders);
-        }
-    }, [dataOrders]);
+        if (ordersContext.value)
+            setOrders(handleFilterOrders(ordersContext.value, STATUS_PENDING));
+    }, [ordersContext.value]);
 
-    if (loadingOrders)
+    if (!orders)
         return (
             <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
                 <div>Đang tải đơn mới</div>

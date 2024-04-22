@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/contexts/auth_context';
 // import AccountService from '@/assets/service/account';
 import { parseJwt } from '@/app/modules/feature_function';
-import { ORDERED_MANAGE_PAGE } from '@/app/constants/url';
+import { ORDER_MANAGE_PAGE } from '@/app/constants/url';
 
 function SignIn() {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
@@ -41,7 +41,7 @@ function SignIn() {
             const { user } = await onLogin(username_inp, password_inp);
             if (user != null) {
                 alert(`Login success, hello: ${user.full_name}`);
-                if (user.is_agent) router.replace(ORDERED_MANAGE_PAGE);
+                if (user.is_agent) router.replace(ORDER_MANAGE_PAGE);
                 else if (user.is_deliver) router.replace('/pages/deliver');
                 else router.replace('/pages/home');
             } else alert('Login fail');

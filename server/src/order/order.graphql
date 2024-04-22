@@ -59,6 +59,7 @@ input UpdateOrderInput {
 type Subscription {
   pubInfoOrder: String!
   pubNewOrder(id_agent: ID!): Order
+  pubUserStatusOrder(id_user: ID!): Order
 }
 
 type Query {

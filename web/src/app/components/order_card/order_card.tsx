@@ -5,6 +5,7 @@ import {
     BACKEND_IMAGES,
     STATUS_ACTIVE,
     STATUS_FAILED,
+    STATUS_PENDING,
     STATUS_SUCCESS,
 } from '@/app/constants/backend';
 import './order_card.scss';
@@ -19,11 +20,14 @@ import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
 import { useSubscription } from '@apollo/client';
 import { useUpdateOrderMutation } from '@/app/apollo-client/mutations/services';
 import colors from '@/app/constants/colors';
+import { useAgent } from '@/app/contexts/agent_context';
+import { Prev } from 'react-bootstrap/esm/PageItem';
 
 function OrderCard({ order }: { order: any }) {
     const defaultAvatar = require('@/app/favicon.ico');
     const [avatar, setAvatar] = useState(defaultAvatar);
     const [modalShow, setModalShow] = useState(false);
+    const { orders } = useAgent();
 
     const updateOrderFunc = useUpdateOrderMutation();
 
@@ -36,17 +40,51 @@ function OrderCard({ order }: { order: any }) {
         setModalShow(true);
     }
 
+    async function handleUpdateStatusOrder(order: any) {
+        orders.setState((prev: any) => {
+            return prev.map((ord: any) => {
+                if (ord.id === order.id) return order;
+                return ord;
+            });
+        });
+    }
+
     async function handleClickConfirm() {
         setModalShow(false);
         const { id } = order;
-        await updateOrderFunc({ id: id, status: STATUS_ACTIVE });
-        alert('Bạn đã xác nhận hóa đơn');
+        const STATUS =
+            order.status === STATUS_PENDING
+                ? STATUS_ACTIVE
+                : order.status === STATUS_ACTIVE
+                ? STATUS_SUCCESS
+                : '';
+        if (STATUS) {
+            const updatedOrder = await updateOrderFunc({
+                id: id,
+                status: STATUS,
+            });
+            handleUpdateStatusOrder(updatedOrder);
+        }
+        switch (order.status) {
+            case STATUS_PENDING:
+                alert('Bạn đã xác nhận hóa đơn');
+                break;
+            case STATUS_ACTIVE:
+                alert('Xác nhận hóa đơn thành công');
+                break;
+            default:
+                return;
+        }
     }
 
     async function handleClickCancel() {
         setModalShow(false);
         const { id } = order;
-        await updateOrderFunc({ id: id, status: STATUS_FAILED });
+        const updatedOrder = await updateOrderFunc({
+            id: id,
+            status: STATUS_FAILED,
+        });
+        handleUpdateStatusOrder(updatedOrder);
         alert('Bạn đã từ chối hóa đơn');
     }
 

@@ -183,3 +183,26 @@ export function isValidPhoneNumber(phoneNumber) {
     if (phoneNumber.match(regex)) return true;
     return false;
 }
+
+export function calculateTimeFrom(inputDate) {
+    const inputDateTime = new Date(inputDate);
+    const currentTime = new Date();
+
+    // Tính khoảng thời gian theo phút
+    const timeDifferenceInMinutes = Math.round(
+        (currentTime - inputDateTime) / 60000
+    );
+
+    if (timeDifferenceInMinutes <= 60) {
+        // Nếu ít hơn hoặc bằng 60 phút, in ra số phút
+        return `${timeDifferenceInMinutes} phút trước`;
+    } else if (timeDifferenceInMinutes <= 1440) {
+        // Nếu ít hơn hoặc bằng 24 giờ, in ra số giờ
+        const hours = Math.floor(timeDifferenceInMinutes / 60);
+        return `${hours} giờ trước`;
+    } else {
+        // Nếu nhiều hơn 24 giờ, tính theo ngày
+        const days = Math.floor(timeDifferenceInMinutes / 1440);
+        return `${days} ngày trước`;
+    }
+}

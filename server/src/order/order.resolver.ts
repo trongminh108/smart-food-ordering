@@ -20,6 +20,8 @@ export class OrderResolver {
   pubSub: PubSub = new PubSub();
   PUSH_INFO_ORDER = 'PUSH_INFO_ORDER';
   PUB_NEW_ORDER = 'PUB_NEW_ORDER';
+  PUB_USER_STATUS_ORDER = 'PUB_USER_STATUS_ORDER';
+
   constructor(
     private readonly orderService: OrderService,
     private readonly agentService: AgentService,
@@ -58,6 +60,9 @@ export class OrderResolver {
   async update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
     const updatedOrder = await this.orderService.update(updateOrderInput);
     this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: updatedOrder });
+    this.pubSub.publish(this.PUB_USER_STATUS_ORDER, {
+      pubUserStatusOrder: updatedOrder,
+    });
     return updatedOrder;
   }
 
@@ -111,5 +116,14 @@ export class OrderResolver {
   })
   pubNewOrder() {
     return this.pubSub.asyncIterator(this.PUB_NEW_ORDER);
+  }
+
+  @Subscription('pubUserStatusOrder', {
+    filter(payload, variables, context) {
+      return payload.pubUserStatusOrder.id_user === variables.id_user;
+    },
+  })
+  pubUserStatusOrder() {
+    return this.pubSub.asyncIterator(this.PUB_USER_STATUS_ORDER);
   }
 }
