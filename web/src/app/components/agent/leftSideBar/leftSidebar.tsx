@@ -10,6 +10,7 @@ import {
     PRODUCT_MANAGE_PAGE,
     REVENUE_PAGE,
     STAFF_MANAGE_PAGE,
+    ORDERED_MANAGE_PAGE,
 } from '@/app/constants/url';
 
 const dataLSB = [
@@ -24,6 +25,10 @@ const dataLSB = [
     {
         name: 'Nhân viên',
         link: STAFF_MANAGE_PAGE,
+    },
+    {
+        name: 'Lịch sử',
+        link: ORDERED_MANAGE_PAGE,
     },
     {
         name: 'Doanh thu',

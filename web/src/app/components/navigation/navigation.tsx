@@ -9,7 +9,12 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import Avatar from '@/app/components/avatar/avatar';
 import SearchBar from '@/app/components/searchBar/searchBar';
-import { HOME_PAGE } from '@/app/constants/url';
+import {
+    AGENT_MANAGE_PAGE,
+    HOME_PAGE,
+    ORDERED_MANAGE_PAGE,
+    ORDER_MANAGE_PAGE,
+} from '@/app/constants/url';
 // import { access_token_role } from '@/constants/cookies';
 // import { useData } from '../context/context';
 
@@ -19,16 +24,12 @@ const dataNav = [
         link: HOME_PAGE,
     },
     {
-        title: 'Category',
-        link: '/pages/category',
+        title: 'Agent',
+        link: AGENT_MANAGE_PAGE,
     },
     {
-        title: 'Movie',
-        link: '/pages/movie',
-    },
-    {
-        title: 'Series',
-        link: '/pages/series',
+        title: 'Orders',
+        link: ORDER_MANAGE_PAGE,
     },
 ];
 

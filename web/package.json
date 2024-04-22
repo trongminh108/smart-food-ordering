@@ -12,6 +12,7 @@
     "@apollo/client": "^3.9.11",
     "bootstrap": "^5.3.3",
     "graphql": "^16.8.1",
+    "graphql-ws": "^5.16.0",
     "js-cookie": "^3.0.5",
     "next": "14.2.1",
     "react": "^18",

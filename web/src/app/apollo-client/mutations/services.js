@@ -6,7 +6,11 @@ import {
     registerUser,
     updateOrder,
 } from './mutations';
-import { getOrderByID, getOrdersByUserID } from '../queries/orders';
+import {
+    getOrderByID,
+    getOrdersByAgentID,
+    getOrdersByUserID,
+} from '../queries/orders';
 import { getAgentByID, getAllAgents } from '../queries/agents';
 
 export function useAddOrderDetailsMutation() {
@@ -92,25 +96,31 @@ export function useRegisterMutation() {
     return handleRegister;
 }
 
-// export function useUpdateOrderMutation() {
-//     const [useUpdateOrder] = useMutation(updateOrder);
+export function useUpdateOrderMutation() {
+    const [UpdateOrder] = useMutation(updateOrder);
 
-//     async function handleUpdateOrder(order) {
-//         try {
-//             const { data } = await useUpdateOrder({
-//                 variables: {
-//                     updateOrderInput: order,
-//                 },
-//                 update: cacheUpdateOrderMutation,
-//             });
-//             return data.updateOrder;
-//         } catch (error) {
-//             console.error(error);
-//         }
-//         return null;
-//     }
-//     return handleUpdateOrder;
-// }
+    async function handleUpdateOrder(order) {
+        try {
+            const { data } = await UpdateOrder({
+                variables: {
+                    updateOrderInput: order,
+                },
+                // update: cacheUpdateOrderMutation,
+                refetchQueries: {
+                    query: getOrdersByAgentID,
+                    variables: {
+                        ordersByAgentIdId: order.id_agent,
+                    },
+                },
+            });
+            return data.updateOrder;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleUpdateOrder;
+}
 
 const updateCacheAddOrder = async (cache, { data: { createOrder } }) => {
     // console.log(createOrder);

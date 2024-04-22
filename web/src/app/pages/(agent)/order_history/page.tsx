@@ -6,11 +6,15 @@ import { Container, Row } from 'react-bootstrap';
 import { getOrdersByAgentID } from '@/app/apollo-client/queries/orders';
 import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
 import OrderCard from '@/app/components/order_card/order_card';
-import { STATUS_ACTIVE, STATUS_PENDING } from '@/app/constants/backend';
+import {
+    STATUS_ACTIVE,
+    STATUS_DRAFT,
+    STATUS_PENDING,
+} from '@/app/constants/backend';
 import { useAuth } from '@/app/contexts/auth_context';
 import { useQuery, useSubscription } from '@apollo/client';
 
-function OrderManage() {
+function OrderHistory() {
     const { authState } = useAuth();
     const {
         loading: loadingOrders,
@@ -26,9 +30,7 @@ function OrderManage() {
 
     useSubscription(pubNewOrder, {
         onData: ({ data }) => {
-            setOrders((prev: any) => {
-                return [data.data.pubNewOrder, ...prev];
-            });
+            setOrders((prev: any) => [data.data.pubNewOrder, ...prev]);
         },
         variables: {
             idAgent: authState.id_agent,
@@ -39,7 +41,10 @@ function OrderManage() {
         if (dataOrders) {
             const ordersPending = dataOrders.ordersByAgentID.filter(
                 (order: any) => {
-                    return order.status === STATUS_PENDING;
+                    return (
+                        order.status !== STATUS_PENDING &&
+                        order.status !== STATUS_DRAFT
+                    );
                 }
             );
             ordersPending.sort((a: any, b: any) => {
@@ -50,7 +55,6 @@ function OrderManage() {
                 return 0;
             });
             setOrders(ordersPending);
-            console.log(dataOrders);
         }
     }, [dataOrders]);
 
@@ -86,4 +90,4 @@ function OrderManage() {
         );
 }
 
-export default OrderManage;
+export default OrderHistory;

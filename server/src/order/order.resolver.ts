@@ -13,6 +13,7 @@ import { CreateOrderInput, UpdateOrderInput } from 'src/graphql';
 import { AgentService } from 'src/agent/agent.service';
 import { OrderDetailsService } from 'src/order_details/order_details.service';
 import { PubSub } from 'graphql-subscriptions';
+import { STATUS_PENDING } from 'src/constants';
 
 @Resolver('Order')
 export class OrderResolver {
@@ -54,8 +55,10 @@ export class OrderResolver {
   }
 
   @Mutation('updateOrder')
-  update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.orderService.update(updateOrderInput);
+  async update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
+    const updatedOrder = await this.orderService.update(updateOrderInput);
+    this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: updatedOrder });
+    return updatedOrder;
   }
 
   @Mutation('removeOrder')
@@ -102,7 +105,7 @@ export class OrderResolver {
     filter(payload, variables, context) {
       return (
         payload.pubNewOrder.id_agent === variables.id_agent &&
-        payload.pubNewOrder.status === 'ACTIVE'
+        payload.pubNewOrder.status === STATUS_PENDING
       );
     },
   })

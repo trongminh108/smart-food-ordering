@@ -2,7 +2,7 @@ export const BACKEND_IP = 'localhost';
 
 export const BACKEND_URL = `http://${BACKEND_IP}:4000`;
 
-export const BACKEND_SUB = `${BACKEND_IP}:4000`;
+export const BACKEND_SUB = `ws://${BACKEND_IP}:4000`;
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';
 
 export const STATUS_DRAFT = 'DRAFT';

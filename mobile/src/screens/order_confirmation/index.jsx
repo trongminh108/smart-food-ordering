@@ -21,7 +21,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '../../contexts/map_context';
 import { useAuth } from '../../contexts/auth_context';
 import ProductPaymentCard from '../../components/product_payment_card/product_payment_card';
-import { STATUS_ACTIVE, STATUS_PENDING } from '../../constants/backend';
+import {
+    STATUS_ACTIVE,
+    STATUS_DRAFT,
+    STATUS_PENDING,
+} from '../../constants/backend';
 import {
     useAddOrderDetailsMutation,
     useAddOrderMutation,
@@ -88,7 +92,7 @@ export default function OrderConfirmation({ route }) {
                             id_user: authState?.user?.id || null,
                             total_quantity: order.total_quantity,
                             total_price: order.total_price,
-                            status: STATUS_PENDING,
+                            status: STATUS_DRAFT,
                         });
                         const res = await order_details.map(async (detail) => {
                             await AddOrderDetailsFunc({
@@ -98,6 +102,10 @@ export default function OrderConfirmation({ route }) {
                                 discount: 0,
                                 subtotal: detail.subtotal,
                             });
+                        });
+                        const updateOrderPending = await updateOrderFunc({
+                            id: responseOrder?.id,
+                            status: STATUS_PENDING,
                         });
                     }
                     ToastAndroid.showWithGravity(

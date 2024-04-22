@@ -6,6 +6,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import LeftSideBar from '@/app/components/agent/leftSideBar/leftSidebar';
 import { useAuth } from '../contexts/auth_context';
 import colors from '@/app/constants/colors';
+import AgentProvider from '../contexts/agent_context';
 
 function AgentContainer({ children }: CHILDREN) {
     const { authState } = useAuth();
@@ -19,14 +20,16 @@ function AgentContainer({ children }: CHILDREN) {
         return <div>Bạn phải đăng nhập bằng tài khoản đối tác</div>;
 
     return (
-        <Container fluid style={{ backgroundColor: colors.background }}>
-            <Row>
-                <Col sm={3} className="p-0">
-                    <LeftSideBar />
-                </Col>
-                <Col className="p-0">{children}</Col>
-            </Row>
-        </Container>
+        <AgentProvider>
+            <Container fluid style={{ backgroundColor: colors.background }}>
+                <Row>
+                    <Col sm={3} className="p-0">
+                        <LeftSideBar />
+                    </Col>
+                    <Col className="p-0">{children}</Col>
+                </Row>
+            </Container>
+        </AgentProvider>
     );
 }
 

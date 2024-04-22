@@ -49,6 +49,7 @@ const Tab = createBottomTabNavigator();
 
 const MainScreen = () => {
     const { authState } = useAuth();
+    const { origins } = useMap();
     let initRoute = HomeName;
 
     if (authState?.authenticated && authState?.user.is_agent)
@@ -61,7 +62,9 @@ const MainScreen = () => {
 
     useEffect(() => {
         async function GetUserLocation() {
-            setIsLoading((prev) => !prev);
+            setIsLoading(false);
+            const latLng = await getUserLocation();
+            origins.setOrigins(latLng);
         }
         GetUserLocation();
     }, []);

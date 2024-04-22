@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image';
-import { BACKEND_IMAGES } from '@/app/constants/backend';
+import {
+    BACKEND_IMAGES,
+    STATUS_ACTIVE,
+    STATUS_FAILED,
+    STATUS_SUCCESS,
+} from '@/app/constants/backend';
 import './order_card.scss';
 import {
+    calculateTimeFrom,
     displayDistance,
     formatCurrency,
 } from '@/app/modules/feature_function';
 
 import OrderDetailsCard from '@/app/components/order_details_modal/order_details_modal';
+import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
+import { useSubscription } from '@apollo/client';
+import { useUpdateOrderMutation } from '@/app/apollo-client/mutations/services';
+import colors from '@/app/constants/colors';
 
 function OrderCard({ order }: { order: any }) {
     const defaultAvatar = require('@/app/favicon.ico');
     const [avatar, setAvatar] = useState(defaultAvatar);
     const [modalShow, setModalShow] = useState(false);
+
+    const updateOrderFunc = useUpdateOrderMutation();
 
     useEffect(() => {
         if (order?.user?.avatar)
@@ -24,13 +36,17 @@ function OrderCard({ order }: { order: any }) {
         setModalShow(true);
     }
 
-    function handleClickConfirm() {
+    async function handleClickConfirm() {
         setModalShow(false);
+        const { id } = order;
+        await updateOrderFunc({ id: id, status: STATUS_ACTIVE });
         alert('Bạn đã xác nhận hóa đơn');
     }
 
-    function handleClickCancel() {
+    async function handleClickCancel() {
         setModalShow(false);
+        const { id } = order;
+        await updateOrderFunc({ id: id, status: STATUS_FAILED });
         alert('Bạn đã từ chối hóa đơn');
     }
 
@@ -38,8 +54,18 @@ function OrderCard({ order }: { order: any }) {
         <>
             <Container
                 fluid
-                className="cardOrderContainer py-0 rounded-3"
+                className="cardOrderContainer py-0 rounded-3 border border-dark"
                 onClick={handleClickOrderCard}
+                style={{
+                    backgroundColor:
+                        order.status === STATUS_FAILED
+                            ? colors.status_failed
+                            : order.status === STATUS_ACTIVE
+                            ? colors.status_active
+                            : order.status === STATUS_SUCCESS
+                            ? colors.status_success
+                            : colors.white,
+                }}
             >
                 <Row className="p-0" style={{ height: 80 }}>
                     <Col sm={1} className="p-0">
@@ -61,7 +87,9 @@ function OrderCard({ order }: { order: any }) {
                             className="justify-content-between d-flex flex-column"
                         >
                             <Row style={{ fontWeight: 'bold', fontSize: '20' }}>
-                                {order.recipient} - {order.phone_number}
+                                {`(${calculateTimeFrom(order.updatedAt)}) - ${
+                                    order.recipient
+                                } - ${order.phone_number}`}
                             </Row>
                             <Row>{`${displayDistance(
                                 order.distance

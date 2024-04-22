@@ -44,8 +44,10 @@ export default function OrderDetailsModal({
             <Modal.Body>
                 {/* <h4>Thực đơn</h4> */}
                 {order.order_details.map((details: any, index: any) => (
-                    <div key={index} className="d-flex align-items-around">
-                        <p>{`${details.quantity} x ${details.product.name}`}</p>
+                    <div key={index} className="d-flex align-items-between">
+                        <p
+                            style={{ width: '100%' }}
+                        >{`${details.quantity} x ${details.product.name}`}</p>
                         <p>{`${formatCurrency(details.subtotal)}`}</p>
                     </div>
                 ))}

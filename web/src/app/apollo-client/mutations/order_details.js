@@ -7,6 +7,10 @@ export const ORDER_DETAILS_TYPE = `
     quantity
     discount
     subtotal
+    product {
+        name
+        images
+    }
 `;
 
 export const addOrderDetails = gql`
