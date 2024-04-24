@@ -1,9 +1,10 @@
 export const BACKEND_IP = 'localhost';
+export const PORT = `4000`;
+export const BACKEND_URL = `http://${BACKEND_IP}:${PORT}`;
 
-export const BACKEND_URL = `http://${BACKEND_IP}:4000`;
-
-export const BACKEND_SUB = `ws://${BACKEND_IP}:4000`;
+export const BACKEND_SUB = `ws://${BACKEND_IP}:${PORT}`;
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';
+export const BACKEND_URL_FILE_UPLOAD = `http://${BACKEND_IP}:${PORT}/file-upload`;
 
 export const STATUS_DRAFT = 'DRAFT';
 export const STATUS_PENDING = 'PENDING';

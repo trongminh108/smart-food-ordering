@@ -7,6 +7,8 @@ import {
     SORT_INCREASE,
     SORT_INCREASE_SOLD,
 } from '../constants/name';
+import { BACKEND_URL_FILE_UPLOAD } from '../constants/backend';
+import axios from 'axios';
 
 export const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -137,4 +139,21 @@ export function searchIgnoreCaseAndDiacritics(text, keyword) {
     return normalizedTextWithoutDiacritics.includes(
         normalizedKeywordWithoutDiacritics
     );
+}
+
+export async function handleUploadFile(file) {
+    const formData = new FormData();
+    await formData.append('file', file);
+    await axios
+        .post(BACKEND_URL_FILE_UPLOAD, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((response) => {
+            // console.log(response?.data);
+        })
+        .catch((rej) => {
+            console.log(rej.message);
+        });
 }

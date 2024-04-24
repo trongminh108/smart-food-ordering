@@ -1,4 +1,4 @@
-import { useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
     addOrderDetails,
     addOrder,
@@ -6,12 +6,8 @@ import {
     registerUser,
     updateOrder,
 } from './mutations';
-import {
-    getOrderByID,
-    getOrdersByAgentID,
-    getOrdersByUserID,
-} from '../queries/orders';
-import { getAgentByID, getAllAgents } from '../queries/agents';
+import { getOrdersByAgentID, getOrdersByUserID } from '../queries/orders';
+import { addProduct, updateProduct } from '../mutations/products';
 
 export function useAddOrderDetailsMutation() {
     const [createOrderDetails] = useMutation(addOrderDetails);
@@ -52,6 +48,44 @@ export function useAddOrderMutation() {
         return null;
     }
     return handleCreateOrder;
+}
+
+export function useAddProductMutation() {
+    const [createProduct] = useMutation(addProduct);
+
+    async function handleCreateProduct(product) {
+        try {
+            const { data } = await createProduct({
+                variables: {
+                    createProductInput: product,
+                },
+            });
+            return data.createProduct;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleCreateProduct;
+}
+
+export function useUpdateProductMutation() {
+    const [UpdateProduct] = useMutation(updateProduct);
+
+    async function handleUpdateProduct(product) {
+        try {
+            const { data } = await UpdateProduct({
+                variables: {
+                    updateProductInput: product,
+                },
+            });
+            return data.updateProduct;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleUpdateProduct;
 }
 
 export function useLoginMutation() {

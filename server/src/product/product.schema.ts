@@ -2,28 +2,28 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ collection: 'PRODUCTS' })
 export class PRODUCT {
-  @Prop()
+  @Prop({ default: null })
   id_category: string;
 
-  @Prop()
+  @Prop({ default: null })
   id_agent: string;
 
-  @Prop()
+  @Prop({ default: null })
   name: string;
 
-  @Prop()
+  @Prop({ default: null })
   images: Array<string>;
 
-  @Prop()
+  @Prop({ default: null })
   description: string;
 
-  @Prop()
-  sold: string;
+  @Prop({ default: 0 })
+  sold: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   price: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   rating: number;
 }
 

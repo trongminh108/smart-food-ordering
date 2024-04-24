@@ -1,18 +1,19 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
 
-const AgentContext = createContext<any>(null);
-
-import React from 'react';
-import { CHILDREN } from '../constants/interfaces';
 import { useQuery, useSubscription } from '@apollo/client';
+
+import { getAllCategories } from '../apollo-client/queries/categories';
 import { getOrdersByAgentID } from '../apollo-client/queries/orders';
-import { useAuth } from './auth_context';
+import { getProductsByAgentID } from '../apollo-client/queries/products';
 import {
     pubAgentStatusOrder,
     pubNewOrder,
 } from '../apollo-client/subscriptions/orders';
-import { getProductsByAgentID } from '../apollo-client/queries/products';
-import { Container } from 'react-bootstrap';
+import { CHILDREN } from '../constants/interfaces';
+import { useAuth } from './auth_context';
+
+const AgentContext = createContext<any>(null);
 
 function AgentProvider({ children }: CHILDREN) {
     const { authState } = useAuth();
@@ -26,6 +27,13 @@ function AgentProvider({ children }: CHILDREN) {
             idAgent: authState.user.agent.id,
         },
     });
+    const { data: dataAllCategories } = useQuery(getAllCategories);
+
+    const [orders, setOrders] = useState<any>(null);
+    const [products, setProducts] = useState<any>(null);
+    const [categories, setCategories] = useState<any>(null);
+    const [allCategories, setAllCategories] = useState<any>(null);
+    const [statusOrder, setStatusOrder] = useState(null);
 
     useEffect(() => {
         if (dataOrders) setOrders([...dataOrders.ordersByAgentID]);
@@ -47,10 +55,19 @@ function AgentProvider({ children }: CHILDREN) {
         }
     }, [dataProducts]);
 
-    const [orders, setOrders] = useState<any>(null);
-    const [products, setProducts] = useState<any>(null);
-    const [categories, setCategories] = useState<any>(null);
-    const [statusOrder, setStatusOrder] = useState(null);
+    useEffect(() => {
+        if (dataAllCategories) {
+            const newCates = [...dataAllCategories.categories];
+            newCates.sort((a: any, b: any) => {
+                const na = a.name,
+                    nb = b.name;
+                if (na > nb) return 1;
+                if (na < nb) return -1;
+                return 1;
+            });
+            setAllCategories(newCates);
+        }
+    }, [dataAllCategories]);
 
     useSubscription(pubNewOrder, {
         onData: ({ data }) => {
@@ -82,6 +99,7 @@ function AgentProvider({ children }: CHILDREN) {
         orders: { value: orders, setState: setOrders },
         products: { value: products, setState: setProducts },
         categories: { value: categories, setState: setCategories },
+        allCategories: { value: allCategories, setState: setAllCategories },
         statusOrder: { value: statusOrder, setState: setStatusOrder },
     };
 
