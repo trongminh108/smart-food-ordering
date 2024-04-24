@@ -13,11 +13,8 @@ import UserLocation from '../../components/user_location/user_location';
 
 import { AGENTS, PRODUCTS } from '../../constants/data';
 import { useLazyQuery } from '@apollo/client';
-import { getAllProducts } from '../../graphql-client/queries/products';
-import {
-    getAgentByID,
-    getAllAgents,
-} from '../../graphql-client/queries/agents';
+import { getAllProducts } from '../../apollo-client/queries/products';
+import { getAgentByID, getAllAgents } from '../../apollo-client/queries/agents';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
 import { getUserLocation } from '../../modules/feature_functions';
 import { useMap } from '../../contexts/map_context';

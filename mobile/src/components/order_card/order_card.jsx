@@ -28,7 +28,7 @@ import {
 } from '../../constants/backend';
 import { displayDistance } from '../../modules/feature_functions';
 import { useNavigation } from '@react-navigation/native';
-import { useUpdateOrderMutation } from '../../graphql-client/mutations/services';
+import { useUpdateOrderMutation } from '../../apollo-client/mutations/services';
 
 const OrderCard = ({ order, distance, duration, status }) => {
     const { agent, user } = order;

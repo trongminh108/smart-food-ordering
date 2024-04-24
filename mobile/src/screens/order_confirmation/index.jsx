@@ -30,7 +30,7 @@ import {
     useAddOrderDetailsMutation,
     useAddOrderMutation,
     useUpdateOrderMutation,
-} from '../../graphql-client/mutations/services';
+} from '../../apollo-client/mutations/services';
 import { useNavigation } from '@react-navigation/native';
 import { HomeName } from '../../constants/screen_names';
 

@@ -13,7 +13,7 @@ function GlobalContainer({ children }: { children: React.ReactNode }) {
     return (
         <BackendProvider>
             <AuthProvider>
-                <Header />
+                {/* <Header /> */}
                 <Navigation />
                 {children}
                 <Footer />

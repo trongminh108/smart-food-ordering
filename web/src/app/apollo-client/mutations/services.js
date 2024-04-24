@@ -211,3 +211,23 @@ export const updateCacheAddOrderDetails = async (
     //     }
     // }
 };
+
+export function useLoginWithFaceIDMutation() {
+    const [loginFunc] = useMutation(loginWithFaceID);
+
+    async function handleLogin(face_id) {
+        try {
+            const { data } = await loginFunc({
+                variables: {
+                    faceId: face_id,
+                },
+            });
+            return data.loginWithFaceID;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+
+    return handleLogin;
+}

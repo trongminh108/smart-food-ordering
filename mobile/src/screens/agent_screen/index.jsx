@@ -13,15 +13,15 @@ import NotLogin from '../../components/not_login/not_login';
 import { FONT_SIZE } from '../../constants/style';
 import colors from '../../constants/colors';
 import { useLazyQuery, useSubscription } from '@apollo/client';
-import { getOrdersByUserID } from '../../graphql-client/queries/queries';
+import { getOrdersByUserID } from '../../apollo-client/queries/queries';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
 import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { useNavigation } from '@react-navigation/native';
-import { pubNewOrder } from '../../graphql-client/subscriptions/orders';
-import { getAgentByUserID } from '../../graphql-client/queries/agents';
+import { pubNewOrder } from '../../apollo-client/subscriptions/orders';
+import { getAgentByUserID } from '../../apollo-client/queries/agents';
 import { STATUS_ACTIVE } from '../../constants/backend';
-import { getOrdersByAgentID } from '../../graphql-client/queries/orders';
+import { getOrdersByAgentID } from '../../apollo-client/queries/orders';
 
 const AgentScreen = () => {
     const { authState } = useAuth();

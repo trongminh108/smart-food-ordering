@@ -16,7 +16,7 @@ import LoadingScreen from '../../components/loading_screen/loading_screen';
 import OrderCard from '../../components/order_card/order_card';
 import { useMap } from '../../contexts/map_context';
 import { STATUS_ACTIVE } from '../../constants/backend';
-import { getOrdersByCondition } from '../../graphql-client/queries/orders';
+import { getOrdersByCondition } from '../../apollo-client/queries/orders';
 import { handleSortOrders } from '../../modules/feature_functions';
 
 const DeliverScreen = () => {

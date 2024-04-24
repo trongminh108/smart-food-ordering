@@ -11,9 +11,9 @@ import { BACKEND_IMAGES } from '../../constants/backend';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { addOrderDetails } from '../../graphql-client/mutations/mutations';
+import { addOrderDetails } from '../../apollo-client/mutations/mutations';
 import { useMap } from '../../contexts/map_context';
-import { getAgentByID } from '../../graphql-client/queries/agents';
+import { getAgentByID } from '../../apollo-client/queries/agents';
 import { displayDistance } from '../../modules/feature_functions';
 
 const ProductCard = ({ product, agent, navigation, distance, duration }) => {

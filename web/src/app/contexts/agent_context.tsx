@@ -11,24 +11,45 @@ import {
     pubAgentStatusOrder,
     pubNewOrder,
 } from '../apollo-client/subscriptions/orders';
+import { getProductsByAgentID } from '../apollo-client/queries/products';
+import { Container } from 'react-bootstrap';
 
 function AgentProvider({ children }: CHILDREN) {
     const { authState } = useAuth();
-    const {
-        loading: loadingOrders,
-        data: dataOrders,
-        error,
-    } = useQuery(getOrdersByAgentID, {
+    const { data: dataOrders } = useQuery(getOrdersByAgentID, {
         variables: {
             ordersByAgentIdId: authState.user.agent.id,
         },
     });
+    const { data: dataProducts } = useQuery(getProductsByAgentID, {
+        variables: {
+            idAgent: authState.user.agent.id,
+        },
+    });
 
     useEffect(() => {
-        if (dataOrders) setOrders(dataOrders.ordersByAgentID);
+        if (dataOrders) setOrders([...dataOrders.ordersByAgentID]);
     }, [dataOrders]);
 
+    useEffect(() => {
+        if (dataProducts) {
+            const products = [...dataProducts.productsByAgentID];
+            setProducts(products);
+            const categories = products.map((product) => ({
+                id: product.id_category,
+                name: product.category.name,
+            }));
+            const res = categories.filter((value, index, self) => {
+                return index === self.findIndex((o) => o.id === value.id);
+            });
+
+            setCategories(res);
+        }
+    }, [dataProducts]);
+
     const [orders, setOrders] = useState<any>(null);
+    const [products, setProducts] = useState<any>(null);
+    const [categories, setCategories] = useState<any>(null);
     const [statusOrder, setStatusOrder] = useState(null);
 
     useSubscription(pubNewOrder, {
@@ -59,6 +80,8 @@ function AgentProvider({ children }: CHILDREN) {
 
     const value = {
         orders: { value: orders, setState: setOrders },
+        products: { value: products, setState: setProducts },
+        categories: { value: categories, setState: setCategories },
         statusOrder: { value: statusOrder, setState: setStatusOrder },
     };
 

@@ -217,3 +217,22 @@ export function handleSortOrders(ordersPending) {
     });
     return ordersPending;
 }
+
+export function searchIgnoreCaseAndDiacritics(text, keyword) {
+    const normalizedText = text.toLowerCase();
+    const normalizedKeyword = keyword.toLowerCase();
+
+    const removeDiacritics = (str) => {
+        return str
+            .normalize('NFD') // Chuẩn hóa chuỗi thành Unicode (NFD)
+            .replace(/[\u0300-\u036f]/g, ''); // Loại bỏ các ký tự dấu
+    };
+
+    const normalizedTextWithoutDiacritics = removeDiacritics(normalizedText);
+    const normalizedKeywordWithoutDiacritics =
+        removeDiacritics(normalizedKeyword);
+
+    return normalizedTextWithoutDiacritics.includes(
+        normalizedKeywordWithoutDiacritics
+    );
+}

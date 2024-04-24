@@ -25,13 +25,13 @@ import OrderProducts from '../../components/order_products/order_products';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
 
 import { useLazyQuery } from '@apollo/client';
-import { getAllProducts } from '../../graphql-client/queries/products';
-import { getAllCategories } from '../../graphql-client/queries/categories';
+import { getAllProducts } from '../../apollo-client/queries/products';
+import { getAllCategories } from '../../apollo-client/queries/categories';
 import {
     useAddOrderDetailsMutation,
     useAddOrderMutation,
     useUpdateOrderMutation,
-} from '../../graphql-client/mutations/services';
+} from '../../apollo-client/mutations/services';
 import { useAuth } from '../../contexts/auth_context';
 import { useMap } from '../../contexts/map_context';
 import { getDistanceDuration } from '../../modules/feature_functions';

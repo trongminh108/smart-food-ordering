@@ -7,7 +7,7 @@ import {
     useLoginMutation,
     useLoginWithFaceIDMutation,
     useRegisterMutation,
-} from '../graphql-client/mutations/services';
+} from '../apollo-client/mutations/services';
 
 import {
     AgentName,
@@ -27,7 +27,7 @@ import { useLazyQuery } from '@apollo/client';
 import {
     getAgentByID,
     getAgentByUserID,
-} from '../graphql-client/queries/agents';
+} from '../apollo-client/queries/agents';
 
 const TOKEN_KEY = 'jwt_secret_key_sfo';
 const TOKEN = 'token';

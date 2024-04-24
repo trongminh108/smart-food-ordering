@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { useAuth } from '../contexts/auth_context';
-import { getUserByUsername } from '../graphql-client/queries/queries';
+import { getUserByUsername } from '../apollo-client/queries/queries';
 
 import LoadingScreen from '../components/loading_screen/loading_screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';

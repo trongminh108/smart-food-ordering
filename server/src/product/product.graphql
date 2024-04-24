@@ -1,6 +1,7 @@
 type Product {
   id: ID!
   id_category: ID
+  category: Category
   id_agent: ID
   name: String
   images: [String]
@@ -36,6 +37,7 @@ input UpdateProductInput {
 type Query {
   products: [Product]!
   product(id: ID!): Product
+  productsByAgentID(id_agent: ID!): [Product]
 }
 
 type Mutation {

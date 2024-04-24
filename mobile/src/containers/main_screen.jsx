@@ -38,7 +38,7 @@ import FavoriteScreen from '../screens/favorite_screen';
 import AgentScreen from '../screens/agent_screen';
 import { useAuth } from '../contexts/auth_context';
 import DeliverScreen from '../screens/deliver_screen';
-import { getAllAgents } from '../graphql-client/queries/queries';
+import { getAllAgents } from '../apollo-client/queries/queries';
 import { useLazyQuery } from '@apollo/client';
 import LoadingScreen from '../components/loading_screen/loading_screen';
 import { useMap } from '../contexts/map_context';

@@ -11,7 +11,7 @@ import { useLazyQuery } from '@apollo/client';
 import { useAuth } from '../../contexts/auth_context';
 import colors from '../../constants/colors';
 import { BUTTON_HEIGHT } from '../../constants/style';
-import { getUserByUsername } from '../../graphql-client/queries/users';
+import { getUserByUsername } from '../../apollo-client/queries/users';
 
 import LoadingScreen from '../../components/loading_screen/loading_screen';
 import UserInfoContainer from '../../containers/user_info_container';

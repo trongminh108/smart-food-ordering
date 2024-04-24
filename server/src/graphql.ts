@@ -337,6 +337,8 @@ export abstract class IQuery {
 
     abstract product(id: string): Nullable<Product> | Promise<Nullable<Product>>;
 
+    abstract productsByAgentID(id_agent: string): Nullable<Nullable<Product>[]> | Promise<Nullable<Nullable<Product>[]>>;
+
     abstract users(): Nullable<User>[] | Promise<Nullable<User>[]>;
 
     abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
@@ -563,6 +565,7 @@ export class Product {
     __typename?: 'Product';
     id: string;
     id_category?: Nullable<string>;
+    category?: Nullable<Category>;
     id_agent?: Nullable<string>;
     name?: Nullable<string>;
     images?: Nullable<Nullable<string>[]>;

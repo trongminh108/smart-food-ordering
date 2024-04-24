@@ -18,6 +18,10 @@ export class CategoryService {
     return await this.categoryModel.find(condition);
   }
 
+  async findOneByCondition(condition = {}) {
+    return await this.categoryModel.findOne(condition);
+  }
+
   async findOne(id: string) {
     return await this.categoryModel.findById(id);
   }

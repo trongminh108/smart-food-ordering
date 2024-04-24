@@ -23,7 +23,7 @@ function AgentContainer({ children }: CHILDREN) {
         <AgentProvider>
             <Container fluid style={{ backgroundColor: colors.background }}>
                 <Row>
-                    <Col sm={3} className="p-0">
+                    <Col sm={2} className="p-0">
                         <LeftSideBar />
                     </Col>
                     <Col className="p-0">{children}</Col>
