@@ -7,7 +7,11 @@ import {
     updateOrder,
 } from './mutations';
 import { getOrdersByAgentID, getOrdersByUserID } from '../queries/orders';
-import { addProduct, updateProduct } from '../mutations/products';
+import {
+    addProduct,
+    removeProduct,
+    updateProduct,
+} from '../mutations/products';
 
 export function useAddOrderDetailsMutation() {
     const [createOrderDetails] = useMutation(addOrderDetails);
@@ -86,6 +90,25 @@ export function useUpdateProductMutation() {
         return null;
     }
     return handleUpdateProduct;
+}
+
+export function useRemoveProductMutation() {
+    const [RemoveProduct] = useMutation(removeProduct);
+
+    async function handleRemoveProduct(id) {
+        try {
+            const { data } = await RemoveProduct({
+                variables: {
+                    removeProductId: id,
+                },
+            });
+            return data.removeProduct;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleRemoveProduct;
 }
 
 export function useLoginMutation() {

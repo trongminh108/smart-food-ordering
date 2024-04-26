@@ -6,6 +6,9 @@ import {
     SORT_DECREASE_SOLD,
     SORT_INCREASE,
     SORT_INCREASE_SOLD,
+    TOAST_ERROR,
+    TOAST_INFO,
+    TOAST_SUCCESS,
 } from '../constants/name';
 import { BACKEND_URL_FILE_UPLOAD } from '../constants/backend';
 import axios from 'axios';
@@ -144,16 +147,86 @@ export function searchIgnoreCaseAndDiacritics(text, keyword) {
 export async function handleUploadFile(file) {
     const formData = new FormData();
     await formData.append('file', file);
-    await axios
+    return await axios
         .post(BACKEND_URL_FILE_UPLOAD, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
         .then((response) => {
-            // console.log(response?.data);
+            console.log(response.data);
+            return response.data;
         })
         .catch((rej) => {
             console.log(rej.message);
         });
+}
+
+import { toast, Bounce } from 'react-toastify';
+export function CustomToastify(message, type = TOAST_SUCCESS) {
+    const options = {
+        position: 'bottom-left',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+    };
+    if (type === TOAST_SUCCESS) return toast.success(message, options);
+    else if (type === TOAST_ERROR) return toast.error(message, options);
+    else if (type === TOAST_INFO) return toast.info(message, options);
+}
+
+export function getDatesInRange(fromDate, toDate) {
+    const dates = [];
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+    const currentDate = new Date(fromDate);
+
+    // Loop through each day between fromDate and toDate
+    while (currentDate <= to) {
+        // Format the current date to 'dd/MM' and push it to the array
+        const formattedDate = currentDate.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+        });
+        dates.push(formattedDate);
+
+        // Move to the next day
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return dates;
+}
+
+export function convertDate(date) {
+    const currentDate = new Date(date);
+
+    const formattedDate = currentDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    });
+
+    return formattedDate;
+}
+
+export function getMinMaxDates(dates) {
+    if (dates.length === 0) {
+        return { fromDate: null, toDate: null };
+    }
+
+    // Convert string dates to Date objects
+    const dateObjects = dates.map((dateString) => new Date(dateString));
+
+    // Find the minimum and maximum dates
+    const fromDate = new Date(Math.min(...dateObjects));
+    const toDate = new Date(Math.max(...dateObjects));
+
+    // Return the minimum and maximum dates
+    return { fromDate, toDate };
 }

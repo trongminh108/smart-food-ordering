@@ -7,6 +7,9 @@ import LeftSideBar from '@/app/components/agent/leftSideBar/leftSidebar';
 import { useAuth } from '../contexts/auth_context';
 import colors from '@/app/constants/colors';
 import AgentProvider from '../contexts/agent_context';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loading from '../components/loading/loading';
 
 function AgentContainer({ children }: CHILDREN) {
     const { authState } = useAuth();
@@ -17,7 +20,14 @@ function AgentContainer({ children }: CHILDREN) {
     });
 
     if (!(authState.authenticated && authState.user.is_agent))
-        return <div>Bạn phải đăng nhập bằng tài khoản đối tác</div>;
+        return (
+            <div style={{ width: '100%', height: '100vh' }}>
+                <Loading
+                    loading={false}
+                    message="Bạn phải đăng nhập bằng tài khoản đối tác"
+                />
+            </div>
+        );
 
     return (
         <AgentProvider>
@@ -28,6 +38,7 @@ function AgentContainer({ children }: CHILDREN) {
                     </Col>
                     <Col className="p-0">{children}</Col>
                 </Row>
+                <ToastContainer />
             </Container>
         </AgentProvider>
     );

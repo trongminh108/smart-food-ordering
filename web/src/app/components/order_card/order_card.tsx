@@ -24,7 +24,7 @@ import { useAgent } from '@/app/contexts/agent_context';
 import { Prev } from 'react-bootstrap/esm/PageItem';
 
 function OrderCard({ order }: { order: any }) {
-    const defaultAvatar = require('@/app/favicon.ico');
+    const defaultAvatar = require('@/assets/images/unknown_user.jpg');
     const [avatar, setAvatar] = useState(defaultAvatar);
     const [modalShow, setModalShow] = useState(false);
     const { orders } = useAgent();
@@ -113,9 +113,10 @@ function OrderCard({ order }: { order: any }) {
                             height={80}
                             alt="user avatar"
                             style={{
-                                backgroundColor: 'red',
+                                backgroundColor: 'white',
                                 width: '100%',
                                 aspectRatio: '1',
+                                objectFit: 'cover',
                             }}
                         />
                     </Col>

@@ -31,6 +31,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Loading from '@/app/components/loading/loading';
 
 interface Column {
     id: 'index' | 'name' | 'price' | 'sold' | 'rating' | 'density';
@@ -83,7 +84,6 @@ function ProductPage() {
         { value: SORT_DECREASE_SOLD, name: 'Số lượng bán giảm dần' },
     ];
     const [addModal, setAddModal] = useState(false);
-    const [deleteModal, setDeleteModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
 
@@ -205,11 +205,7 @@ function ProductPage() {
     }
 
     if (!products)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Đang tải sản phẩm</div>
-            </Container>
-        );
+        return <Loading loading={true} message="Đang tải sản phẩm của quán" />;
     if (products && products.length != 0 && categories)
         return (
             <Container fluid className="d-flex flex-column gap-4 my-4">
@@ -352,20 +348,13 @@ function ProductPage() {
                         show={updateModal}
                         onHide={() => setUpdateModal(false)}
                         product={selectedRow ? selectedRow : products[0]}
-                        onDelete={() => setDeleteModal(true)}
                     />
-                    <YesNoModal showModal={deleteModal} />
                 </Row>
-                <Row></Row>
             </Container>
         );
 
     if (products && products.length == 0)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Không có đơn để hiển thị</div>
-            </Container>
-        );
+        return <Loading loading={false} message="Quán chưa có sản phẩm" />;
 }
 
 export default ProductPage;

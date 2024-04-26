@@ -2,32 +2,34 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function YesNoModal({ showModal }: { showModal: any }) {
-    const [show, setShow] = useState(showModal);
+interface YES_NO_MODAL {
+    show: any;
+    onHide: () => void;
+    data: any;
+    onYesFunc?: () => void;
+    onNoFunc?: () => void;
+}
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
+function YesNoModal({ show, onHide, data, onYesFunc, onNoFunc }: YES_NO_MODAL) {
     return (
         <Modal
             show={show}
-            onHide={handleClose}
+            onHide={onHide}
             backdrop="static"
             keyboard={false}
-            style={{ zIndex: 10 }}
+            style={{ zIndex: 10000 }}
         >
             <Modal.Header closeButton>
-                <Modal.Title>Modal title</Modal.Title>
+                <Modal.Title>{data.title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                I will not close if you click outside me. Do not even try to
-                press escape key.
-            </Modal.Body>
+            <Modal.Body>{data.message}</Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
+                <Button variant="primary" onClick={onYesFunc}>
+                    Chắc chắn
                 </Button>
-                <Button variant="primary">Understood</Button>
+                <Button variant="secondary" onClick={onNoFunc}>
+                    Hủy bỏ
+                </Button>
             </Modal.Footer>
         </Modal>
     );

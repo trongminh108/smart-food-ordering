@@ -10,6 +10,8 @@ import { STATUS_ACTIVE, STATUS_PENDING } from '@/app/constants/backend';
 import { useAuth } from '@/app/contexts/auth_context';
 import { useQuery, useSubscription } from '@apollo/client';
 import { useAgent } from '@/app/contexts/agent_context';
+import colors from '@/app/constants/colors';
+import Loading from '@/app/components/loading/loading';
 
 function OrderManage() {
     const { authState } = useAuth();
@@ -35,19 +37,14 @@ function OrderManage() {
             setOrders(handleFilterOrders(ordersContext.value, STATUS_PENDING));
     }, [ordersContext.value]);
 
-    if (!orders)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Đang tải đơn mới</div>
-            </Container>
-        );
+    if (!orders) return <Loading loading={true} message="Đang tải đơn mới" />;
 
     if (orders && orders.length != 0)
         return (
             <Container
                 fluid
                 className="d-flex flex-column justify-content-center align-items-center pt-5 gap-4 px-5"
-                style={{ backgroundColor: '#ebecf0' }}
+                style={{ backgroundColor: colors.background }}
             >
                 {orders.map((order: any) => {
                     return (
@@ -59,12 +56,7 @@ function OrderManage() {
             </Container>
         );
 
-    if (orders && orders.length == 0)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Không có đơn để hiển thị</div>
-            </Container>
-        );
+    return <Loading loading={false} message="Tạm thời chưa có đơn mới" />;
 }
 
 export default OrderManage;

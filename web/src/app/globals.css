@@ -89,6 +89,10 @@ body {
     min-height: 100vh;
 }
 
+.modal-open {
+    padding-right: 0px !important;
+}
+
 /* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

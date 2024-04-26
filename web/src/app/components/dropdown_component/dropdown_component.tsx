@@ -15,9 +15,9 @@ function DropdownComponent({
             onChange={onChange}
             defaultValue={defaultVal}
         >
-            {data.map((option: any) => {
+            {data.map((option: any, index: number) => {
                 return (
-                    <option key={option.value} value={option.value}>
+                    <option key={index} value={option.value}>
                         {option.name}
                     </option>
                 );

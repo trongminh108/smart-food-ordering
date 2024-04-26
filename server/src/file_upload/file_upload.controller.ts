@@ -1,4 +1,6 @@
 import { diskStorage } from 'multer';
+import { basename, extname } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   Controller,
@@ -7,7 +9,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extname } from 'path';
 
 @Controller('file-upload')
 export class FileUploadController {
@@ -26,14 +27,21 @@ export class FileUploadController {
           callback(null, destinationPath);
         },
         filename: (req, file, callback) => {
-          const filename = file.originalname;
-          callback(null, filename);
+          const filename = basename(
+            file.originalname,
+            extname(file.originalname),
+          );
+          const uniqueSuffix = `${Date.now()}-${Math.round(
+            Math.random() * 1e9,
+          )}`;
+          const fileExtension = extname(file.originalname).toLowerCase();
+          const randomFilename = `${filename}-${uniqueSuffix}${fileExtension}`;
+          callback(null, randomFilename);
         },
       }),
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File): string {
-    console.log(file);
     return file.filename;
   }
 }

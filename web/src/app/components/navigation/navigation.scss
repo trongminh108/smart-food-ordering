@@ -12,7 +12,7 @@ $ni-radius: 20px;
     display: flex;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 10;
+    z-index: 10000;
 
     &.sticky {
         width: 100%;

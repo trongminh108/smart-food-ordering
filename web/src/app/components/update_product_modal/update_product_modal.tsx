@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import Image from 'next/image';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
 import {
@@ -16,13 +18,18 @@ import Modal from 'react-bootstrap/Modal';
 
 import {
     useAddProductMutation,
+    useRemoveProductMutation,
     useUpdateProductMutation,
 } from '@/app/apollo-client/mutations/services';
 import { BACKEND_IMAGES } from '@/app/constants/backend';
 import colors from '@/app/constants/colors';
+import { TOAST_ERROR } from '@/app/constants/name';
 import { useAgent } from '@/app/contexts/agent_context';
 import { useAuth } from '@/app/contexts/auth_context';
-import { handleUploadFile } from '@/app/modules/feature_function';
+import {
+    CustomToastify,
+    handleUploadFile,
+} from '@/app/modules/feature_function';
 
 import DropdownComponent from '../dropdown_component/dropdown_component';
 import YesNoModal from '../yes_no_modal/yes_no_modal';
@@ -30,12 +37,10 @@ import YesNoModal from '../yes_no_modal/yes_no_modal';
 export default function UpdateProductModal({
     show,
     onHide,
-    onDelete,
     product,
 }: {
     show: boolean;
     onHide: () => void;
-    onDelete: () => void;
     product: any;
 }) {
     const { allCategories, products } = useAgent();
@@ -44,13 +49,18 @@ export default function UpdateProductModal({
         { value: '0', name: 'Đang tải' },
     ]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
     const defaultImage = require('@/assets/images/water.jpg');
     const [imageProduct, setImageProduct] = useState(
         product.images[0] != null
             ? BACKEND_IMAGES + product.images[0]
             : defaultImage
     );
+    const [imageChange, setImageChange] = useState(false);
     const fileImageRef = useRef<HTMLInputElement>(null);
+
+    const updateProductFunc = useUpdateProductMutation();
+    const removeProductFunc = useRemoveProductMutation();
 
     interface FORM_DATA {
         id: string;
@@ -86,6 +96,7 @@ export default function UpdateProductModal({
             description: product.description,
             price: product.price,
         });
+        setImageChange(false);
     }, [show]);
 
     useEffect(() => {
@@ -127,10 +138,10 @@ export default function UpdateProductModal({
             const temp = URL.createObjectURL(file);
             setImageProduct(temp);
             setFormData((prev: any) => ({ ...prev, images: file }));
+            setImageChange(true);
         }
     }
 
-    const updateProductFunc = useUpdateProductMutation();
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const { images, ...data } = formData;
@@ -146,8 +157,6 @@ export default function UpdateProductModal({
             })
         );
 
-        // // products.setState((prev: any) => [newProduct, ...prev]);
-        console.log(formData);
         onHide();
     };
 
@@ -159,8 +168,46 @@ export default function UpdateProductModal({
         }
     }
 
-    function handleDeleteProduct() {
-        onHide();
+    async function handleUpdateProduct() {
+        try {
+            const { images, ...data } = formData;
+            if (formData.images && imageChange) {
+                const imageName = await handleUploadFile(formData.images);
+                formData.images = [imageName];
+            } else {
+                formData.images = product.images;
+            }
+            formData.price = Number(data.price);
+
+            const newProduct = await updateProductFunc(formData);
+            products.setState((prev: any) =>
+                prev.map((product: any) => {
+                    if (product.id === newProduct.id) return newProduct;
+                    return product;
+                })
+            );
+            CustomToastify(`Đã cập nhật ${product.name} thành công`);
+            setShowUpdateModal(false);
+            onHide();
+        } catch (e) {
+            console.error(e);
+            CustomToastify(e, TOAST_ERROR);
+        }
+    }
+
+    async function handleDeleteProduct() {
+        try {
+            const res = await removeProductFunc(product.id);
+            products.setState((prev: any) =>
+                prev.filter((product: any) => product.id !== res.id)
+            );
+            CustomToastify(`Đã xóa ${product.name} thành công`);
+            setShowDeleteModal(false);
+            onHide();
+        } catch (error) {
+            CustomToastify(error, TOAST_ERROR);
+            console.error(error);
+        }
     }
 
     return (
@@ -190,7 +237,10 @@ export default function UpdateProductModal({
                                     alt={formData.name}
                                     width={200}
                                     height={200}
-                                    style={{ cursor: 'pointer' }}
+                                    style={{
+                                        cursor: 'pointer',
+                                        objectFit: 'cover',
+                                    }}
                                     onClick={handleImageClick}
                                 />
                                 <FormGroup className="mb-3">
@@ -255,7 +305,7 @@ export default function UpdateProductModal({
                                     <DropdownComponent
                                         onChange={handleChangeCategory}
                                         data={categories}
-                                        defaultVal={formData.id_category}
+                                        defaultVal={product.id_category}
                                     />
                                 </InputGroup>
                             </Col>
@@ -273,14 +323,14 @@ export default function UpdateProductModal({
                     </FloatingLabel>
 
                     <div className="d-flex gap-3 justify-content-end">
-                        <Button type="submit" variant="success">
+                        <Button
+                            variant="success"
+                            onClick={() => setShowUpdateModal(true)}
+                        >
                             Chỉnh sửa
                         </Button>
                         <Button
-                            onClick={() => {
-                                console.log('You clicked Delete');
-                                onDelete();
-                            }}
+                            onClick={() => setShowDeleteModal(true)}
                             variant="danger"
                         >
                             Xóa bỏ
@@ -291,7 +341,28 @@ export default function UpdateProductModal({
                     </div>
                 </Form>
             </Modal.Body>
-            <Modal.Footer className="d-flex justify-content-between"></Modal.Footer>
+            <Modal.Footer className="d-flex justify-content-between">
+                <YesNoModal
+                    show={showDeleteModal}
+                    onHide={() => setShowDeleteModal(false)}
+                    data={{
+                        title: 'Xóa sản phẩm',
+                        message: `Bạn chắc chắn xóa "${product.name}" chứ?`,
+                    }}
+                    onYesFunc={handleDeleteProduct}
+                    onNoFunc={() => setShowDeleteModal(false)}
+                />
+                <YesNoModal
+                    show={showUpdateModal}
+                    onHide={() => setShowUpdateModal(false)}
+                    data={{
+                        title: 'Chỉnh sửa sản phẩm',
+                        message: `Bạn chắc chắn sửa "${product.name}" chứ?`,
+                    }}
+                    onYesFunc={handleUpdateProduct}
+                    onNoFunc={() => setShowUpdateModal(false)}
+                />
+            </Modal.Footer>
         </Modal>
     );
 }

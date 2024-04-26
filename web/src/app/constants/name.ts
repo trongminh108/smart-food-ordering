@@ -11,3 +11,11 @@ export const SORT_DECREASE_SOLD = 'decrease_sold';
 export const SORT_DEFAULT = 'default';
 
 export const FILTER_DEFAULT = 'all';
+
+export const TOAST_SUCCESS = 'success';
+export const TOAST_ERROR = 'error';
+export const TOAST_INFO = 'info';
+export const TOAST_WARNING = 'warning';
+
+export const RADIO_PERIOD = 'period';
+export const RADIO_SO_FAR = 'so_far';

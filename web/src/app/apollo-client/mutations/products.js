@@ -16,3 +16,11 @@ export const updateProduct = gql`
         }
     }
 `;
+
+export const removeProduct = gql`
+    mutation Mutation($removeProductId: ID!) {
+        removeProduct(id: $removeProductId) {
+            ${PRODUCT_TYPE}
+        }
+    }
+`;
