@@ -60,6 +60,7 @@ export class UpdateCommentInput {
 
 export class CreateDeliverInput {
     id_user?: Nullable<string>;
+    id_agent?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
     comments_quantity?: Nullable<number>;
@@ -68,6 +69,7 @@ export class CreateDeliverInput {
 export class UpdateDeliverInput {
     id: string;
     id_user?: Nullable<string>;
+    id_agent?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
     comments_quantity?: Nullable<number>;
@@ -107,6 +109,7 @@ export class CreateOrderInput {
     discount?: Nullable<number>;
     total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    message?: Nullable<string>;
     status?: Nullable<string>;
 }
 
@@ -124,6 +127,7 @@ export class UpdateOrderInput {
     discount?: Nullable<number>;
     total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    message?: Nullable<string>;
     status?: Nullable<string>;
 }
 
@@ -210,9 +214,7 @@ export class CreateUserInput {
     gmail?: Nullable<string>;
     avatar?: Nullable<string>;
     phone_number?: Nullable<string>;
-    current_address?: Nullable<string>;
-    delivery_address?: Nullable<string>;
-    position?: Nullable<Nullable<number>[]>;
+    delivery_address?: Nullable<Nullable<string>[]>;
     is_agent?: Nullable<boolean>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
@@ -226,9 +228,7 @@ export class UpdateUserInput {
     gmail?: Nullable<string>;
     avatar?: Nullable<string>;
     phone_number?: Nullable<string>;
-    current_address?: Nullable<string>;
-    delivery_address?: Nullable<string>;
-    position?: Nullable<Nullable<number>[]>;
+    delivery_address?: Nullable<Nullable<string>[]>;
     is_agent?: Nullable<boolean>;
     is_deliver?: Nullable<boolean>;
     face_recognition?: Nullable<string>;
@@ -478,6 +478,7 @@ export class Deliver {
     __typename?: 'Deliver';
     id: string;
     id_user?: Nullable<string>;
+    id_agent?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
     comments_quantity?: Nullable<number>;
@@ -523,6 +524,7 @@ export class Order {
     discount?: Nullable<number>;
     total_quantity?: Nullable<number>;
     total_price?: Nullable<number>;
+    message?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     updatedAt?: Nullable<DateTime>;
     status?: Nullable<string>;
@@ -584,9 +586,7 @@ export class User {
     gmail?: Nullable<string>;
     avatar?: Nullable<string>;
     phone_number?: Nullable<string>;
-    current_address?: Nullable<string>;
-    delivery_address?: Nullable<string>;
-    position?: Nullable<Nullable<number>[]>;
+    delivery_address?: Nullable<Nullable<string>[]>;
     is_agent?: Nullable<boolean>;
     agent?: Nullable<Agent>;
     is_deliver?: Nullable<boolean>;

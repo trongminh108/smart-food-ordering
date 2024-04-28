@@ -18,6 +18,7 @@ type Order {
   discount: Float
   total_quantity: Int
   total_price: Float
+  message: String
   createdAt: DateTime
   updatedAt: DateTime
   status: String
@@ -36,6 +37,7 @@ input CreateOrderInput {
   discount: Float
   total_quantity: Int
   total_price: Float
+  message: String
   status: String
 }
 
@@ -53,6 +55,7 @@ input UpdateOrderInput {
   discount: Float
   total_quantity: Int
   total_price: Float
+  message: String
   status: String
 }
 

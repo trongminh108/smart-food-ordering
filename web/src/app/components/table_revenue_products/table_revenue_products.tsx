@@ -8,13 +8,17 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {
+    convertDate,
     formatCurrency,
     getDatesInRange,
+    sortProducts,
 } from '@/app/modules/feature_function';
 import Loading from '../loading/loading';
+import { STATUS_SUCCESS } from '@/app/constants/backend';
+import { SORT_DECREASE_SUBTOTAL } from '@/app/constants/name';
 
 interface Column {
-    id: 'index' | 'name' | 'price' | 'sold' | 'rating' | 'total';
+    id: 'index' | 'name' | 'price' | 'sold' | 'rating' | 'subtotal';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -37,14 +41,15 @@ const columns: readonly Column[] = [
         align: 'right',
     },
     {
-        id: 'rating',
-        label: 'Đánh giá',
+        id: 'subtotal',
+        label: 'Tổng tiền',
         minWidth: 170,
         align: 'right',
+        format: (value: number) => formatCurrency(value),
     },
     {
-        id: 'total',
-        label: 'Tổng tiền',
+        id: 'rating',
+        label: 'Đánh giá',
         minWidth: 170,
         align: 'right',
     },
@@ -81,7 +86,40 @@ export default function TableRevenueProducts({
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     React.useEffect(() => {
-        orders.forEach((order: any) => console.log(order.order_details));
+        // orders.forEach((order: any) => console.log(order.order_details));
+        const ordersValid = orders.filter((order: any) => {
+            const orderDate = new Date(order.updatedAt);
+            const from = new Date(labelDates.fromDate);
+            const to = new Date(labelDates.toDate);
+            return (
+                labels.includes(convertDate(order.updatedAt)) &&
+                order.status === STATUS_SUCCESS
+            );
+        });
+        const allOrderDetails = ordersValid.flatMap(
+            (order: any) => order.order_details
+        );
+
+        const res = allOrderDetails.reduce((acc: any, details: any) => {
+            const id_product = details.product.id;
+            const { images, ...product } = details.product;
+            if (!acc[id_product]) {
+                acc[id_product] = {
+                    ...product,
+                    sold: 0,
+                    subtotal: 0,
+                };
+            }
+            acc[id_product].sold += details.quantity;
+            acc[id_product].subtotal += details.subtotal;
+            return acc;
+        }, {});
+
+        const products = sortProducts(
+            Object.values(res),
+            SORT_DECREASE_SUBTOTAL
+        );
+        setRows(products);
     }, [labelDates]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -123,16 +161,19 @@ export default function TableRevenueProducts({
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
                             )
-                            .map((row) => {
+                            .map((row: any, index: number) => {
                                 return (
                                     <TableRow
                                         hover
                                         role="checkbox"
                                         tabIndex={-1}
-                                        key={row.code}
+                                        key={row.id}
                                     >
                                         {columns.map((column) => {
-                                            const value = row[column.id];
+                                            let value;
+                                            if (column.id !== 'index')
+                                                value = row[column.id];
+                                            else value = index + 1;
                                             return (
                                                 <TableCell
                                                     key={column.id}

@@ -2,16 +2,19 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ collection: 'DELIVERS' })
 export class DELIVER {
-  @Prop()
+  @Prop({ default: '' })
   id_user: string;
 
-  @Prop()
+  @Prop({ default: '' })
+  id_agent: string;
+
+  @Prop({ default: '' })
   phone_number: string;
 
-  @Prop()
+  @Prop({ default: 0 })
   rating: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   comments_quantity: number;
 }
 

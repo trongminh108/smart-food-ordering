@@ -15,7 +15,6 @@ export const ORDER_TYPE = `
     recipient
     user {
         full_name
-        current_address
         phone_number
     }
     order_details {
@@ -35,6 +34,7 @@ export const ORDER_TYPE = `
     discount
     total_quantity
     total_price
+    message
     createdAt
     updatedAt
     status

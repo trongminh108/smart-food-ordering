@@ -151,12 +151,9 @@ export default function RevenuePage() {
                         <LineChart labelDates={labels} orders={orders} />
                     </Col>
                 </Row>
-                <Row>
+                <Row className="mt-4">
                     <Col>
-                        <TableRevenueProducts
-                            labelDates={labels}
-                            orders={orders}
-                        />
+                        <BarChart labelDates={labels} orders={orders} />
                     </Col>
                 </Row>
             </Container>

@@ -1,6 +1,7 @@
 type Deliver {
   id: ID!
   id_user: ID
+  id_agent: ID
   phone_number: String
   rating: Float
   comments_quantity: Int
@@ -8,6 +9,7 @@ type Deliver {
 
 input CreateDeliverInput {
   id_user: ID
+  id_agent: ID
   phone_number: String
   rating: Float
   comments_quantity: Int
@@ -16,6 +18,7 @@ input CreateDeliverInput {
 input UpdateDeliverInput {
   id: ID!
   id_user: ID
+  id_agent: ID
   phone_number: String
   rating: Float
   comments_quantity: Int

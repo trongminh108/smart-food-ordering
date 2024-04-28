@@ -6,9 +6,7 @@ type User {
   gmail: String
   avatar: String
   phone_number: String
-  current_address: String
-  delivery_address: String
-  position: [Float]
+  delivery_address: [String]
   is_agent: Boolean
   agent: Agent
   is_deliver: Boolean
@@ -22,9 +20,7 @@ input CreateUserInput {
   gmail: String
   avatar: String
   phone_number: String
-  current_address: String
-  delivery_address: String
-  position: [Float]
+  delivery_address: [String]
   is_agent: Boolean
   is_deliver: Boolean
   face_recognition: String
@@ -38,9 +34,7 @@ input UpdateUserInput {
   gmail: String
   avatar: String
   phone_number: String
-  current_address: String
-  delivery_address: String
-  position: [Float]
+  delivery_address: [String]
   is_agent: Boolean
   is_deliver: Boolean
   face_recognition: String

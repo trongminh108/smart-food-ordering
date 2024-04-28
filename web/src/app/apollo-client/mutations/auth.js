@@ -21,9 +21,7 @@ export const registerUser = gql`
             gmail
             avatar
             phone_number
-            current_address
             delivery_address
-            position
             is_agent
             is_deliver
             face_recognition

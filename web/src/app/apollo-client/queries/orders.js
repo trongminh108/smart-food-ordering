@@ -16,7 +16,6 @@ export const ORDER_TYPE = `
     user {
         avatar
         full_name
-        current_address
         phone_number
     }
     order_details {
@@ -24,8 +23,11 @@ export const ORDER_TYPE = `
         discount
         subtotal
         product {
+            id
             name
             images
+            price
+            rating
         }
     }
     phone_number
@@ -36,6 +38,7 @@ export const ORDER_TYPE = `
     discount
     total_quantity
     total_price
+    message
     createdAt
     updatedAt
     status

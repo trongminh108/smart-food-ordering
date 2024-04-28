@@ -25,13 +25,7 @@ export class USER {
   phone_number: string;
 
   @Prop({ default: '' })
-  current_address: string;
-
-  @Prop({ default: '' })
-  delivery_address: string;
-
-  @Prop({ default: [0, 0] })
-  position: number[];
+  delivery_address: string[];
 
   @Prop({ default: false }) // Mặc định là false
   is_agent: boolean;

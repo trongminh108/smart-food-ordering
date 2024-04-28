@@ -148,7 +148,7 @@ export default function LineChart({ labelDates, orders }: LINE_CHART) {
                             : 0
                     } (${
                         failedRevenue != null ? failedRevenue.orderQuantity : 0
-                    })`}
+                    } đơn)`}
                 </Row>
             </Row>
             <Row className="w-75 m-auto">

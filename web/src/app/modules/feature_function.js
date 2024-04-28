@@ -4,6 +4,7 @@ import { TOKEN } from '@/app/constants/cookies';
 import {
     SORT_DECREASE,
     SORT_DECREASE_SOLD,
+    SORT_DECREASE_SUBTOTAL,
     SORT_INCREASE,
     SORT_INCREASE_SOLD,
     TOAST_ERROR,
@@ -111,6 +112,14 @@ function sortProductsSoldDecrease(a, b) {
     else return 1;
 }
 
+function sortProductsSubtotalDecrease(a, b) {
+    const pA = a.subtotal;
+    const pB = b.subtotal;
+    if (pA < pB) return 1;
+    if (pA > pB) return -1;
+    else return 1;
+}
+
 export function sortProducts(products, type = SORT_INCREASE) {
     if (products.length <= 1) {
         console.log('Products is product');
@@ -122,6 +131,8 @@ export function sortProducts(products, type = SORT_INCREASE) {
         products.sort(sortProductsSoldIncrease);
     else if (type === SORT_DECREASE_SOLD)
         products.sort(sortProductsSoldDecrease);
+    else if (type === SORT_DECREASE_SUBTOTAL)
+        products.sort(sortProductsSubtotalDecrease);
     return products;
 }
 

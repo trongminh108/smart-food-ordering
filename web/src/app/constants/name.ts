@@ -8,6 +8,8 @@ export const SORT_INCREASE = 'increase';
 export const SORT_DECREASE = 'decrease';
 export const SORT_INCREASE_SOLD = 'increase_sold';
 export const SORT_DECREASE_SOLD = 'decrease_sold';
+export const SORT_INCREASE_SUBTOTAL = 'increase_subtotal';
+export const SORT_DECREASE_SUBTOTAL = 'decrease_subtotal';
 export const SORT_DEFAULT = 'default';
 
 export const FILTER_DEFAULT = 'all';

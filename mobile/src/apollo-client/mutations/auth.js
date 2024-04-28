@@ -7,9 +7,7 @@ const USER_TYPE = `
     gmail
     avatar
     phone_number
-    current_address
     delivery_address
-    position
     is_agent
     agent {
         id
@@ -38,9 +36,7 @@ export const registerUser = gql`
             gmail
             avatar
             phone_number
-            current_address
             delivery_address
-            position
             is_agent
             is_deliver
             face_recognition
