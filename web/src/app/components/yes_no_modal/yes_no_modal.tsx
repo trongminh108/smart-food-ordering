@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FloatingLabel, Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
@@ -8,9 +9,23 @@ interface YES_NO_MODAL {
     data: any;
     onYesFunc?: () => void;
     onNoFunc?: () => void;
+    message?: boolean;
 }
 
-function YesNoModal({ show, onHide, data, onYesFunc, onNoFunc }: YES_NO_MODAL) {
+function YesNoModal({
+    show,
+    onHide,
+    data,
+    onYesFunc,
+    onNoFunc,
+    message = false,
+}: YES_NO_MODAL) {
+    const [text, setText] = useState('');
+
+    function handleChange(e: any) {
+        setText(e.target.value);
+    }
+
     return (
         <Modal
             show={show}
@@ -23,6 +38,18 @@ function YesNoModal({ show, onHide, data, onYesFunc, onNoFunc }: YES_NO_MODAL) {
                 <Modal.Title>{data.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>{data.message}</Modal.Body>
+            {message && (
+                <FloatingLabel label="Nhập lý do">
+                    <Form.Control
+                        as="textarea"
+                        placeholder="Lý do từ chối đơn hàng"
+                        style={{ height: '100px' }}
+                        name="description"
+                        onChange={handleChange}
+                        value={text}
+                    />
+                </FloatingLabel>
+            )}
             <Modal.Footer>
                 <Button variant="primary" onClick={onYesFunc}>
                     Chắc chắn

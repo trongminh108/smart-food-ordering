@@ -163,12 +163,12 @@ export function useUpdateOrderMutation() {
                     updateOrderInput: order,
                 },
                 // update: cacheUpdateOrderMutation,
-                refetchQueries: {
-                    query: getOrdersByAgentID,
-                    variables: {
-                        ordersByAgentIdId: order.id_agent,
-                    },
-                },
+                // refetchQueries: {
+                //     query: getOrdersByAgentID,
+                //     variables: {
+                //         ordersByAgentIdId: order.id_agent,
+                //     },
+                // },
             });
             return data.updateOrder;
         } catch (error) {

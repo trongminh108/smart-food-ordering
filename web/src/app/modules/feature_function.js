@@ -68,6 +68,7 @@ export function calculateTimeFrom(inputDate) {
 
     if (timeDifferenceInMinutes <= 60) {
         // Nếu ít hơn hoặc bằng 60 phút, in ra số phút
+        if (timeDifferenceInMinutes <= 1) return 'Đơn mới';
         return `${timeDifferenceInMinutes} phút trước`;
     } else if (timeDifferenceInMinutes <= 1440) {
         // Nếu ít hơn hoặc bằng 24 giờ, in ra số giờ
@@ -76,6 +77,7 @@ export function calculateTimeFrom(inputDate) {
     } else {
         // Nếu nhiều hơn 24 giờ, tính theo ngày
         const days = Math.floor(timeDifferenceInMinutes / 1440);
+        if (days > 1) return `${convertDate(inputDateTime)}`;
         return `${days} ngày trước`;
     }
 }

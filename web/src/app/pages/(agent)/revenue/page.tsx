@@ -54,7 +54,7 @@ export default function RevenuePage() {
             }
         }
     }
-    if (!orders || labels === null)
+    if (orders === null || labels === null)
         return <Loading message="Đang tải dữ liệu thống kê" />;
 
     if (orders && orders.length != 0)

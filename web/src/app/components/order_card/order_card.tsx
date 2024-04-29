@@ -10,6 +10,7 @@ import {
 } from '@/app/constants/backend';
 import './order_card.scss';
 import {
+    CustomToastify,
     calculateTimeFrom,
     displayDistance,
     formatCurrency,
@@ -21,12 +22,14 @@ import { useSubscription } from '@apollo/client';
 import { useUpdateOrderMutation } from '@/app/apollo-client/mutations/services';
 import colors from '@/app/constants/colors';
 import { useAgent } from '@/app/contexts/agent_context';
-import { Prev } from 'react-bootstrap/esm/PageItem';
+import { TOAST_ERROR, TOAST_INFO, TOAST_SUCCESS } from '@/app/constants/name';
+import YesNoModal from '../yes_no_modal/yes_no_modal';
 
 function OrderCard({ order }: { order: any }) {
     const defaultAvatar = require('@/assets/images/unknown_user.jpg');
     const [avatar, setAvatar] = useState(defaultAvatar);
     const [modalShow, setModalShow] = useState(false);
+    const [messageModal, setMessageModal] = useState(false);
     const { orders } = useAgent();
 
     const updateOrderFunc = useUpdateOrderMutation();
@@ -49,7 +52,7 @@ function OrderCard({ order }: { order: any }) {
         });
     }
 
-    async function handleClickConfirm() {
+    async function handleClickConfirmModal() {
         setModalShow(false);
         const { id } = order;
         const STATUS =
@@ -63,29 +66,35 @@ function OrderCard({ order }: { order: any }) {
                 id: id,
                 status: STATUS,
             });
-            handleUpdateStatusOrder(updatedOrder);
+            // handleUpdateStatusOrder(updatedOrder);
         }
         switch (order.status) {
             case STATUS_PENDING:
-                alert('Bạn đã xác nhận hóa đơn');
+                CustomToastify('Đã xác nhận hóa đơn', TOAST_INFO);
                 break;
             case STATUS_ACTIVE:
-                alert('Xác nhận hóa đơn thành công');
+                CustomToastify('Xác nhận hóa đơn thành công', TOAST_SUCCESS);
                 break;
             default:
                 return;
         }
     }
 
-    async function handleClickCancel() {
-        setModalShow(false);
-        const { id } = order;
-        const updatedOrder = await updateOrderFunc({
-            id: id,
-            status: STATUS_FAILED,
-        });
-        handleUpdateStatusOrder(updatedOrder);
-        alert('Bạn đã từ chối hóa đơn');
+    async function handleClickRejectOrder() {
+        try {
+            setModalShow(false);
+            setMessageModal(false);
+            const { id } = order;
+            const updatedOrder = await updateOrderFunc({
+                id: id,
+                status: STATUS_FAILED,
+            });
+            // handleUpdateStatusOrder(updatedOrder);
+            CustomToastify('Bạn đã từ chối hóa đơn', TOAST_ERROR);
+        } catch (error) {
+            CustomToastify(error, TOAST_ERROR);
+            console.log('[ORDER CARD]', error);
+        }
     }
 
     return (
@@ -159,9 +168,20 @@ function OrderCard({ order }: { order: any }) {
             <OrderDetailsCard
                 show={modalShow}
                 onHide={() => setModalShow(false)}
-                onConfirm={handleClickConfirm}
-                onCancel={handleClickCancel}
+                onConfirm={handleClickConfirmModal}
+                onCancel={() => setMessageModal(true)}
                 order={order}
+            />
+            <YesNoModal
+                show={messageModal}
+                message={true}
+                data={{
+                    title: 'Từ chối đơn hàng',
+                    message: 'Bạn chắc chắn từ chối đơn hàng chứ?',
+                }}
+                onHide={() => setMessageModal(false)}
+                onYesFunc={handleClickRejectOrder}
+                onNoFunc={() => setMessageModal(false)}
             />
         </>
     );

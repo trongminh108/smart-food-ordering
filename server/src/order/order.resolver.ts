@@ -18,6 +18,7 @@ import { AgentService } from 'src/agent/agent.service';
 import { OrderDetailsService } from 'src/order_details/order_details.service';
 import { PubSub } from 'graphql-subscriptions';
 import {
+  STATUS_ACTIVE,
   STATUS_DRAFT,
   STATUS_FAILED,
   STATUS_PENDING,
@@ -74,7 +75,7 @@ export class OrderResolver {
   @Mutation('updateOrder')
   async update(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
     const updatedOrder = await this.orderService.update(updateOrderInput);
-    this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: updatedOrder });
+    // this.pubSub.publish(this.PUB_NEW_ORDER, { pubNewOrder: updatedOrder });
     this.pubSub.publish(this.PUB_USER_STATUS_ORDER, {
       pubUserStatusOrder: updatedOrder,
     });
@@ -149,8 +150,7 @@ export class OrderResolver {
     filter(payload, variables, context) {
       return (
         payload.pubAgentStatusOrder.id_agent === variables.id_agent &&
-        (payload.pubAgentStatusOrder.status === STATUS_SUCCESS ||
-          payload.pubAgentStatusOrder.status === STATUS_FAILED)
+        payload.pubAgentStatusOrder.status != STATUS_DRAFT
       );
     },
   })

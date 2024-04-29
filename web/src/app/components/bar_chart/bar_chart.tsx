@@ -130,7 +130,7 @@ export function BarChart({ labelDates, orders }: BAR_CHART) {
             ) || [],
         datasets: [
             {
-                label: 'Sản phẩm',
+                label: 'Tổng tiền',
                 data: products.map((product: any) => product.subtotal) || [],
                 backgroundColor: colors,
             },

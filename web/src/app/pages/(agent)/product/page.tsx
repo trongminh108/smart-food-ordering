@@ -204,9 +204,9 @@ function ProductPage() {
         setUpdateModal(true);
     }
 
-    if (!products)
+    if (!products || !categories)
         return <Loading loading={true} message="Đang tải sản phẩm của quán" />;
-    if (products && products.length != 0 && categories)
+    if (products && categories)
         return (
             <Container fluid className="d-flex flex-column gap-4 my-4">
                 <Row className="d-flex justify-content-end">
@@ -235,92 +235,108 @@ function ProductPage() {
                         />
                     </Col>
                 </Row>
-                <Row>
-                    <Paper
-                        sx={{ width: '100%', overflow: 'hidden' }}
-                        className=""
-                    >
-                        <TableContainer sx={{ maxHeight: '83vh' }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                                sx={{
-                                                    minWidth: column.minWidth,
-                                                }}
-                                                className="fw-bold"
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {products
-                                        .slice(
-                                            page * rowsPerPage,
-                                            page * rowsPerPage + rowsPerPage
-                                        )
-                                        .map((row: any, index: any) => {
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={row.id}
-                                                    style={{
-                                                        cursor: 'pointer',
+                {products.length != 0 ? (
+                    <Row>
+                        <Paper
+                            sx={{ width: '100%', overflow: 'hidden' }}
+                            className=""
+                        >
+                            <TableContainer sx={{ maxHeight: '83vh' }}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                            {columns.map((column) => (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align={column.align}
+                                                    sx={{
+                                                        minWidth:
+                                                            column.minWidth,
                                                     }}
-                                                    onClick={() =>
-                                                        handleClickRow(row)
-                                                    }
+                                                    className="fw-bold"
                                                 >
-                                                    {columns.map((column) => {
-                                                        let value;
-                                                        if (
-                                                            column.id !==
-                                                            'index'
-                                                        )
-                                                            value =
-                                                                row[column.id];
-                                                        else value = index + 1;
-                                                        return (
-                                                            <TableCell
-                                                                key={column.id}
-                                                                align={
-                                                                    column.align
-                                                                }
-                                                            >
-                                                                {column.format &&
-                                                                typeof value ===
-                                                                    'number'
-                                                                    ? column.format(
-                                                                          value
-                                                                      )
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, 100]}
-                            component="div"
-                            count={products.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
-                </Row>
+                                                    {column.label}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {products
+                                            .slice(
+                                                page * rowsPerPage,
+                                                page * rowsPerPage + rowsPerPage
+                                            )
+                                            .map((row: any, index: any) => {
+                                                return (
+                                                    <TableRow
+                                                        hover
+                                                        role="checkbox"
+                                                        tabIndex={-1}
+                                                        key={row.id}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() =>
+                                                            handleClickRow(row)
+                                                        }
+                                                    >
+                                                        {columns.map(
+                                                            (column) => {
+                                                                let value;
+                                                                if (
+                                                                    column.id !==
+                                                                    'index'
+                                                                )
+                                                                    value =
+                                                                        row[
+                                                                            column
+                                                                                .id
+                                                                        ];
+                                                                else
+                                                                    value =
+                                                                        index +
+                                                                        1;
+                                                                return (
+                                                                    <TableCell
+                                                                        key={
+                                                                            column.id
+                                                                        }
+                                                                        align={
+                                                                            column.align
+                                                                        }
+                                                                    >
+                                                                        {column.format &&
+                                                                        typeof value ===
+                                                                            'number'
+                                                                            ? column.format(
+                                                                                  value
+                                                                              )
+                                                                            : value}
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </TableRow>
+                                                );
+                                            })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25, 100]}
+                                component="div"
+                                count={products.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </Paper>
+                    </Row>
+                ) : (
+                    <Loading loading={false} message="Quán chưa có sản phẩm" />
+                )}
+
                 <Row>
                     <Col xs={3}>
                         <Button
@@ -343,13 +359,15 @@ function ProductPage() {
                         }}
                     />
                 </Row>
-                <Row>
-                    <UpdateProductModal
-                        show={updateModal}
-                        onHide={() => setUpdateModal(false)}
-                        product={selectedRow ? selectedRow : products[0]}
-                    />
-                </Row>
+                {products.length != 0 && (
+                    <Row>
+                        <UpdateProductModal
+                            show={updateModal}
+                            onHide={() => setUpdateModal(false)}
+                            product={selectedRow ? selectedRow : products[0]}
+                        />
+                    </Row>
+                )}
             </Container>
         );
 

@@ -8,6 +8,7 @@ import Footer from '../components/footer/footer';
 import { Container } from 'react-bootstrap';
 import AuthProvider from '../contexts/auth_context';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer } from 'react-toastify';
 
 function GlobalContainer({ children }: { children: React.ReactNode }) {
     return (
@@ -17,6 +18,7 @@ function GlobalContainer({ children }: { children: React.ReactNode }) {
                 <Navigation />
                 {children}
                 <Footer />
+                <ToastContainer />
             </AuthProvider>
         </BackendProvider>
     );

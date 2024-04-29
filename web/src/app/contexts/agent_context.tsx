@@ -12,6 +12,8 @@ import {
 } from '../apollo-client/subscriptions/orders';
 import { CHILDREN } from '../constants/interfaces';
 import { useAuth } from './auth_context';
+import { CustomToastify } from '../modules/feature_function';
+import { STATUS_PENDING } from '../constants/backend';
 
 const AgentContext = createContext<any>(null);
 
@@ -69,26 +71,36 @@ function AgentProvider({ children }: CHILDREN) {
         }
     }, [dataAllCategories]);
 
-    useSubscription(pubNewOrder, {
-        onData: ({ data }) => {
-            setOrders((prev: any) => {
-                return [data.data.pubNewOrder, ...prev];
-            });
-        },
-        variables: {
-            idAgent: authState.id_agent,
-        },
-    });
+    // useSubscription(pubNewOrder, {
+    //     onData: ({ data }) => {
+    //         const newOrder = data.data.pubNewOrder;
+    //         setOrders((prev: any) => {
+    //             return [newOrder, ...prev];
+    //         });
+    //         setUpdate((prev) => prev + 1);
+    //         CustomToastify(`Có đơn mới từ ${newOrder.recipient}`);
+    //     },
+    //     variables: {
+    //         idAgent: authState.id_agent,
+    //     },
+    // });
 
     useSubscription(pubAgentStatusOrder, {
         onData: ({ data }) => {
             const newOrder = data.data.pubAgentStatusOrder;
-            setOrders((prev: any) => {
-                prev.map((order: any) => {
-                    if (order.id === newOrder.id) return newOrder;
-                    return order;
+            if (newOrder.status === STATUS_PENDING) {
+                setOrders((prev: any) => {
+                    return [newOrder, ...prev];
                 });
-            });
+                CustomToastify(`Có đơn mới từ ${newOrder.recipient}`);
+            } else {
+                setOrders((prev: any) => {
+                    return prev.map((order: any) => {
+                        if (order.id === newOrder.id) return newOrder;
+                        return order;
+                    });
+                });
+            }
         },
         variables: {
             idAgent: authState.id_agent,

@@ -36,9 +36,10 @@ function AgentContainer({ children }: CHILDREN) {
                     <Col sm={2} className="p-0">
                         <LeftSideBar />
                     </Col>
-                    <Col className="p-0">{children}</Col>
+                    <Col className="p-0" style={{ backgroundColor: '#ebecf0' }}>
+                        {children}
+                    </Col>
                 </Row>
-                <ToastContainer />
             </Container>
         </AgentProvider>
     );

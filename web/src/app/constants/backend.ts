@@ -6,6 +6,7 @@ export const BACKEND_SUB = `ws://${BACKEND_IP}:${PORT}`;
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';
 export const BACKEND_URL_FILE_UPLOAD = `http://${BACKEND_IP}:${PORT}/file-upload`;
 
+export const STATUS_ALL = 'All';
 export const STATUS_DRAFT = 'DRAFT';
 export const STATUS_PENDING = 'PENDING';
 export const STATUS_ACTIVE = 'ACTIVE';

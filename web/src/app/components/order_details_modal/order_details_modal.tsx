@@ -1,3 +1,4 @@
+import { STATUS_ACTIVE, STATUS_PENDING } from '@/app/constants/backend';
 import { formatCurrency } from '@/app/modules/feature_function';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -56,14 +57,18 @@ export default function OrderDetailsModal({
                 <h5 className="fw-bold">{`Tổng tiền: ${formatCurrency(
                     order.total_price
                 )}`}</h5>
-                <div className="d-flex gap-3">
-                    <Button onClick={handleClickConfirm} variant="success">
-                        Xác nhận
-                    </Button>
-                    <Button onClick={onCancel} variant="danger">
-                        Từ chối
-                    </Button>
-                </div>
+
+                {(order.status === STATUS_PENDING ||
+                    order.status === STATUS_ACTIVE) && (
+                    <div className="d-flex gap-3">
+                        <Button onClick={handleClickConfirm} variant="success">
+                            Xác nhận
+                        </Button>
+                        <Button onClick={onCancel} variant="danger">
+                            Từ chối
+                        </Button>
+                    </div>
+                )}
             </Modal.Footer>
         </Modal>
     );

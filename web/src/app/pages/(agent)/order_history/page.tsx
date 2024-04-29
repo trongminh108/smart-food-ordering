@@ -8,6 +8,7 @@ import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
 import OrderCard from '@/app/components/order_card/order_card';
 import {
     STATUS_ACTIVE,
+    STATUS_ALL,
     STATUS_DRAFT,
     STATUS_FAILED,
     STATUS_PENDING,
@@ -17,10 +18,13 @@ import { useAuth } from '@/app/contexts/auth_context';
 import { useQuery, useSubscription } from '@apollo/client';
 import { useAgent } from '@/app/contexts/agent_context';
 import FilterTypeOrder from '@/app/components/filter_type_order/filter_type_order';
+import Loading from '@/app/components/loading/loading';
 
 function OrderHistory() {
     const { orders: ordersContext } = useAgent();
     const [orders, setOrders] = useState(ordersContext.value);
+
+    const [typeOrder, setTypeOrder] = useState(STATUS_ALL);
 
     function handleSortOrders(ordersPending: any) {
         ordersPending.sort((a: any, b: any) => {
@@ -44,36 +48,40 @@ function OrderHistory() {
 
     function handleOnChangeType(e: any) {
         const type = e.target.value;
-        let newOrders = [];
-        if (type === STATUS_ACTIVE)
-            newOrders = ordersContext.value.filter(
-                (order: any) => order.status === STATUS_ACTIVE
-            );
-        else if (type === STATUS_SUCCESS)
-            newOrders = ordersContext.value.filter(
-                (order: any) => order.status === STATUS_SUCCESS
-            );
-        else if (type === STATUS_FAILED)
-            newOrders = ordersContext.value.filter(
-                (order: any) => order.status === STATUS_FAILED
-            );
-        else newOrders = ordersContext.value;
-        setOrders(handleSortOrders(newOrders));
+        // let newOrders = [];
+        // if (type === STATUS_ACTIVE)
+        //     newOrders = ordersContext.value.filter(
+        //         (order: any) => order.status === STATUS_ACTIVE
+        //     );
+        // else if (type === STATUS_SUCCESS)
+        //     newOrders = ordersContext.value.filter(
+        //         (order: any) => order.status === STATUS_SUCCESS
+        //     );
+        // else if (type === STATUS_FAILED)
+        //     newOrders = ordersContext.value.filter(
+        //         (order: any) => order.status === STATUS_FAILED
+        //     );
+        // else newOrders = ordersContext.value;
+        // setOrders(handleSortOrders(newOrders));
+        setTypeOrder(type);
     }
 
     useEffect(() => {
-        if (ordersContext.value)
-            setOrders(handleFilterOrders(ordersContext.value));
-    }, [ordersContext.value]);
+        if (ordersContext.value) {
+            const ordersFiltered = handleFilterOrders(ordersContext.value);
+            if (typeOrder != STATUS_ALL)
+                setOrders(
+                    ordersFiltered.filter(
+                        (order: any) => order.status === typeOrder
+                    )
+                );
+            else setOrders(ordersFiltered);
+        }
+    }, [ordersContext.value, typeOrder]);
 
-    if (!orders)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Đang tải đơn mới</div>
-            </Container>
-        );
+    if (!orders) return <Loading message="Đang tải đơn mới" />;
 
-    if (orders && orders.length != 0)
+    if (orders)
         return (
             <Container
                 fluid
@@ -85,20 +93,18 @@ function OrderHistory() {
                         <FilterTypeOrder onChange={handleOnChangeType} />
                     </Col>
                 </Row>
-                {orders.map((order: any) => {
-                    return (
+                {orders.length !== 0 ? (
+                    orders.map((order: any) => (
                         <Row key={order.id} style={{ width: '100%' }}>
                             <OrderCard order={order} />
                         </Row>
-                    );
-                })}
-            </Container>
-        );
-
-    if (orders && orders.length == 0)
-        return (
-            <Container className="d-flex flex-column justify-content-center align-items-center pt-3">
-                <div>Không có đơn để hiển thị</div>
+                    ))
+                ) : (
+                    <Loading
+                        loading={false}
+                        message="Hiện tại chưa có đơn hiển thị"
+                    />
+                )}
             </Container>
         );
 }
