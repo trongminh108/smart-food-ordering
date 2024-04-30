@@ -17,16 +17,24 @@ import {
     FaceRecognitionName,
     RegisterName,
 } from '../../constants/screen_names';
+import LoadingScreen from '../../components/loading_screen/loading_screen';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [securePassword, setSecurePassword] = useState(true);
     const { onLogin } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handlePressLogin() {
         // alert(username + ' - ' + password);
-        await onLogin(username, password);
+        try {
+            setIsLoading(true);
+            await onLogin(username, password);
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const navigation = useNavigation();
@@ -39,6 +47,8 @@ const LoginScreen = () => {
     function handlePressLoginWithFaceID() {
         navigation.navigate(FaceRecognitionName);
     }
+
+    if (isLoading) return <LoadingScreen message={'Đang tải thông tin'} />;
 
     return (
         <View style={styles.LoginScreenContainer}>

@@ -21,7 +21,6 @@ export default function OrderDetailsModal({
     }
 
     function handleClickConfirm() {
-        onHide();
         onConfirm();
     }
 

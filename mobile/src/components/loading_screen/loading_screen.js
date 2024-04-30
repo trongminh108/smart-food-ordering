@@ -23,7 +23,7 @@ export default loading_screen;
 
 const styles = StyleSheet.create({
     loadingScreen: {
-        position: 'absolute',
+        // position: 'absolute',
         flex: 1,
         width: '100%',
         height: '100%',

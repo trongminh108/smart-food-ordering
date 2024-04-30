@@ -68,14 +68,20 @@ function OrderHistory() {
 
     useEffect(() => {
         if (ordersContext.value) {
+            console.log('[VALUE]', ordersContext.value);
+
             const ordersFiltered = handleFilterOrders(ordersContext.value);
+            console.log('[FILTERED]', ordersFiltered);
+
             if (typeOrder != STATUS_ALL)
                 setOrders(
-                    ordersFiltered.filter(
-                        (order: any) => order.status === typeOrder
+                    handleSortOrders(
+                        ordersFiltered.filter(
+                            (order: any) => order.status === typeOrder
+                        )
                     )
                 );
-            else setOrders(ordersFiltered);
+            else setOrders(handleSortOrders(ordersFiltered));
         }
     }, [ordersContext.value, typeOrder]);
 

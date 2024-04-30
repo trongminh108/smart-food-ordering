@@ -6,7 +6,6 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import AddProductModal from '@/app/components/add_product_modal/add_product_modal';
 import DropdownComponent from '@/app/components/dropdown_component/dropdown_component';
 import UpdateProductModal from '@/app/components/update_product_modal/update_product_modal';
-import YesNoModal from '@/app/components/yes_no_modal/yes_no_modal';
 import colors from '@/app/constants/colors';
 import {
     FILTER_DEFAULT,

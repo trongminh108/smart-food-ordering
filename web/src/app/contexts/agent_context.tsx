@@ -71,20 +71,6 @@ function AgentProvider({ children }: CHILDREN) {
         }
     }, [dataAllCategories]);
 
-    // useSubscription(pubNewOrder, {
-    //     onData: ({ data }) => {
-    //         const newOrder = data.data.pubNewOrder;
-    //         setOrders((prev: any) => {
-    //             return [newOrder, ...prev];
-    //         });
-    //         setUpdate((prev) => prev + 1);
-    //         CustomToastify(`Có đơn mới từ ${newOrder.recipient}`);
-    //     },
-    //     variables: {
-    //         idAgent: authState.id_agent,
-    //     },
-    // });
-
     useSubscription(pubAgentStatusOrder, {
         onData: ({ data }) => {
             const newOrder = data.data.pubAgentStatusOrder;
@@ -94,6 +80,8 @@ function AgentProvider({ children }: CHILDREN) {
                 });
                 CustomToastify(`Có đơn mới từ ${newOrder.recipient}`);
             } else {
+                console.log('[AGENT CONTEXT]', newOrder);
+
                 setOrders((prev: any) => {
                     return prev.map((order: any) => {
                         if (order.id === newOrder.id) return newOrder;

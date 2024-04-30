@@ -27,6 +27,7 @@ export const ORDER_TYPE = `
             name
             images
             price
+            sold
             rating
         }
     }

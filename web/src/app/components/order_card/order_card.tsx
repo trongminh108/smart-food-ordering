@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Badge, Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image';
 import {
     BACKEND_IMAGES,
@@ -19,7 +19,10 @@ import {
 import OrderDetailsCard from '@/app/components/order_details_modal/order_details_modal';
 import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
 import { useSubscription } from '@apollo/client';
-import { useUpdateOrderMutation } from '@/app/apollo-client/mutations/services';
+import {
+    useUpdateOrderMutation,
+    useUpdateProductMutation,
+} from '@/app/apollo-client/mutations/services';
 import colors from '@/app/constants/colors';
 import { useAgent } from '@/app/contexts/agent_context';
 import { TOAST_ERROR, TOAST_INFO, TOAST_SUCCESS } from '@/app/constants/name';
@@ -29,10 +32,15 @@ function OrderCard({ order }: { order: any }) {
     const defaultAvatar = require('@/assets/images/unknown_user.jpg');
     const [avatar, setAvatar] = useState(defaultAvatar);
     const [modalShow, setModalShow] = useState(false);
+    const [badge, setBadge] = useState(
+        order.status === STATUS_PENDING ? true : false
+    );
     const [messageModal, setMessageModal] = useState(false);
-    const { orders } = useAgent();
+    const [confirmModal, setConfirmModal] = useState(false);
+    const { orders: ordersContext } = useAgent();
 
     const updateOrderFunc = useUpdateOrderMutation();
+    const updateProductFunc = useUpdateProductMutation();
 
     useEffect(() => {
         if (order?.user?.avatar)
@@ -41,46 +49,85 @@ function OrderCard({ order }: { order: any }) {
 
     function handleClickOrderCard() {
         setModalShow(true);
-    }
-
-    async function handleUpdateStatusOrder(order: any) {
-        orders.setState((prev: any) => {
-            return prev.map((ord: any) => {
-                if (ord.id === order.id) return order;
-                return ord;
-            });
-        });
+        setBadge(false);
     }
 
     async function handleClickConfirmModal() {
-        setModalShow(false);
-        const { id } = order;
-        const STATUS =
-            order.status === STATUS_PENDING
-                ? STATUS_ACTIVE
-                : order.status === STATUS_ACTIVE
-                ? STATUS_SUCCESS
-                : '';
-        if (STATUS) {
-            const updatedOrder = await updateOrderFunc({
-                id: id,
-                status: STATUS,
-            });
-            // handleUpdateStatusOrder(updatedOrder);
-        }
-        switch (order.status) {
-            case STATUS_PENDING:
-                CustomToastify('Đã xác nhận hóa đơn', TOAST_INFO);
-                break;
-            case STATUS_ACTIVE:
-                CustomToastify('Xác nhận hóa đơn thành công', TOAST_SUCCESS);
-                break;
-            default:
-                return;
+        try {
+            setModalShow(false);
+            setConfirmModal(false);
+            const { id } = order;
+            const STATUS =
+                order.status === STATUS_PENDING
+                    ? STATUS_ACTIVE
+                    : order.status === STATUS_ACTIVE
+                    ? STATUS_SUCCESS
+                    : '';
+            if (STATUS) {
+                const updatedOrder = await updateOrderFunc({
+                    id: id,
+                    status: STATUS,
+                });
+                if (STATUS === STATUS_SUCCESS) {
+                    const orderDetails = updatedOrder.order_details;
+                    orderDetails.forEach((detail: any) => {
+                        const idProduct = detail.product.id;
+                        const sold =
+                            Number(detail.product.sold) +
+                            Number(detail.quantity);
+                        return updateProductFunc({
+                            id: idProduct,
+                            sold: sold,
+                        });
+                    });
+                    // const orderDetails = updatedOrder.order_details;
+                    // const updateProductPromises = orderDetails.map(
+                    //     (detail: any) => {
+                    //         const idProduct = detail.product.id;
+                    //         const sold =
+                    //             Number(detail.product.sold) +
+                    //             Number(detail.quantity);
+                    //         return updateProductFunc({
+                    //             id: idProduct,
+                    //             sold: sold,
+                    //         });
+                    //     }
+                    // );
+
+                    // try {
+                    //     // Thực hiện tất cả các mutation cùng một lúc và đợi chúng hoàn thành
+                    //     await Promise.all(updateProductPromises).then(
+                    //         (resolve) => {
+                    //             ordersContext.setState((prev: any) => prev);
+                    //             console.log(resolve);
+                    //         }
+                    //     );
+                    //     // console.log('Update product thành công');
+                    // } catch (error) {
+                    //     console.error('Lỗi khi cập nhật sản phẩm:', error);
+                    // }
+                }
+            }
+            switch (STATUS) {
+                case STATUS_ACTIVE:
+                    CustomToastify('Đã xác nhận hóa đơn', TOAST_INFO);
+                    break;
+                case STATUS_SUCCESS:
+                    CustomToastify(
+                        'Xác nhận hóa đơn thành công',
+                        TOAST_SUCCESS
+                    );
+                    break;
+                default:
+                    return;
+            }
+        } catch (error) {
+            CustomToastify(error, TOAST_ERROR);
+            console.log('[ORDER CARD CONFIRM]', error);
         }
     }
 
-    async function handleClickRejectOrder() {
+    async function handleClickRejectOrder(message: string) {
         try {
             setModalShow(false);
             setMessageModal(false);
@@ -88,12 +135,13 @@ function OrderCard({ order }: { order: any }) {
             const updatedOrder = await updateOrderFunc({
                 id: id,
                 status: STATUS_FAILED,
+                message: message,
             });
             // handleUpdateStatusOrder(updatedOrder);
             CustomToastify('Bạn đã từ chối hóa đơn', TOAST_ERROR);
         } catch (error) {
             CustomToastify(error, TOAST_ERROR);
-            console.log('[ORDER CARD]', error);
+            console.log('[ORDER CARD REJECT]', error);
         }
     }
 
@@ -114,6 +162,11 @@ function OrderCard({ order }: { order: any }) {
                             : colors.white,
                 }}
             >
+                {badge && (
+                    <Badge bg="danger" className="position-absolute ml-3">
+                        Đơn mới
+                    </Badge>
+                )}
                 <Row className="p-0" style={{ height: 80 }}>
                     <Col sm={1} className="p-0">
                         <Image
@@ -168,7 +221,7 @@ function OrderCard({ order }: { order: any }) {
             <OrderDetailsCard
                 show={modalShow}
                 onHide={() => setModalShow(false)}
-                onConfirm={handleClickConfirmModal}
+                onConfirm={() => setConfirmModal(true)}
                 onCancel={() => setMessageModal(true)}
                 order={order}
             />
@@ -182,6 +235,19 @@ function OrderCard({ order }: { order: any }) {
                 onHide={() => setMessageModal(false)}
                 onYesFunc={handleClickRejectOrder}
                 onNoFunc={() => setMessageModal(false)}
+            />
+            <YesNoModal
+                show={confirmModal}
+                data={{
+                    title: 'Xác nhận đơn hàng',
+                    message:
+                        order.status === STATUS_PENDING
+                            ? 'Bạn xác nhận giao đơn hàng này không?'
+                            : 'Bạn chắc chắn xác nhận đơn hàng thành công?',
+                }}
+                onHide={() => setConfirmModal(false)}
+                onYesFunc={handleClickConfirmModal}
+                onNoFunc={() => setConfirmModal(false)}
             />
         </>
     );

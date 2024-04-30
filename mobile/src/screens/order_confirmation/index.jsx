@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '../../contexts/map_context';
 import { useAuth } from '../../contexts/auth_context';
 import ProductPaymentCard from '../../components/product_payment_card/product_payment_card';
+import LoadingScreen from '../../components/loading_screen/loading_screen';
 import {
     STATUS_ACTIVE,
     STATUS_DRAFT,
@@ -58,8 +59,8 @@ export default function OrderConfirmation({ route }) {
 
     async function handleOnPressConfirmOrder() {
         try {
-            setIsLoading(true);
             async function PressYesConfirm() {
+                setIsLoading(true);
                 if (
                     isValidPhoneNumber(phoneNumber) &&
                     name.trim().length != 0
@@ -117,13 +118,15 @@ export default function OrderConfirmation({ route }) {
                 } else {
                     alert('Tên người nhận hoặc số điện thoại không hợp lệ');
                 }
+                setIsLoading(false);
             }
             showConfirmBox(PressYesConfirm);
-            setIsLoading(false);
         } catch (error) {
             console.error(error);
         }
     }
+
+    if (isLoading) return <LoadingScreen message={'Đang tiến hành đặt món'} />;
 
     return (
         <View style={styles.orderConfirmationContainer}>

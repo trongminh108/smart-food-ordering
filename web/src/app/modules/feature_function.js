@@ -10,6 +10,7 @@ import {
     TOAST_ERROR,
     TOAST_INFO,
     TOAST_SUCCESS,
+    TOAST_WARNING,
 } from '../constants/name';
 import { BACKEND_URL_FILE_UPLOAD } from '../constants/backend';
 import axios from 'axios';
@@ -68,7 +69,7 @@ export function calculateTimeFrom(inputDate) {
 
     if (timeDifferenceInMinutes <= 60) {
         // Nếu ít hơn hoặc bằng 60 phút, in ra số phút
-        if (timeDifferenceInMinutes <= 1) return 'Đơn mới';
+        // if (timeDifferenceInMinutes <= 1) return 'Đơn mới';
         return `${timeDifferenceInMinutes} phút trước`;
     } else if (timeDifferenceInMinutes <= 1440) {
         // Nếu ít hơn hoặc bằng 24 giờ, in ra số giờ
@@ -179,7 +180,7 @@ import { toast, Bounce } from 'react-toastify';
 export function CustomToastify(message, type = TOAST_SUCCESS) {
     const options = {
         position: 'bottom-left',
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -191,6 +192,7 @@ export function CustomToastify(message, type = TOAST_SUCCESS) {
     if (type === TOAST_SUCCESS) return toast.success(message, options);
     else if (type === TOAST_ERROR) return toast.error(message, options);
     else if (type === TOAST_INFO) return toast.info(message, options);
+    else if (type === TOAST_WARNING) return toast.warning(message, options);
 }
 
 export function getDatesInRange(fromDate, toDate) {

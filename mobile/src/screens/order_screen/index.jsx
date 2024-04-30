@@ -53,14 +53,19 @@ const OrdersScreen = () => {
 
     useSubscription(pubUserStatusOrder, {
         onData: ({ data }) => {
-            const status = data.data.pubUserStatusOrder.status;
-            const title = data.data.pubUserStatusOrder.agent.name;
+            const order = data.data.pubUserStatusOrder;
+            const status = order.status;
+            const title = order.agent.name;
             switch (status) {
                 case STATUS_ACTIVE:
-                    onSendNotification(title, 'Đơn của bạn đã được duyệt');
+                    onSendNotification(title, 'Đơn của bạn đã được xác nhận');
                     break;
                 case STATUS_FAILED:
-                    onSendNotification(title, 'Đơn của bạn đã bị hủy');
+                    const message = order.message;
+                    onSendNotification(
+                        title,
+                        `Đơn của bạn đã bị hủy do "${message}"`
+                    );
                     break;
                 case STATUS_SUCCESS:
                     onSendNotification(

@@ -1,3 +1,5 @@
+import { TOAST_ERROR, TOAST_WARNING } from '@/app/constants/name';
+import { CustomToastify } from '@/app/modules/feature_function';
 import { useState } from 'react';
 import { FloatingLabel, Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -7,7 +9,7 @@ interface YES_NO_MODAL {
     show: any;
     onHide: () => void;
     data: any;
-    onYesFunc?: () => void;
+    onYesFunc?: any;
     onNoFunc?: () => void;
     message?: boolean;
 }
@@ -24,6 +26,15 @@ function YesNoModal({
 
     function handleChange(e: any) {
         setText(e.target.value);
+    }
+
+    function handleClickYes() {
+        if (onYesFunc) {
+            if (message) {
+                if (text) onYesFunc(text);
+                else CustomToastify('Bạn phải nhập lý do', TOAST_ERROR);
+            } else onYesFunc();
+        }
     }
 
     return (
@@ -51,7 +62,7 @@ function YesNoModal({
                 </FloatingLabel>
             )}
             <Modal.Footer>
-                <Button variant="primary" onClick={onYesFunc}>
+                <Button variant="primary" onClick={handleClickYes}>
                     Chắc chắn
                 </Button>
                 <Button variant="secondary" onClick={onNoFunc}>
