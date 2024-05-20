@@ -15,7 +15,7 @@ import {
     convertDate,
     formatCurrency,
     getDatesInRange,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 import { STATUS_FAILED, STATUS_SUCCESS } from '@/app/constants/backend';
 import { Col, Container, Row } from 'react-bootstrap';
 

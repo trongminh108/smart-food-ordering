@@ -29,7 +29,7 @@ import { useAuth } from '@/app/contexts/auth_context';
 import {
     CustomToastify,
     handleUploadFile,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 
 import DropdownComponent from '../dropdown_component/dropdown_component';
 import YesNoModal from '../yes_no_modal/yes_no_modal';

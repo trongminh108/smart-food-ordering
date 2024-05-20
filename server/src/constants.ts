@@ -5,7 +5,7 @@ export const MONGOOSE_URI =
 
 export const SALT_OR_ROUNDS = 10;
 
-export const GG_MAP_API = 'AIzaSyB_8vefOV1JnGvShVFG0BS9_rKgU3BKT-k';
+export const GG_MAP_API = 'AIzaSyBbQDG7iqW3PIHkmP3B4ZmT3sw7yXoa4mU';
 
 export function GG_MAP_REVERSE_GEOCODING_API(lat, lng, api_key = GG_MAP_API) {
   return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&location_type=ROOFTOP&key=${api_key}`;
@@ -23,6 +23,16 @@ export function GG_MAP_DISTANCE_MATRIX_API(
 
 const TEST_GG_API = `https://maps.googleapis.com/maps/api/geocode/json?latlng=10.387973895202244,105.42367147467304&location_type=ROOFTOP&key=AIzaSyCizJs78NYhWcXTm4TV00jD8k-JlgSHF3U`;
 
+//=============================================== OPEN STREET MAP ===========================================
+export function OPEN_STREET_MAP_REVERSE_GEOCODING_API(lat, lng) {
+  return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+}
+
+export function OPEN_STREET_MAP_DISTANCE_MATRIX_API(origin, destination) {
+  return `https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=false`;
+}
+
+//=============================================== STATUS ORDER ===========================================
 export const STATUS_DRAFT = 'DRAFT';
 export const STATUS_PENDING = 'PENDING';
 export const STATUS_ACTIVE = 'ACTIVE';

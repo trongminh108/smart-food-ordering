@@ -20,7 +20,7 @@ import {
     formatCurrency,
     searchIgnoreCaseAndDiacritics,
     sortProducts,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 // ** MUI Imports
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -204,7 +204,9 @@ function ProductPage() {
     }
 
     if (!products || !categories)
-        return <Loading loading={true} message="Đang tải sản phẩm của quán" />;
+        return (
+            <Loading loading={true} message="Đang tải sản phẩm của quán..." />
+        );
     if (products && categories)
         return (
             <Container fluid className="d-flex flex-column gap-4 my-4">

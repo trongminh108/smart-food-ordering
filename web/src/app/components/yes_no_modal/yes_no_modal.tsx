@@ -1,5 +1,5 @@
 import { TOAST_ERROR, TOAST_WARNING } from '@/app/constants/name';
-import { CustomToastify } from '@/app/modules/feature_function';
+import { CustomToastify } from '@/app/modules/feature_functions';
 import { useState } from 'react';
 import { FloatingLabel, Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';

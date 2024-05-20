@@ -16,7 +16,10 @@ import { useLazyQuery } from '@apollo/client';
 import { getAllProducts } from '../../apollo-client/queries/products';
 import { getAgentByID, getAllAgents } from '../../apollo-client/queries/agents';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
-import { getUserLocation } from '../../modules/feature_functions';
+import {
+    getUserLocation,
+    removeCodeAddress,
+} from '../../modules/feature_functions';
 import { useMap } from '../../contexts/map_context';
 import { Ionicons } from '@expo/vector-icons';
 import { ICON_SIZE_MID } from '../../constants/style';

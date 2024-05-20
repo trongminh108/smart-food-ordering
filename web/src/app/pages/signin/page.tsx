@@ -8,7 +8,7 @@ import { Button, Container, Form } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/contexts/auth_context';
 // import AccountService from '@/assets/service/account';
-import { parseJwt } from '@/app/modules/feature_function';
+import { parseJwt } from '@/app/modules/feature_functions';
 import { ORDER_MANAGE_PAGE } from '@/app/constants/url';
 
 function SignIn() {

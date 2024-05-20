@@ -47,7 +47,9 @@ export const getAddressFromLocation = async (latlng) => {};
 export const removeCodeAddress = (address) => {
     const commaIndex = address.indexOf(',');
     if (commaIndex !== -1) {
-        address = address.substring(commaIndex + 1).trim();
+        const code = address.substring(0, commaIndex);
+        if (code.includes('+')) return address.substring(commaIndex + 1).trim();
+        else return address;
     }
     return address;
 };

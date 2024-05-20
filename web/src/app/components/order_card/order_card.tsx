@@ -14,7 +14,7 @@ import {
     calculateTimeFrom,
     displayDistance,
     formatCurrency,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 
 import OrderDetailsCard from '@/app/components/order_details_modal/order_details_modal';
 import { pubNewOrder } from '@/app/apollo-client/subscriptions/orders';
@@ -110,7 +110,7 @@ function OrderCard({ order }: { order: any }) {
             }
             switch (STATUS) {
                 case STATUS_ACTIVE:
-                    CustomToastify('Đã xác nhận hóa đơn', TOAST_INFO);
+                    CustomToastify('Đã xác nhận giao đơn này', TOAST_INFO);
                     break;
                 case STATUS_SUCCESS:
                     CustomToastify(
@@ -149,7 +149,7 @@ function OrderCard({ order }: { order: any }) {
         <>
             <Container
                 fluid
-                className="cardOrderContainer py-0 rounded-3 border border-dark"
+                className="cardOrderContainer py-0 rounded-3 border border-dark position-relative"
                 onClick={handleClickOrderCard}
                 style={{
                     backgroundColor:
@@ -163,7 +163,11 @@ function OrderCard({ order }: { order: any }) {
                 }}
             >
                 {badge && (
-                    <Badge bg="danger" className="position-absolute ml-3">
+                    <Badge
+                        bg="danger"
+                        className="position-absolute ml-3"
+                        style={{ left: 0 }}
+                    >
                         Đơn mới
                     </Badge>
                 )}

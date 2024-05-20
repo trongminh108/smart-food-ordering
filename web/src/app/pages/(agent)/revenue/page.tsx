@@ -7,7 +7,10 @@ import { PieChart } from '@/app/components/pie_chart/pie_chart';
 import TableRevenueProducts from '@/app/components/table_revenue_products/table_revenue_products';
 import { RADIO_PERIOD, RADIO_SO_FAR, TOAST_INFO } from '@/app/constants/name';
 import { useAgent } from '@/app/contexts/agent_context';
-import { CustomToastify, getMinMaxDates } from '@/app/modules/feature_function';
+import {
+    CustomToastify,
+    getMinMaxDates,
+} from '@/app/modules/feature_functions';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 

@@ -20,7 +20,7 @@ import { useAddProductMutation } from '@/app/apollo-client/mutations/services';
 import {
     CustomToastify,
     handleUploadFile,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 import Image from 'next/image';
 import { TOAST_ERROR } from '@/app/constants/name';
 

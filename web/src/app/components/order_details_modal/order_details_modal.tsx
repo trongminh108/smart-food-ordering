@@ -1,5 +1,5 @@
 import { STATUS_ACTIVE, STATUS_PENDING } from '@/app/constants/backend';
-import { formatCurrency } from '@/app/modules/feature_function';
+import { formatCurrency } from '@/app/modules/feature_functions';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
@@ -53,9 +53,10 @@ export default function OrderDetailsModal({
                 ))}
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
-                <h5 className="fw-bold">{`Tổng tiền: ${formatCurrency(
-                    order.total_price
-                )}`}</h5>
+                <h5 className="fw-bold">
+                    {`Tổng tiền: ${formatCurrency(order.total_price)}`}
+                    {order.message && ` - (${order.message})`}
+                </h5>
 
                 {(order.status === STATUS_PENDING ||
                     order.status === STATUS_ACTIVE) && (

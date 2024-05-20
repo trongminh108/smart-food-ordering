@@ -12,7 +12,7 @@ import {
     parseJwt,
     removeCookiesLogin,
     setCookiesLogin,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 
 import {
     EXIST_GMAIL,
@@ -110,17 +110,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             setCookiesLogin(hash_token);
 
-            // await AsyncStorage.setItem(TOKEN, token);
-            // await AsyncStorage.setItem(USER, user.username);
-            // await AsyncStorage.setItem(USER_INFO, JSON.stringify(user));
-            // await AsyncStorage.setItem(AGENT, id_agent);
-
-            // ToastAndroid.showWithGravity(
-            //     'Đăng nhập thành công',
-            //     ToastAndroid.SHORT,
-            //     ToastAndroid.BOTTOM
-            // );
-
             return res;
         }
 
@@ -135,11 +124,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logout = async () => {
-        // await AsyncStorage.removeItem(TOKEN);
-        // await AsyncStorage.removeItem(USER);
-        // await AsyncStorage.removeItem(USER_INFO);
-        // await AsyncStorage.removeItem(AGENT);
-
         setAuthState({
             token: '',
             user: {},
@@ -149,12 +133,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         removeCookiesLogin();
-
-        // ToastAndroid.showWithGravity(
-        //     'Đã đăng xuất',
-        //     ToastAndroid.SHORT,
-        //     ToastAndroid.BOTTOM
-        // );
 
         return true;
         // navigation.navigate(HomeName);

@@ -1,4 +1,4 @@
-export const BACKEND_IP = `192.168.1.6`;
+export const BACKEND_IP = `192.168.1.9`;
 export const BACKEND_SUB = `${BACKEND_IP}:4000`;
 export const BACKEND_URL = `http://${BACKEND_IP}:4000`;
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 
+import { getDeliversByAgentID } from '@/app/apollo-client/queries/delivers';
 import { useQuery, useSubscription } from '@apollo/client';
 
 import { getAllCategories } from '../apollo-client/queries/categories';
@@ -10,10 +11,10 @@ import {
     pubAgentStatusOrder,
     pubNewOrder,
 } from '../apollo-client/subscriptions/orders';
-import { CHILDREN } from '../constants/interfaces';
-import { useAuth } from './auth_context';
-import { CustomToastify } from '../modules/feature_function';
 import { STATUS_PENDING } from '../constants/backend';
+import { CHILDREN } from '../constants/interfaces';
+import { CustomToastify } from '../modules/feature_functions';
+import { useAuth } from './auth_context';
 
 const AgentContext = createContext<any>(null);
 
@@ -30,11 +31,17 @@ function AgentProvider({ children }: CHILDREN) {
         },
     });
     const { data: dataAllCategories } = useQuery(getAllCategories);
+    const { data: dataDeliversByAgentID } = useQuery(getDeliversByAgentID, {
+        variables: {
+            idAgent: authState.user.agent.id,
+        },
+    });
 
     const [orders, setOrders] = useState<any>(null);
     const [products, setProducts] = useState<any>(null);
     const [categories, setCategories] = useState<any>(null);
     const [allCategories, setAllCategories] = useState<any>(null);
+    const [delivers, setDelivers] = useState<any>(null);
     const [statusOrder, setStatusOrder] = useState(null);
 
     useEffect(() => {
@@ -71,6 +78,12 @@ function AgentProvider({ children }: CHILDREN) {
         }
     }, [dataAllCategories]);
 
+    useEffect(() => {
+        if (dataDeliversByAgentID) {
+            setDelivers([...dataDeliversByAgentID.deliversByAgentID]);
+        }
+    }, [dataDeliversByAgentID]);
+
     useSubscription(pubAgentStatusOrder, {
         onData: ({ data }) => {
             const newOrder = data.data.pubAgentStatusOrder;
@@ -80,8 +93,6 @@ function AgentProvider({ children }: CHILDREN) {
                 });
                 CustomToastify(`Có đơn mới từ ${newOrder.recipient}`);
             } else {
-                console.log('[AGENT CONTEXT]', newOrder);
-
                 setOrders((prev: any) => {
                     return prev.map((order: any) => {
                         if (order.id === newOrder.id) return newOrder;
@@ -100,6 +111,7 @@ function AgentProvider({ children }: CHILDREN) {
         products: { value: products, setState: setProducts },
         categories: { value: categories, setState: setCategories },
         allCategories: { value: allCategories, setState: setAllCategories },
+        delivers: { value: delivers, setState: setDelivers },
         statusOrder: { value: statusOrder, setState: setStatusOrder },
     };
 

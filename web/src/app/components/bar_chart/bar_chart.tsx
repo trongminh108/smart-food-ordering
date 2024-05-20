@@ -14,7 +14,7 @@ import {
     convertDate,
     getDatesInRange,
     sortProducts,
-} from '@/app/modules/feature_function';
+} from '@/app/modules/feature_functions';
 import { STATUS_SUCCESS } from '@/app/constants/backend';
 import { SORT_DECREASE_SUBTOTAL } from '@/app/constants/name';
 import Loading from '../loading/loading';

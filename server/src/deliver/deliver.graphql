@@ -1,6 +1,7 @@
 type Deliver {
   id: ID!
   id_user: ID
+  user: User
   id_agent: ID
   phone_number: String
   rating: Float
@@ -26,6 +27,7 @@ input UpdateDeliverInput {
 
 type Query {
   delivers: [Deliver]!
+  deliversByAgentID(id_agent: ID!): [Deliver]!
   deliver(id: ID!): Deliver
 }
 

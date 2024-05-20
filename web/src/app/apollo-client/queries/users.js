@@ -13,6 +13,7 @@ export const USER_TYPE = `
     agent {
         id
         name
+        position
     }
     is_deliver
     face_recognition

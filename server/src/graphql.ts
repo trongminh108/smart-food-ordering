@@ -96,6 +96,11 @@ export class LocationInput {
     lng?: Nullable<number>;
 }
 
+export class PositionInput {
+    lat?: Nullable<number>;
+    lng?: Nullable<number>;
+}
+
 export class CreateOrderInput {
     id_agent?: Nullable<string>;
     id_deliver?: Nullable<string>;
@@ -303,6 +308,8 @@ export abstract class IQuery {
 
     abstract delivers(): Nullable<Deliver>[] | Promise<Nullable<Deliver>[]>;
 
+    abstract deliversByAgentID(id_agent: string): Nullable<Deliver>[] | Promise<Nullable<Deliver>[]>;
+
     abstract deliver(id: string): Nullable<Deliver> | Promise<Nullable<Deliver>>;
 
     abstract favorites(): Nullable<Favorite>[] | Promise<Nullable<Favorite>[]>;
@@ -312,6 +319,10 @@ export abstract class IQuery {
     abstract getAddressFromLocation(location: LocationInput): string | Promise<string>;
 
     abstract getDistanceBetweenLocation(origins: LocationInput, destinations: LocationInput): DistanceMatrix | Promise<DistanceMatrix>;
+
+    abstract getAddressFromPosition(latlng: PositionInput): string | Promise<string>;
+
+    abstract getDistanceDuration(origin: PositionInput, destination: PositionInput): DistanceDuration | Promise<DistanceDuration>;
 
     abstract orders(): Nullable<Order>[] | Promise<Nullable<Order>[]>;
 
@@ -478,6 +489,7 @@ export class Deliver {
     __typename?: 'Deliver';
     id: string;
     id_user?: Nullable<string>;
+    user?: Nullable<User>;
     id_agent?: Nullable<string>;
     phone_number?: Nullable<string>;
     rating?: Nullable<number>;
@@ -504,6 +516,18 @@ export class Location {
     __typename?: 'Location';
     lat?: Nullable<number>;
     lng?: Nullable<number>;
+}
+
+export class Position {
+    __typename?: 'Position';
+    lat?: Nullable<number>;
+    lng?: Nullable<number>;
+}
+
+export class DistanceDuration {
+    __typename?: 'DistanceDuration';
+    distance?: Nullable<number>;
+    duration?: Nullable<number>;
 }
 
 export class Order {

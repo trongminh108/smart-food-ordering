@@ -25,6 +25,7 @@ import { VoucherModule } from './voucher/voucher.module';
 import { VouchersProductsModule } from './vouchers_products/vouchers_products.module';
 import { AuthModule } from './auth/auth.module';
 import { GgMapApiModule } from './gg_map_api/gg_map_api.module';
+import { OpenStreetMapModule } from './open_street_map/open_street_map.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { GgMapApiModule } from './gg_map_api/gg_map_api.module';
     FileUploadModule,
     AuthModule,
     GgMapApiModule,
+    OpenStreetMapModule,
   ],
   controllers: [AppController],
   providers: [AppService],

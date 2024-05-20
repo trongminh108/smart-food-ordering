@@ -1,0 +1,25 @@
+type Position {
+  lat: Float
+  lng: Float
+}
+
+type DistanceDuration {
+  distance: Float
+  duration: Float
+}
+
+input PositionInput {
+  lat: Float
+  lng: Float
+}
+
+type Query {
+  getAddressFromPosition(latlng: PositionInput!): String!
+  getDistanceDuration(
+    origin: PositionInput!
+    destination: PositionInput!
+  ): DistanceDuration!
+}
+
+# type Mutation {
+# }
