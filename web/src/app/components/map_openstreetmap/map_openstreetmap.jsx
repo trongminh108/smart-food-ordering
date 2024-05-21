@@ -14,6 +14,8 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { displayDistance } from '@/app/modules/feature_functions';
 import { useAgent } from '@/app/contexts/agent_context';
 import Loading from '../loading/loading';
+import { ConvertOrdersToGraph } from '@/app/modules/directions';
+import { greedyHamiltonianPath } from '@/app/modules/greedy';
 
 const ZOOM = 13;
 
@@ -27,6 +29,30 @@ function OpenStreetMapContainer({ orders, onHide }) {
     };
     const [delivers, setDelivers] = useState(deliversContext.value);
     const [ordersDeliver, setOrdersDeliver] = useState(orders);
+    const [isLoading, setIsLoading] = useState(true);
+    const [reload, setReload] = useState(0);
+
+    useEffect(() => {
+        async function getDirections() {
+            const graph = await ConvertOrdersToGraph(position, ordersDeliver);
+
+            let { path, totalCost } = greedyHamiltonianPath(graph, 0);
+
+            path.pop();
+            path.shift();
+            path = path.map((i) => i - 1);
+            const res = [];
+            for (let i = 0; i < ordersDeliver.length; i++) {
+                res.push(ordersDeliver[path[i]]);
+            }
+            return res;
+        }
+        const promise = getDirections();
+        promise.then((res) => {
+            setOrdersDeliver(res);
+            setIsLoading(false);
+        });
+    }, [orders, reload]);
 
     useEffect(() => {
         const value = deliversContext.value;
@@ -34,6 +60,11 @@ function OpenStreetMapContainer({ orders, onHide }) {
             setDelivers([...value]);
         }
     }, [deliversContext.value]);
+
+    function handleClickOptimize() {
+        setIsLoading(true);
+        setReload((prev) => prev + 1);
+    }
 
     function handleClickOrder(id) {
         setOrdersDeliver((prev) => prev.filter((order) => order.id != id));
@@ -56,34 +87,48 @@ function OpenStreetMapContainer({ orders, onHide }) {
 
     function handleClickSubmit() {}
 
-    if (!delivers) return <Loading message="Đang tải bảng đồ..." />;
+    if (!delivers) return <Loading message="Đang tải bản đồ..." />;
     return (
         <Container fluid className="w-100 h-100 p-0">
             <Row className="h-100 p-0 m-0">
                 <Col xs={9} className="p-0">
-                    <MapContainer
-                        center={position}
-                        zoom={ZOOM}
-                        scrollWheelZoom={true}
-                        style={{ width: '100%', height: '100%' }}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <FullscreenControl position="topright" />
-                        <LeafletRoutingMachine
-                            origin={position}
-                            ordersDeliver={ordersDeliver}
-                            orders={orders}
-                            onClickOrderMarker={handleClickOrderMarker}
-                        />
-                    </MapContainer>
+                    {!isLoading ? (
+                        <MapContainer
+                            center={position}
+                            zoom={ZOOM}
+                            scrollWheelZoom={true}
+                            style={{ width: '100%', height: '100%' }}
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <FullscreenControl position="topright" />
+                            <LeafletRoutingMachine
+                                origin={position}
+                                ordersDeliver={ordersDeliver}
+                                orders={orders}
+                                onClickOrderMarker={handleClickOrderMarker}
+                            />
+                        </MapContainer>
+                    ) : (
+                        <Loading message="Đang tối ưu đường đi..." />
+                    )}
                 </Col>
                 <Col xs={3} className="p-0">
                     <Row className="h-50 overflow-hidden m-0">
                         <Col className="gap-3 d-flex flex-column justify-content-start">
-                            <p className="mt-2 fw-bold">Thứ tự giao hàng: </p>
+                            <div className="d-flex gap-3 mt-2">
+                                <p className="mt-2 fw-bold">
+                                    Thứ tự giao hàng:{' '}
+                                </p>
+                                <Button
+                                    variant="success"
+                                    onClick={handleClickOptimize}
+                                >
+                                    Tối ưu
+                                </Button>
+                            </div>
                             {ordersDeliver.map((order) => {
                                 return (
                                     <Button

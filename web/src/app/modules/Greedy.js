@@ -1,4 +1,4 @@
-const greedyHamiltonianPath = (graph, start) => {
+export const greedyHamiltonianPath = (graph, start) => {
     const n = graph.length;
     const visited = new Array(n).fill(false);
     const path = [start];
@@ -31,16 +31,3 @@ const greedyHamiltonianPath = (graph, start) => {
 
     return { path, totalCost };
 };
-
-// Ví dụ sử dụng
-const graph = [
-    [0, 10, 15, 20],
-    [10, 0, 35, 25],
-    [15, 35, 0, 30],
-    [20, 25, 30, 0],
-];
-
-const start = 0;
-const { path, totalCost } = greedyHamiltonianPath(graph, start);
-console.log(`Đường đi Hamilton tối ưu tìm được: ${path}`);
-console.log(`Tổng trọng số: ${totalCost}`);

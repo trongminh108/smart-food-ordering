@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { useMap } from 'react-leaflet';
 import { useAuth } from '@/app/contexts/auth_context';
 import { ConvertOrdersToGraph, SortGraph } from '@/app/modules/directions';
-import Dijkstra from '@/app/modules/dijkstra';
+import { greedyHamiltonianPath } from '@/app/modules/greedy';
 
 const SIZE_MARKER = [30, 30];
 const agentMarker = L.icon({
@@ -29,16 +29,6 @@ const LeafletRoutingMachine = ({
     const { authState } = useAuth();
 
     useEffect(() => {
-        async function getDirections() {
-            const graph = await ConvertOrdersToGraph(origin, ordersDeliver);
-            // const dijkstra = new Dijkstra(graph, 0);
-            // const res = dijkstra.Solve();
-            const newGraph = SortGraph(graph);
-            console.log('[GRAPH]: ', graph);
-            console.log('[NEW GRAPH]: ', newGraph);
-        }
-        getDirections();
-
         const waypoints = [L.latLng(origin.lat, origin.lng)];
         ordersDeliver.forEach((order) => {
             const pos = L.latLng(order.position[0], order.position[1]);
