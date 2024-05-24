@@ -9,12 +9,14 @@ export default function OrderDetailsModal({
     onConfirm,
     onCancel,
     order,
+    type = 0,
 }: {
     show: boolean;
     onHide: () => void;
     onConfirm: () => void;
     onCancel: () => void;
     order: any;
+    type?: number;
 }) {
     function handleClickCancelOrder() {
         onCancel();
@@ -55,7 +57,7 @@ export default function OrderDetailsModal({
             <Modal.Footer className="d-flex justify-content-between">
                 <h5 className="fw-bold">
                     {`Tổng tiền: ${formatCurrency(order.total_price)}`}
-                    {order.message && ` - (${order.message})`}
+                    {order.message && ` - (Lý do thất bại: ${order.message})`}
                 </h5>
 
                 {(order.status === STATUS_PENDING ||
@@ -65,7 +67,10 @@ export default function OrderDetailsModal({
                             Xác nhận
                         </Button>
                         <Button onClick={onCancel} variant="danger">
-                            Từ chối
+                            {type == 0 ? 'Từ chối' : 'Giao sau'}
+                        </Button>
+                        <Button onClick={onHide} variant="secondary">
+                            Đóng
                         </Button>
                     </div>
                 )}

@@ -13,6 +13,7 @@ export class OpenStreetMapService {
     const url = OPEN_STREET_MAP_REVERSE_GEOCODING_API(latlng.lat, latlng.lng);
     try {
       const res = await axios.get(url);
+      // console.log('[RES]: ', res);
       return res.data.display_name;
     } catch (error) {
       console.log('Error from getAddressFromPosition: ', error);

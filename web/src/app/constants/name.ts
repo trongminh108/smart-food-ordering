@@ -42,3 +42,7 @@ export const TOAST_WARNING = 'warning';
 //================================================ RADIO BUTTON ===========================================
 export const RADIO_PERIOD = 'period';
 export const RADIO_SO_FAR = 'so_far';
+export const RADIO_PERCENTAGE = 'percentage';
+export const RADIO_DISCOUNT = 'discount';
+export const RADIO_INFINITY = 'infinity';
+export const RADIO_LIMIT = 'limit';

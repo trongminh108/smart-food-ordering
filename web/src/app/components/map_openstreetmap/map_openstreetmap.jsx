@@ -1,8 +1,7 @@
-import './map_openstreetmap.css';
+// import './map_openstreetmap.css';
 // import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 // import 'leaflet-control-geocoder/dist/Control.Geocoder.js';ss
 
-import L from 'leaflet';
 import React, { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useAuth } from '@/app/contexts/auth_context';
@@ -11,11 +10,19 @@ import LeafletRoutingMachine from '../leaflet_routing_machine/leaflet_routing_ma
 import { FullscreenControl } from 'react-leaflet-fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { displayDistance } from '@/app/modules/feature_functions';
+import {
+    CustomToastify,
+    displayDistance,
+} from '@/app/modules/feature_functions';
 import { useAgent } from '@/app/contexts/agent_context';
 import Loading from '../loading/loading';
 import { ConvertOrdersToGraph } from '@/app/modules/directions';
 import { greedyHamiltonianPath } from '@/app/modules/greedy';
+import OrderDetailsModal from '../order_details_modal/order_details_modal';
+import YesNoModal from '../yes_no_modal/yes_no_modal';
+import { TOAST_ERROR, TOAST_INFO, TOAST_SUCCESS } from '@/app/constants/name';
+import { useUpdateOrderMutation } from '@/app/apollo-client/mutations/services';
+import { STATUS_ACTIVE } from '@/app/constants/backend';
 
 const ZOOM = 13;
 
@@ -28,9 +35,14 @@ function OpenStreetMapContainer({ orders, onHide }) {
         lng: authState.user.agent.position[1],
     };
     const [delivers, setDelivers] = useState(deliversContext.value);
-    const [ordersDeliver, setOrdersDeliver] = useState(orders);
+    const [deliver, setDeliver] = useState(null);
+    const [ordersDeliver, setOrdersDeliver] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [reload, setReload] = useState(0);
+    const [order, setOrder] = useState(orders[0] || null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
+    const updateOrderFunc = useUpdateOrderMutation();
 
     useEffect(() => {
         async function getDirections() {
@@ -66,12 +78,25 @@ function OpenStreetMapContainer({ orders, onHide }) {
         setReload((prev) => prev + 1);
     }
 
-    function handleClickOrder(id) {
-        setOrdersDeliver((prev) => prev.filter((order) => order.id != id));
+    function handleClickOrder(order) {
+        setOrder(order);
+        setShowDetailModal(true);
     }
 
     function handleClickAddOrderDeliver(order) {
-        setOrdersDeliver((prev) => [...prev, order]);
+        setOrder(order);
+        setShowDetailModal(true);
+    }
+
+    function handleConfirmOrder() {
+        const isExist = ordersDeliver.some((o) => o.id == order.id);
+        if (!isExist) setOrdersDeliver((prev) => [...prev, order]);
+        setShowDetailModal(false);
+    }
+
+    function handleCancelOrder() {
+        setOrdersDeliver((prev) => prev.filter((o) => o.id != order.id));
+        setShowDetailModal(false);
     }
 
     function handleClickOrderMarker(e, order) {
@@ -83,13 +108,46 @@ function OpenStreetMapContainer({ orders, onHide }) {
         });
     }
 
-    function handleClickDeliver(id) {}
+    function handleClickDeliver(id) {
+        setDeliver(id);
+    }
 
-    function handleClickSubmit() {}
+    function handleClickSubmit() {
+        let text = '';
+        if (ordersDeliver.length == 0) {
+            text = ' đơn hàng';
+        }
+        if (!deliver) text += text ? ' và người giao' : ' người giao';
+
+        if (text) {
+            CustomToastify('Vui lòng chọn' + text, TOAST_INFO);
+        } else {
+            const promises = [];
+            const n = ordersDeliver.length;
+            for (let i = n - 1; i >= 0; i--) {
+                promises.push(
+                    updateOrderFunc({
+                        id: ordersDeliver[i].id,
+                        id_deliver: deliver,
+                        status: STATUS_ACTIVE,
+                    })
+                );
+            }
+            Promise.all(promises)
+                .then(() => {
+                    CustomToastify('Đã xác nhận giao', TOAST_SUCCESS);
+                    onHide();
+                })
+                .catch(() => {
+                    CustomToastify('Lỗi rồi', TOAST_ERROR);
+                });
+        }
+        setShowSubmitModal(false);
+    }
 
     if (!delivers) return <Loading message="Đang tải bản đồ..." />;
     return (
-        <Container fluid className="w-100 h-100 p-0">
+        <Container fluid className="w-100 h-100 p-0" style={{ zIndex: 1001 }}>
             <Row className="h-100 p-0 m-0">
                 <Col xs={9} className="p-0">
                     {!isLoading ? (
@@ -139,9 +197,7 @@ function OpenStreetMapContainer({ orders, onHide }) {
                                             overflow: 'hidden',
                                         }}
                                         variant="primary"
-                                        onClick={() =>
-                                            handleClickOrder(order.id)
-                                        }
+                                        onClick={() => handleClickOrder(order)}
                                     >
                                         {`${
                                             order.recipient
@@ -189,24 +245,26 @@ function OpenStreetMapContainer({ orders, onHide }) {
                         style={{ height: '40%' }}
                     >
                         <Col className="gap-3 d-flex flex-column justify-content-start">
-                            <p className="mt-2 fw-bold">
-                                Nhân viên giao hàng của quán:{' '}
-                            </p>
-                            {delivers.map((deliver) => {
+                            <p className="mt-2 fw-bold">Nhân viên của quán: </p>
+                            {delivers.map((de) => {
                                 return (
                                     <Button
-                                        key={deliver.id}
+                                        key={de.id}
                                         className="fs-6 mx-2"
                                         style={{
                                             width: '80%',
                                             overflow: 'hidden',
                                         }}
-                                        variant="secondary"
+                                        variant={
+                                            deliver === de.id
+                                                ? 'primary'
+                                                : 'secondary'
+                                        }
                                         onClick={() =>
-                                            handleClickDeliver(deliver.id)
+                                            handleClickDeliver(de.id)
                                         }
                                     >
-                                        {`${deliver.user.full_name}`}
+                                        {`${de.user.full_name}`}
                                     </Button>
                                 );
                             })}
@@ -220,18 +278,39 @@ function OpenStreetMapContainer({ orders, onHide }) {
                         <Col xs={6} className="d-flex justify-content-end">
                             <Button
                                 variant="success"
-                                onClick={handleClickSubmit}
+                                onClick={() => setShowSubmitModal(true)}
                             >
                                 Xác nhận
                             </Button>
                         </Col>
                         <Col xs={4}>
-                            <Button variant="danger" onClick={onHide}>
+                            <Button variant="secondary" onClick={onHide}>
                                 Đóng
                             </Button>
                         </Col>
                     </Row>
                 </Col>
+            </Row>
+            {/* Modal */}
+            <Row>
+                <OrderDetailsModal
+                    show={showDetailModal}
+                    onHide={() => setShowDetailModal(false)}
+                    onConfirm={handleConfirmOrder}
+                    onCancel={handleCancelOrder}
+                    order={order}
+                    type={1}
+                />
+                <YesNoModal
+                    show={showSubmitModal}
+                    onHide={() => setShowSubmitModal(false)}
+                    data={{
+                        message: 'Bạn chắc chắn giao những đơn này chứ?',
+                        title: 'Xác nhận giao hàng',
+                    }}
+                    onYesFunc={handleClickSubmit}
+                    onNoFunc={() => setShowSubmitModal(false)}
+                />
             </Row>
         </Container>
     );

@@ -14,22 +14,36 @@ async function getDistanceDuration(origin, destination) {
 }
 
 export async function ConvertOrdersToGraph(origin, orders) {
-    const n = orders.length + 1;
     const positions = [
         [origin.lat, origin.lng],
         ...orders.map((order) => order.position),
     ];
-    const graph = Array(n)
-        .fill()
-        .map(() => Array(n).fill(0));
     const length = positions.length;
+    const graph = Array.from({ length }, () => Array(length).fill(0));
+
+    // Tạo list các promises API
+    const promises = [];
+
     for (let i = 0; i < length - 1; i++) {
         for (let j = i + 1; j < length; j++) {
-            const tmp = await getDistanceDuration(positions[i], positions[j]);
-            graph[i][j] = tmp.distance;
-            if (i != 0) graph[j][i] = tmp.distance;
+            promises.push(
+                getDistanceDuration(positions[i], positions[j]).then((tmp) => ({
+                    i,
+                    j,
+                    distance: tmp.distance,
+                }))
+            );
         }
     }
+
+    // Thực hiện tất cả API đồng thời và cập nhật đồ thị
+    const results = await Promise.all(promises);
+
+    results.forEach(({ i, j, distance }) => {
+        graph[i][j] = distance;
+        if (i != 0) graph[j][i] = distance; //đồ thị vô hướng
+    });
+
     return graph;
 }
 

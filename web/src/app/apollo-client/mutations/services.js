@@ -13,47 +13,9 @@ import {
     updateProduct,
 } from '../mutations/products';
 
-export function useAddOrderDetailsMutation() {
-    const [createOrderDetails] = useMutation(addOrderDetails);
+import { updateAgent, removeAgent } from './agent';
 
-    async function handleCreateOrderDetails(orderDetails) {
-        try {
-            const { data } = await createOrderDetails({
-                variables: {
-                    createOrderDetailInput: orderDetails,
-                },
-                update: updateCacheAddOrderDetails,
-            });
-            return data.createOrderDetail;
-        } catch (error) {
-            console.error(error);
-        }
-        return null;
-    }
-
-    return handleCreateOrderDetails;
-}
-
-export function useAddOrderMutation() {
-    const [createOrder] = useMutation(addOrder);
-
-    async function handleCreateOrder(order) {
-        try {
-            const { data } = await createOrder({
-                variables: {
-                    createOrderInput: order,
-                },
-                update: updateCacheAddOrder,
-            });
-            return data.createOrder;
-        } catch (error) {
-            console.error(error);
-        }
-        return null;
-    }
-    return handleCreateOrder;
-}
-
+//============================================== PRODUCTS ==================================================
 export function useAddProductMutation() {
     const [createProduct] = useMutation(addProduct);
 
@@ -111,6 +73,7 @@ export function useRemoveProductMutation() {
     return handleRemoveProduct;
 }
 
+//============================================== AUTH ==================================================
 export function useLoginMutation() {
     const [loginFunc] = useMutation(login);
 
@@ -153,6 +116,7 @@ export function useRegisterMutation() {
     return handleRegister;
 }
 
+//============================================== ORDERS ==================================================
 export function useUpdateOrderMutation() {
     const [UpdateOrder] = useMutation(updateOrder);
 
@@ -177,6 +141,26 @@ export function useUpdateOrderMutation() {
         return null;
     }
     return handleUpdateOrder;
+}
+
+export function useAddOrderMutation() {
+    const [createOrder] = useMutation(addOrder);
+
+    async function handleCreateOrder(order) {
+        try {
+            const { data } = await createOrder({
+                variables: {
+                    createOrderInput: order,
+                },
+                update: updateCacheAddOrder,
+            });
+            return data.createOrder;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleCreateOrder;
 }
 
 const updateCacheAddOrder = async (cache, { data: { createOrder } }) => {
@@ -231,6 +215,28 @@ const cacheUpdateOrderMutation = async (cache, { data: { updateOrder } }) => {
     }
 };
 
+//============================================== ORDER DETAILS==================================================
+export function useAddOrderDetailsMutation() {
+    const [createOrderDetails] = useMutation(addOrderDetails);
+
+    async function handleCreateOrderDetails(orderDetails) {
+        try {
+            const { data } = await createOrderDetails({
+                variables: {
+                    createOrderDetailInput: orderDetails,
+                },
+                update: updateCacheAddOrderDetails,
+            });
+            return data.createOrderDetail;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+
+    return handleCreateOrderDetails;
+}
+
 export const updateCacheAddOrderDetails = async (
     cache,
     { data: createOrderDetail }
@@ -269,6 +275,7 @@ export const updateCacheAddOrderDetails = async (
     // }
 };
 
+//============================================== FACE ID AUTH ==================================================
 export function useLoginWithFaceIDMutation() {
     const [loginFunc] = useMutation(loginWithFaceID);
 
@@ -287,4 +294,43 @@ export function useLoginWithFaceIDMutation() {
     }
 
     return handleLogin;
+}
+
+//============================================== AGENT ==================================================
+export function useUpdateAgentMutation() {
+    const [UpdateAgent] = useMutation(updateAgent);
+
+    async function handleUpdateAgent(agent) {
+        try {
+            const { data } = await UpdateAgent({
+                variables: {
+                    updateAgentInput: agent,
+                },
+            });
+            return data.updateAgent;
+        } catch (error) {
+            console.error(error);
+        }
+        return null;
+    }
+    return handleUpdateAgent;
+}
+
+export function useRemoveAgentMutation() {
+    const [RemoveAgent] = useMutation(removeAgent);
+
+    async function handleRemoveAgent(id) {
+        try {
+            const { data } = await RemoveAgent({
+                variables: {
+                    removeAgentId: id,
+                },
+            });
+            return data.removeAgent;
+        } catch (error) {
+            console.log('[SERVICES REMOVE AGENT]: ', error);
+        }
+        return null;
+    }
+    return handleRemoveAgent;
 }

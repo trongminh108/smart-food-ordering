@@ -42,6 +42,7 @@ export class FileUploadController {
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File): string {
+    console.log(file);
     return file.filename;
   }
 }

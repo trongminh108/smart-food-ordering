@@ -11,6 +11,8 @@ import {
     REVENUE_PAGE,
     STAFF_MANAGE_PAGE,
     ORDERED_MANAGE_PAGE,
+    INFO_AGENT,
+    VOUCHERS,
 } from '@/app/constants/url';
 
 const dataLSB = [
@@ -31,8 +33,16 @@ const dataLSB = [
         link: ORDERED_MANAGE_PAGE,
     },
     {
+        name: 'Giảm giá',
+        link: VOUCHERS,
+    },
+    {
         name: 'Doanh thu',
         link: REVENUE_PAGE,
+    },
+    {
+        name: 'Cửa hàng',
+        link: INFO_AGENT,
     },
 ];
 

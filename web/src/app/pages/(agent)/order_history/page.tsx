@@ -136,7 +136,7 @@ function OrderHistory() {
                         />
                     </Col>
                     <Col sm={2} className="p-0">
-                        {'Loại hóa đơn: '}
+                        {'Loại đơn hàng: '}
                         <FilterTypeOrder onChange={handleOnChangeType} />
                     </Col>
                 </Row>

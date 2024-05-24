@@ -80,32 +80,6 @@ function OrderCard({ order }: { order: any }) {
                             sold: sold,
                         });
                     });
-                    // const orderDetails = updatedOrder.order_details;
-                    // const updateProductPromises = orderDetails.map(
-                    //     (detail: any) => {
-                    //         const idProduct = detail.product.id;
-                    //         const sold =
-                    //             Number(detail.product.sold) +
-                    //             Number(detail.quantity);
-                    //         return updateProductFunc({
-                    //             id: idProduct,
-                    //             sold: sold,
-                    //         });
-                    //     }
-                    // );
-
-                    // try {
-                    //     // Thực hiện tất cả các mutation cùng một lúc và đợi chúng hoàn thành
-                    //     await Promise.all(updateProductPromises).then(
-                    //         (resolve) => {
-                    //             ordersContext.setState((prev: any) => prev);
-                    //             console.log(resolve);
-                    //         }
-                    //     );
-                    //     // console.log('Update product thành công');
-                    // } catch (error) {
-                    //     console.error('Lỗi khi cập nhật sản phẩm:', error);
-                    // }
                 }
             }
             switch (STATUS) {
@@ -114,7 +88,7 @@ function OrderCard({ order }: { order: any }) {
                     break;
                 case STATUS_SUCCESS:
                     CustomToastify(
-                        'Xác nhận hóa đơn thành công',
+                        'Xác nhận đơn hàng thành công',
                         TOAST_SUCCESS
                     );
                     break;
@@ -138,7 +112,7 @@ function OrderCard({ order }: { order: any }) {
                 message: message,
             });
             // handleUpdateStatusOrder(updatedOrder);
-            CustomToastify('Bạn đã từ chối hóa đơn', TOAST_ERROR);
+            CustomToastify('Bạn đã từ chối đơn hàng', TOAST_ERROR);
         } catch (error) {
             CustomToastify(error, TOAST_ERROR);
             console.log('[ORDER CARD REJECT]', error);

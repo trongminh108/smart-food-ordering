@@ -5,3 +5,5 @@ export const PRODUCT_MANAGE_PAGE = '/pages/product';
 export const STAFF_MANAGE_PAGE = '/pages/staff';
 export const REVENUE_PAGE = '/pages/revenue';
 export const ORDERED_MANAGE_PAGE = '/pages/order_history';
+export const INFO_AGENT = '/pages/info_agent';
+export const VOUCHERS = '/pages/voucher';

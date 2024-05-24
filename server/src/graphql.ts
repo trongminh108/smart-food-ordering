@@ -564,6 +564,8 @@ export abstract class ISubscription {
     abstract pubUserStatusOrder(id_user: string): Nullable<Order> | Promise<Nullable<Order>>;
 
     abstract pubAgentStatusOrder(id_agent: string): Nullable<Order> | Promise<Nullable<Order>>;
+
+    abstract pubDeliverStatusOrder(id_deliver: string): Nullable<Order> | Promise<Nullable<Order>>;
 }
 
 export class OrderDetail {

@@ -336,4 +336,29 @@ export function calculateTimeFrom(inputDate) {
     }
 }
 
-//=============================================== MAP ===========================================
+//=============================================== API OSM MAP ===========================================
+function API_OSM_GEOCODING(lat, lng) {
+    return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+}
+
+export async function getAddressOSM(position) {
+    const url = API_OSM_GEOCODING(position.lat, position.lng);
+    const data = await axios.get(url);
+    const res = await data.data.display_name;
+    return res;
+}
+
+//=============================================== VOUCHERS ===========================================
+export function generateRandomCode(length = 10) {
+    const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charactersLength);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+}

@@ -32,6 +32,7 @@ export class OrderResolver {
   PUB_NEW_ORDER = 'PUB_NEW_ORDER';
   PUB_USER_STATUS_ORDER = 'PUB_USER_STATUS_ORDER';
   PUB_AGENT_STATUS_ORDER = 'PUB_AGENT_STATUS_ORDER';
+  PUB_DELIVER_STATUS_ORDER = 'PUB_DELIVER_STATUS_ORDER';
 
   constructor(
     private readonly orderService: OrderService,
@@ -81,6 +82,9 @@ export class OrderResolver {
     });
     this.pubSub.publish(this.PUB_AGENT_STATUS_ORDER, {
       pubAgentStatusOrder: updatedOrder,
+    });
+    this.pubSub.publish(this.PUB_DELIVER_STATUS_ORDER, {
+      pubDeliverStatusOrder: updatedOrder,
     });
     return updatedOrder;
   }
@@ -156,5 +160,17 @@ export class OrderResolver {
   })
   pubAgentStatusOrder() {
     return this.pubSub.asyncIterator(this.PUB_AGENT_STATUS_ORDER);
+  }
+
+  @Subscription('pubDeliverStatusOrder', {
+    filter(payload, variables, context) {
+      return (
+        payload.pubDeliverStatusOrder.id_deliver === variables.id_deliver &&
+        payload.pubDeliverStatusOrder.status != STATUS_DRAFT
+      );
+    },
+  })
+  pubDeliverStatusOrder() {
+    return this.pubSub.asyncIterator(this.PUB_DELIVER_STATUS_ORDER);
   }
 }

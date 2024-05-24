@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+import { AGENT_TYPE } from './agents';
+
 export const USER_TYPE = `
     id
     username
@@ -11,9 +13,7 @@ export const USER_TYPE = `
     delivery_address
     is_agent
     agent {
-        id
-        name
-        position
+        ${AGENT_TYPE}
     }
     is_deliver
     face_recognition

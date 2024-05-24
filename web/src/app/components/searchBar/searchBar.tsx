@@ -34,7 +34,7 @@ function SearchBar() {
                 name="searchInput"
                 id="searchInput"
                 className="searchInput"
-                placeholder="Search films"
+                placeholder="Search"
                 onKeyDown={handleOnKeyDown}
             />
             <div className="btnClear" onClick={handleOnClick}></div>

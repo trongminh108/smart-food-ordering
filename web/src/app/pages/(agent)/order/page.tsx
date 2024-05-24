@@ -59,7 +59,7 @@ function OrderManage() {
                             variant="success"
                             onClick={handleOnClickShowMap}
                         >
-                            Show map
+                            Bản đồ
                         </Button>
                     </Col>
                 </Row>

@@ -86,6 +86,7 @@ type Subscription {
   pubNewOrder(id_agent: ID!): Order
   pubUserStatusOrder(id_user: ID!): Order
   pubAgentStatusOrder(id_agent: ID!): Order
+  pubDeliverStatusOrder(id_deliver: ID!): Order
 }
 
 type Query {
