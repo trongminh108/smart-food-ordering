@@ -14,6 +14,8 @@ import {
 } from '../mutations/products';
 
 import { updateAgent, removeAgent } from './agent';
+import { createVoucher } from './voucher';
+import { createVouchersProduct } from './vouchers_product';
 
 //============================================== PRODUCTS ==================================================
 export function useAddProductMutation() {
@@ -333,4 +335,44 @@ export function useRemoveAgentMutation() {
         return null;
     }
     return handleRemoveAgent;
+}
+
+//============================================== VOUCHERS ==================================================
+export function useCreateVoucherMutation() {
+    const [createVoucherMutation] = useMutation(createVoucher);
+
+    async function handleCreateVoucher(voucher) {
+        try {
+            const { data } = await createVoucherMutation({
+                variables: {
+                    createVoucherInput: voucher,
+                },
+            });
+            return data.createVoucher;
+        } catch (error) {
+            console.error('[CREATE VOUCHER SERVICE]: ', error);
+        }
+        return null;
+    }
+    return handleCreateVoucher;
+}
+
+//============================================== VOUCHERS PRODUCTS ==================================================
+export function useCreateVouchersProductMutation() {
+    const [createVouchersProductMutation] = useMutation(createVouchersProduct);
+
+    async function handleCreateVouchersProduct(vouchersProduct) {
+        try {
+            const { data } = await createVouchersProductMutation({
+                variables: {
+                    createVouchersProductInput: vouchersProduct,
+                },
+            });
+            return data.createVouchersProduct;
+        } catch (error) {
+            console.error('[CREATE VOUCHERS PRODUCTS SERVICE]: ', error);
+        }
+        return null;
+    }
+    return handleCreateVouchersProduct;
 }

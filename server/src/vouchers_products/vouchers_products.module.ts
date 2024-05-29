@@ -14,5 +14,6 @@ import {
     ]),
   ],
   providers: [VouchersProductsResolver, VouchersProductsService],
+  exports: [VouchersProductsService, VouchersProductsResolver],
 })
 export class VouchersProductsModule {}

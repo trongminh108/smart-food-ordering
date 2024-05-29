@@ -9,6 +9,7 @@ type Voucher {
   is_valid: Boolean
   is_all_products: Boolean
   usage_limit: Int
+  vouchers_products: [VouchersProduct]
 }
 
 input CreateVoucherInput {
@@ -38,6 +39,7 @@ input UpdateVoucherInput {
 
 type Query {
   vouchers: [Voucher]!
+  vouchersByAgentID(id_agent: ID!): [Voucher]!
   voucher(id: ID!): Voucher
 }
 

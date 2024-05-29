@@ -99,7 +99,7 @@ function SignIn() {
                     />
                 </Form.Group>
                 <Button type="submit" className="btn-submit">
-                    Sign In
+                    Login
                 </Button>
             </Form>
         </Container>

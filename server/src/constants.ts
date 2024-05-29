@@ -5,7 +5,7 @@ export const MONGOOSE_URI =
 
 export const SALT_OR_ROUNDS = 10;
 
-export const GG_MAP_API = 'AIzaSyBbQDG7iqW3PIHkmP3B4ZmT3sw7yXoa4mU';
+export const GG_MAP_API = 'AIzaSyB_8vefOV1JnGvShVFG0BS9_rKgU3BKT-k';
 
 export function GG_MAP_REVERSE_GEOCODING_API(lat, lng, api_key = GG_MAP_API) {
   return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&location_type=ROOFTOP&key=${api_key}`;

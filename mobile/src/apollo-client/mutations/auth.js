@@ -1,21 +1,5 @@
 import { gql } from '@apollo/client';
-
-const USER_TYPE = `
-    id
-    username
-    full_name
-    gmail
-    avatar
-    phone_number
-    delivery_address
-    is_agent
-    agent {
-        id
-        name
-    }
-    is_deliver
-    face_recognition
-`;
+import { USER_TYPE } from '../queries/users';
 
 export const login = gql`
     mutation Mutation($username: String!, $password: String!) {

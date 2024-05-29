@@ -15,6 +15,10 @@ export const USER_TYPE = `
         name
     }
     is_deliver
+    deliver {
+        id_user
+        id_agent        
+    }
     face_recognition
 `;
 

@@ -14,6 +14,7 @@ import {
 import { FullscreenControl } from 'react-leaflet-fullscreen';
 
 import { getAddressOSM } from '@/app/modules/feature_functions';
+import { useAuth } from '@/app/contexts/auth_context';
 
 const customMarkerIcon = new L.Icon({
     iconUrl: '/icons/store_location.png',

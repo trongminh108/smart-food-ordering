@@ -360,9 +360,13 @@ export abstract class IQuery {
 
     abstract vouchers(): Nullable<Voucher>[] | Promise<Nullable<Voucher>[]>;
 
+    abstract vouchersByAgentID(id_agent: string): Nullable<Voucher>[] | Promise<Nullable<Voucher>[]>;
+
     abstract voucher(id: string): Nullable<Voucher> | Promise<Nullable<Voucher>>;
 
     abstract vouchersProducts(): Nullable<VouchersProduct>[] | Promise<Nullable<VouchersProduct>[]>;
+
+    abstract vouchersProductsByAgentID(id_agent: string): Nullable<VouchersProduct>[] | Promise<Nullable<VouchersProduct>[]>;
 
     abstract vouchersProduct(id: string): Nullable<VouchersProduct> | Promise<Nullable<VouchersProduct>>;
 }
@@ -616,6 +620,7 @@ export class User {
     is_agent?: Nullable<boolean>;
     agent?: Nullable<Agent>;
     is_deliver?: Nullable<boolean>;
+    deliver?: Nullable<Deliver>;
     face_recognition?: Nullable<string>;
 }
 
@@ -631,6 +636,7 @@ export class Voucher {
     is_valid?: Nullable<boolean>;
     is_all_products?: Nullable<boolean>;
     usage_limit?: Nullable<number>;
+    vouchers_products?: Nullable<Nullable<VouchersProduct>[]>;
 }
 
 export class VouchersProduct {

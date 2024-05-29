@@ -22,6 +22,10 @@ export class DeliverService {
     return await this.deliverModel.findById(id);
   }
 
+  async findOneByUserID(id_user: string) {
+    return await this.deliverModel.findOne({ id_user: id_user });
+  }
+
   async update(updateDeliverInput: UpdateDeliverInput) {
     const { id, ...updateData } = updateDeliverInput;
     await this.deliverModel.findByIdAndUpdate(id, updateData);

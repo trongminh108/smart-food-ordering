@@ -9,63 +9,54 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '../../contexts/auth_context';
 import NotLogin from '../../components/not_login/not_login';
-import { FONT_SIZE } from '../../constants/style';
+import { BUTTON_HEIGHT, FONT_SIZE } from '../../constants/style';
 import colors from '../../constants/colors';
-import { useLazyQuery, useSubscription } from '@apollo/client';
 import LoadingScreen from '../../components/loading_screen/loading_screen';
-import OrderCard from '../../components/order_card/order_card';
+import OrderCard from '../../components/order_card/order_card_4deliver';
 import { useMap } from '../../contexts/map_context';
 import { STATUS_ACTIVE } from '../../constants/backend';
-import { getOrdersByCondition } from '../../apollo-client/queries/orders';
-import { handleSortOrders } from '../../modules/feature_functions';
+import { useDeliver } from '../../contexts/deliver_context';
+import { useNavigation } from '@react-navigation/native';
+import {
+    GGMapDirectionsName,
+    OrderDetailsName,
+} from '../../constants/screen_names';
 
 const DeliverScreen = () => {
     const { authState } = useAuth();
+    const { orders: ordersContext } = useDeliver();
     const { distance } = useMap();
     const [currentType, setCurrentType] = useState(0);
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState(null);
     const typesOfReceipt = ['Đơn hiện có', 'Đơn đã giao'];
     const statusOrders = ['ACTIVE', 'SUCCESS', 'no', 'PENDING'];
-    const [useGetOrdersByCondition] = useLazyQuery(getOrdersByCondition);
-
-    // useSubscription(pubNewOrder, {
-    //     onData: ({ data }) => {
-    //         setOrders((prev) => [data.data.pubNewOrder, ...prev]);
-    //     },
-    //     variables: {
-    //         idAgent: authState?.id_agent,
-    //     },
-    // });
-
-    // console.log(authState?.id_agent);
+    const navigation = useNavigation();
 
     useEffect(() => {
-        async function getOrdersData() {
-            if (authState.authenticated && authState.user.is_deliver) {
-                const { data } = await useGetOrdersByCondition({
-                    variables: {
-                        condition: {
-                            id_agent: '661885da903a56f42717e862',
-                        },
-                    },
-                });
-                const orders = [...data.ordersByCondition];
-                setOrders(handleSortOrders(orders));
-            }
+        if (ordersContext.value) {
+            setOrders(ordersContext.value);
         }
-        getOrdersData();
-    }, [authState.authenticated]);
+    }, [ordersContext.value, authState?.authenticated]);
 
     function handlePressTypeReceipt(index) {
         setCurrentType(index);
     }
 
+    function handleOnPressOrderCard(order) {
+        navigation.navigate(OrderDetailsName, {
+            order: order,
+        });
+    }
+
+    function handlePressMap() {
+        navigation.navigate(GGMapDirectionsName);
+    }
+
     if (!authState.authenticated) return <NotLogin />;
 
-    if (!orders) return <LoadingScreen message={'Đang tải hóa đơn'} />;
+    if (!orders) return <LoadingScreen message={'Đang tải hóa đơn...'} />;
 
     return (
-        // <UserInfoContainer>
         <View style={styles.receiptScreen}>
             <View style={styles.headerReceipt}>
                 <View style={styles.listCategoriesContainer}>
@@ -97,6 +88,22 @@ const DeliverScreen = () => {
                     </ScrollView>
                 </View>
             </View>
+            <View
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                    marginRight: 20,
+                    marginTop: 12,
+                }}
+            >
+                <TouchableHighlight
+                    style={[styles.buttonLogout]}
+                    onPress={handlePressMap}
+                >
+                    <Text style={{ color: colors.white }}>Map</Text>
+                </TouchableHighlight>
+            </View>
             <View>
                 <ScrollView>
                     <View style={styles.listProductsContainer}>
@@ -121,9 +128,10 @@ const DeliverScreen = () => {
                                     <OrderCard
                                         key={order.id}
                                         order={order}
-                                        distance={dis}
+                                        distance={order.distance}
                                         duration={dura}
                                         status={statusOrders[currentType]}
+                                        onPress={handleOnPressOrderCard}
                                     />
                                 );
                             }
@@ -132,7 +140,6 @@ const DeliverScreen = () => {
                 </ScrollView>
             </View>
         </View>
-        // </UserInfoContainer>
     );
 };
 
@@ -164,5 +171,13 @@ const styles = StyleSheet.create({
         gap: 8,
         marginTop: 12,
         marginBottom: 44,
+    },
+    buttonLogout: {
+        width: '40%',
+        height: 40,
+        backgroundColor: colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: BUTTON_HEIGHT,
     },
 });

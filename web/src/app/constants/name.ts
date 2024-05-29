@@ -46,3 +46,5 @@ export const RADIO_PERCENTAGE = 'percentage';
 export const RADIO_DISCOUNT = 'discount';
 export const RADIO_INFINITY = 'infinity';
 export const RADIO_LIMIT = 'limit';
+export const RADIO_ALL_PRODUCTS = 'all_products';
+export const RADIO_SPECIFIC_PRODUCTS = 'specific_products';

@@ -17,6 +17,7 @@ input UpdateVouchersProductInput {
 
 type Query {
   vouchersProducts: [VouchersProduct]!
+  vouchersProductsByAgentID(id_agent: ID!): [VouchersProduct]!
   vouchersProduct(id: ID!): VouchersProduct
 }
 

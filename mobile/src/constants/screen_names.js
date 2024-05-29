@@ -12,3 +12,5 @@ export const FavoriteName = 'Favorite';
 export const AgentName = 'Agent';
 export const DeliverName = 'Deliver';
 export const FaceRecognitionName = 'FaceRecognition';
+export const OrderDetailsName = 'OrderDetails';
+export const GGMapDirectionsName = 'GGMapDirections';

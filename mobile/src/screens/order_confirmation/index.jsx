@@ -6,6 +6,10 @@ import {
     TextInput,
     ScrollView,
     ToastAndroid,
+    Touchable,
+    Modal,
+    FlatList,
+    Button,
 } from 'react-native';
 import React, { useState } from 'react';
 import colors from '../../constants/colors';
@@ -36,11 +40,14 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeName } from '../../constants/screen_names';
 
 import { isValidPhoneNumber } from '../../modules/feature_functions';
+import { getOrdersByUserID } from '../../apollo-client/queries/orders';
+import { useLazyQuery } from '@apollo/client';
 
 export default function OrderConfirmation({ route }) {
     const { order, distance, is_draft, duration } = route?.params || {};
     const { order_details } = order;
     const delivery_fee = calculateDeliveryFee(distance);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const navigation = useNavigation();
     const { authState } = useAuth();
@@ -48,6 +55,9 @@ export default function OrderConfirmation({ route }) {
     const updateOrderFunc = useUpdateOrderMutation();
     const AddOrderDetailsFunc = useAddOrderDetailsMutation();
     const AddOrderFunc = useAddOrderMutation();
+    const [useGetOrdersByUserID, { data: dataOrders }] =
+        useLazyQuery(getOrdersByUserID);
+    const [addresses, setAddresses] = useState(null);
 
     const [name, setName] = useState(
         authState.authenticated ? authState.user.full_name : ''
@@ -56,6 +66,31 @@ export default function OrderConfirmation({ route }) {
         authState.authenticated ? authState.user.phone_number : ''
     );
     const [isLoading, setIsLoading] = useState(false);
+
+    async function handleChangeAddress() {
+        if (authState.authenticated && authState.user.id) {
+            setIsLoading(true);
+            const { data } = await useGetOrdersByUserID({
+                variables: {
+                    ordersByUserIdId: authState.user.id,
+                },
+            });
+            const addresses = data.ordersByUserID.map((order) => order.address);
+            const listAddresses = [...new Set(addresses)];
+            setAddresses(
+                listAddresses.filter(
+                    (add) => add != 'Đang xác định' && add != null
+                )
+            );
+            setIsLoading(false);
+            setModalVisible(true);
+        }
+    }
+
+    function handleAddressSelect(add) {
+        address.setAddress(add);
+        setModalVisible(false);
+    }
 
     async function handleOnPressConfirmOrder() {
         try {
@@ -147,6 +182,59 @@ export default function OrderConfirmation({ route }) {
                 <Text numberOfLines={1} ellipsizeMode="tail">
                     {address.value}
                 </Text>
+                <TouchableHighlight
+                    onPress={handleChangeAddress}
+                    style={{
+                        position: 'absolute',
+                        right: 0,
+                        backgroundColor: '#EBECF0',
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: 'blue',
+                            textDecorationLine: 'underline',
+                        }}
+                    >
+                        Thay đổi
+                    </Text>
+                </TouchableHighlight>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(false);
+                    }}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalTitle}>
+                                Select an Address
+                            </Text>
+                            <FlatList
+                                data={addresses}
+                                keyExtractor={(item) => item}
+                                renderItem={({ item }) => (
+                                    <TouchableHighlight
+                                        style={styles.addressItem}
+                                        onPress={() =>
+                                            handleAddressSelect(item)
+                                        }
+                                    >
+                                        <Text style={styles.addressText}>
+                                            {item}
+                                        </Text>
+                                    </TouchableHighlight>
+                                )}
+                            />
+                            <Button
+                                title="Close"
+                                onPress={() => setModalVisible(false)}
+                            />
+                        </View>
+                    </View>
+                </Modal>
             </View>
 
             <View style={styles.infoUserContainer}>
@@ -286,5 +374,47 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
+    },
+    title: {
+        fontSize: 20,
+        marginBottom: 10,
+    },
+    address: {
+        fontSize: 16,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        width: '80%',
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        marginBottom: 10,
+    },
+    addressItem: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    addressText: {
+        fontSize: 16,
     },
 });

@@ -7,11 +7,16 @@ import { useQuery, useSubscription } from '@apollo/client';
 import { getAllCategories } from '../apollo-client/queries/categories';
 import { getOrdersByAgentID } from '../apollo-client/queries/orders';
 import { getProductsByAgentID } from '../apollo-client/queries/products';
+import { getVouchersByAgentID } from '../apollo-client/queries/vouchers';
 import {
     pubAgentStatusOrder,
     pubNewOrder,
 } from '../apollo-client/subscriptions/orders';
-import { STATUS_PENDING } from '../constants/backend';
+import {
+    STATUS_FAILED,
+    STATUS_PENDING,
+    STATUS_SUCCESS,
+} from '../constants/backend';
 import { CHILDREN } from '../constants/interfaces';
 import { CustomToastify } from '../modules/feature_functions';
 import { useAuth } from './auth_context';
@@ -36,6 +41,11 @@ function AgentProvider({ children }: CHILDREN) {
             idAgent: authState.user.agent.id,
         },
     });
+    const { data: dataVouchers } = useQuery(getVouchersByAgentID, {
+        variables: {
+            idAgent: authState.user.agent.id,
+        },
+    });
 
     const [orders, setOrders] = useState<any>(null);
     const [products, setProducts] = useState<any>(null);
@@ -43,6 +53,7 @@ function AgentProvider({ children }: CHILDREN) {
     const [allCategories, setAllCategories] = useState<any>(null);
     const [delivers, setDelivers] = useState<any>(null);
     const [statusOrder, setStatusOrder] = useState(null);
+    const [vouchers, setVouchers] = useState<any>(null);
 
     useEffect(() => {
         if (dataOrders) setOrders([...dataOrders.ordersByAgentID]);
@@ -63,6 +74,13 @@ function AgentProvider({ children }: CHILDREN) {
             setCategories(res);
         }
     }, [dataProducts]);
+
+    useEffect(() => {
+        if (dataVouchers) {
+            const vouchers = [...dataVouchers.vouchersByAgentID];
+            setVouchers(vouchers);
+        }
+    }, [dataVouchers]);
 
     useEffect(() => {
         if (dataAllCategories) {
@@ -99,6 +117,14 @@ function AgentProvider({ children }: CHILDREN) {
                         return order;
                     });
                 });
+                if (newOrder.status === STATUS_SUCCESS)
+                    CustomToastify(`Đơn thành công từ ${newOrder.recipient}`);
+                else if (newOrder.status === STATUS_FAILED)
+                    CustomToastify(
+                        `Đơn thất bại từ ${newOrder.recipient}`,
+                        STATUS_FAILED
+                    );
+                console.log(newOrder.status);
             }
         },
         variables: {
@@ -113,6 +139,7 @@ function AgentProvider({ children }: CHILDREN) {
         allCategories: { value: allCategories, setState: setAllCategories },
         delivers: { value: delivers, setState: setDelivers },
         statusOrder: { value: statusOrder, setState: setStatusOrder },
+        vouchers: { value: vouchers, setState: setVouchers },
     };
 
     return (

@@ -30,6 +30,15 @@ export const formatCurrency = (amount) => {
     }).format(amount);
 };
 
+export function formatNumberWithDots(input) {
+    if (input.length != 0) {
+        const tmp = input.replaceAll('.', '');
+        const number = Number(tmp);
+        return number.toLocaleString('vi-VN');
+    }
+    return input;
+}
+
 //================================================ COOKIES ===========================================
 export function setCookiesLogin(acc) {
     const expirationDate = new Date();

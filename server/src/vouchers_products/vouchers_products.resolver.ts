@@ -20,8 +20,8 @@ export class VouchersProductsResolver {
   }
 
   @Query('vouchersProducts')
-  findAll() {
-    return this.vouchersProductsService.findAll();
+  findAll(condition = {}) {
+    return this.vouchersProductsService.findAll(condition);
   }
 
   @Query('vouchersProduct')

@@ -12,3 +12,5 @@ export const STATUS_FAILED = 'FAILED';
 export const EXIST_USERNAMEGMAIL = 'usernamegmail';
 export const EXIST_USERNAME = 'username';
 export const EXIST_GMAIL = 'gmail';
+
+export const GG_MAP_API_KEY = 'AIzaSyB_8vefOV1JnGvShVFG0BS9_rKgU3BKT-k';

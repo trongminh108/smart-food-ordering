@@ -27,6 +27,8 @@ import {
     AgentName,
     DeliverName,
     FaceRecognitionName,
+    OrderDetailsName,
+    GGMapDirectionsName,
 } from '../constants/screen_names';
 import colors from '../constants/colors';
 import LoginScreen from '../screens/login_screen';
@@ -44,12 +46,16 @@ import LoadingScreen from '../components/loading_screen/loading_screen';
 import { useMap } from '../contexts/map_context';
 import { getUserLocation } from '../modules/feature_functions';
 import FaceRecognition from '../screens/face_recognition';
+import { useOSM } from '../contexts/osm_context';
+import OrderDetails from '../components/order_detail/order_details';
+import GGMapDirections from '../screens/ggmap_directions/ggmap_directions';
 
 const Tab = createBottomTabNavigator();
 
 const MainScreen = () => {
     const { authState } = useAuth();
     const { origins } = useMap();
+    // const { origins } = useOSM();
     let initRoute = HomeName;
 
     if (authState?.authenticated && authState?.user.is_agent)
@@ -122,6 +128,16 @@ const MainScreen = () => {
             <Tab.Screen
                 name={OrderConfirmationName}
                 component={OrderConfirmation}
+                options={{ tabBarButton: () => null }}
+            />
+            <Tab.Screen
+                name={OrderDetailsName}
+                component={OrderDetails}
+                options={{ tabBarButton: () => null }}
+            />
+            <Tab.Screen
+                name={GGMapDirectionsName}
+                component={GGMapDirections}
                 options={{ tabBarButton: () => null }}
             />
             <Tab.Screen

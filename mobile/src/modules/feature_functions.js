@@ -107,6 +107,32 @@ export const showConfirmBox = (yesFunc) => {
     );
 };
 
+export function showAlertBox(
+    title,
+    message,
+    yesFunc,
+    noFunc,
+    yesText = 'Yes',
+    noText = 'No'
+) {
+    Alert.alert(
+        title,
+        message,
+        [
+            {
+                text: yesText,
+                onPress: () => yesFunc(),
+            },
+            {
+                text: noText,
+                onPress: () => noFunc(),
+                style: 'cancel',
+            },
+        ],
+        { cancelable: true }
+    );
+}
+
 // for add and remove data
 // export const updateCache = (client, { data: { insert_todos } }) => {
 //     const data = client.readQuery({

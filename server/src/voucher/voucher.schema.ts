@@ -3,8 +3,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ collection: 'VOUCHERS' })
 export class VOUCHER {
   @Prop()
-  id: string;
-  @Prop()
   id_agent: string;
   @Prop()
   code: string;

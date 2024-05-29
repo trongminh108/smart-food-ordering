@@ -25,6 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ICON_SIZE_MID } from '../../constants/style';
 import UserInfoContainer from '../../containers/user_info_container';
 import { useNavigation } from '@react-navigation/native';
+import { useOSM } from '../../contexts/osm_context';
 
 export default function HomeScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,7 @@ export default function HomeScreen({ navigation }) {
     ] = useLazyQuery(getAllAgents);
 
     const { address, distance } = useMap();
+    // const { address, distance } = useOSM();
     const [productsData, setProductsData] = useState([]);
     const [agentsData, setAgentsData] = useState([]);
 

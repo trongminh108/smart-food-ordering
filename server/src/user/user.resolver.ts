@@ -9,12 +9,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserInput, UpdateUserInput } from 'src/graphql';
 import { AgentService } from 'src/agent/agent.service';
+import { DeliverService } from 'src/deliver/deliver.service';
 
 @Resolver('User')
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly agentService: AgentService,
+    private readonly deliverService: DeliverService,
   ) {}
 
   @Mutation('createUser')
@@ -55,5 +57,10 @@ export class UserResolver {
   @ResolveField('agent')
   async agent(@Parent() user) {
     return await this.agentService.findOneByUserID(user.id);
+  }
+
+  @ResolveField('deliver')
+  async deliver(@Parent() user) {
+    return await this.deliverService.findOneByUserID(user.id);
   }
 }

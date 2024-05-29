@@ -10,6 +10,7 @@ type User {
   is_agent: Boolean
   agent: Agent
   is_deliver: Boolean
+  deliver: Deliver
   face_recognition: String
 }
 
