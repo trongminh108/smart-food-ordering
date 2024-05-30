@@ -1,4 +1,4 @@
-export const BACKEND_IP = `192.168.1.9`;
+export const BACKEND_IP = `192.168.250.143`;
 export const BACKEND_SUB = `${BACKEND_IP}:4000`;
 export const BACKEND_URL = `http://${BACKEND_IP}:4000`;
 export const BACKEND_IMAGES = BACKEND_URL + '/files/images/';
@@ -13,4 +13,4 @@ export const EXIST_USERNAMEGMAIL = 'usernamegmail';
 export const EXIST_USERNAME = 'username';
 export const EXIST_GMAIL = 'gmail';
 
-export const GG_MAP_API_KEY = 'AIzaSyB_8vefOV1JnGvShVFG0BS9_rKgU3BKT-k';
+export const GG_MAP_API_KEY = 'AIzaSyDYYR9YXo4VIv6Jxq-1JrdpIi67u_Gqg28';
